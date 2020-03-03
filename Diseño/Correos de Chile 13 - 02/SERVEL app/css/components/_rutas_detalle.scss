@@ -1,0 +1,20 @@
+.detalle_rutas{
+    .container{
+        h1{      
+            margin-top: 40px;
+        }
+        .origen{
+            h2{
+                padding-top:10px;
+            }
+            svg{
+                width: 20px;
+                margin-top: 25px;
+            }
+            .btn-principal{
+                @include btn-principal;
+                display: block;
+            }
+        }
+    }
+}

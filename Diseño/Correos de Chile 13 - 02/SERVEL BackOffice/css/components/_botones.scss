@@ -1,0 +1,71 @@
+@mixin btn{
+    display: block;
+    border-radius: 30px;
+    padding: 10px 0;
+    width: 300px;
+    text-transform: uppercase;
+    text-decoration: none;
+    opacity: 1;
+    font-weight: 400;
+    transition: all 0.5s ease;
+    font-size: 16px;
+}
+
+@mixin btn-principal{
+    @include btn;
+    background-color: $rojo-correos;
+    border: none;
+    color: white;
+    &:hover {
+        background-color: $verde;
+        color: white;
+    }
+}
+
+@mixin btn-secundario{
+    @include btn;
+    background-color: $negro;
+    border: none;
+    color: white;
+    &:hover {
+        background-color:$rojo-correos;
+        color: white;
+    }
+}
+
+@mixin btn-alternativo{
+    @include btn;
+    background-color: white;
+    border: 1px solid $rojo-correos;
+    color: $negro;
+    &:hover {
+        background-color: $negro;
+        color: white;
+    }
+}
+
+.btn-principal{@include btn-principal}
+.btn-secundario{@include btn-secundario}
+.btn-alternativo{@include btn-alternativo}
+
+.btn-centrado{
+    display: block;
+    margin: 0 auto;
+}
+
+.inactivo{
+    opacity: .3;
+    cursor: not-allowed;
+}
+
+.botones-centrados{
+    display: flex;
+    justify-content: center;
+    a, button{
+        margin: 15px 10px;
+    }
+}
+
+button.btn-principal{
+    height: 40px;
+}

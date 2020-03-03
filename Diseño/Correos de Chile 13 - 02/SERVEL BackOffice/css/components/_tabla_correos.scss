@@ -1,0 +1,128 @@
+#tabla_correos_length label select{
+    border: 1px solid black;
+    border-radius: 25px;
+    height: 40px;
+    min-width: 80px; 
+    outline: none;
+}
+
+#tabla_correos_filter, #tabla_usuarios_length{
+    margin: 20px 0;
+}
+
+#tabla_correos_filter label input{
+    border: 1px solid black;
+    border-radius: 25px;
+    height: 40px;
+    outline: none;
+}
+
+.ui.celled.table tr td, .ui.celled.table tr th {
+    border-left: none;
+}
+
+table.dataTable.table thead th.sorting, table.dataTable.table thead th.sorting_asc, table.dataTable.table thead th.sorting_desc, table.dataTable.table thead td.sorting, table.dataTable.table thead td.sorting_asc, table.dataTable.table thead td.sorting_desc {
+    padding-right: 0;
+}
+
+table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
+    border-top: none;
+}
+
+table.dataTable.no-footer {
+    border-bottom: 1px solid rgba(34,36,38,.15);
+}
+
+table.dataTable.table thead th.sorting:after, table.dataTable.table thead td.sorting:after {
+    display: none;
+}
+table.dataTable.table thead th.sorting_asc:after, table.dataTable.table thead td.sorting_asc:after {
+   display: none;
+}
+
+table.dataTable.table thead th.sorting_desc:after, table.dataTable.table thead td.sorting_desc:after {
+    display: none;
+}
+
+table.dataTable.table thead th{
+    color: $rojo-correos;
+    cursor: pointer;
+}
+
+.ui.table {
+    background: transparent;
+    margin: 10px 0;
+    border: 1px solid rgba(34,36,38,.15);
+    box-shadow: none;
+    border-radius: 20px;
+    text-align: left;
+    color: $negro;
+}
+
+.ui.table thead tr:first-child>th:first-child {
+    border-radius: 20px 0 0 0;
+}
+
+.ui.table thead tr:first-child>th:last-child {
+    border-radius: 0 20px 0 0;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    padding-top: 15px;
+    color: #666;
+    font-weight: 400;
+    opacity: .5;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    border: none;
+    background: $rojo-correos;
+    border-radius: 20px;
+    color: white!important;
+}
+
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+    color: #666;
+    margin-top: 10px;
+}
+
+#tabla_correos_length label select {
+    border: none;
+    border-radius: 25px;
+    height: 25px;
+    min-width: 44px;
+    outline: none;
+    font-size: 16px;
+}
+
+#tabla_correos_filter label input {
+    border: 1px solid #666;
+    border-radius: 25px;
+    height: 30px;
+    outline: none;
+}
+
+.ui.celled.table tr:last-child td:first-child {
+    border-radius: 0 0 0 20px;
+}
+
+.ui.celled.table tr:last-child td:last-child {
+    border-radius: 0 0 20px 0;
+}
+
+#tabla_correos{
+    .btn-editar{
+        @include btn-secundario;
+        width: 75px;
+        padding: 2px 0;
+        font-size: 12px;
+        margin: 5px auto;
+    }  
+    .btn-detalle{
+        @include btn-principal;
+        width: 75px;
+        padding: 2px 0;
+        font-size: 12px;
+        margin: 5px auto;
+    }
+}

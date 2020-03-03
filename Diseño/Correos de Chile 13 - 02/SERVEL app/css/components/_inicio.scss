@@ -1,0 +1,59 @@
+.inicio {
+    .container{
+        background-image: url(../img/bg-operador.jpg);
+        background-size: cover;
+        h1{
+            margin-top: 2px;
+        }
+        .tareas{
+            margin-top: 40px;
+            width: 90%;
+            margin-left: 5%;
+            display: flex;
+            flex-flow: wrap;
+            justify-content: space-between;
+            a{
+                background-color: white;
+                color: black;
+                font-weight: 500;
+                text-decoration: none;
+                padding: 3vh 0;
+                display: block;
+                width: 80%;
+                margin-left: 10%;
+                border-radius: 20px;
+                margin-bottom: 10px;
+                box-shadow: 0px 6px 23px 0px rgba(0, 0, 0, 0.23);
+            }
+            a.recepciones{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 2vh;
+                svg{
+                    width: 13vw;
+                    margin-right: 4vw;
+                }
+            }
+            .dia-bolsa{
+                width: 47%;
+                margin-left: 0;
+                display: flex;
+                justify-content: space-between;
+                font-size: 4vw;
+                
+                a.dia, a.bolsa{
+                    width: 100%;
+                    margin-left: 0;
+                    display: flex;
+                    flex-flow: column;
+                    align-items: center;
+                    svg{
+                        width: 13vw;
+                        margin-bottom: 2vh;
+                    }
+                }
+            }   
+        }
+    }
+} 

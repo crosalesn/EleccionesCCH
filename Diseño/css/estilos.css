@@ -1,0 +1,348 @@
+.svg_blanco {
+  fill: white;
+}
+
+.svg_negro {
+  fill: black;
+}
+
+.svg_verde {
+  fill: #93BD38;
+}
+
+.svg_rojo {
+  fill: #bf0811;
+}
+
+* {
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+/********** scroolbar **********/
+body::-webkit-scrollbar-track {
+  background-color: #F5F5F5;
+}
+
+body::-webkit-scrollbar {
+  width: 7px;
+  background-color: #F5F5F5;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #000000;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background-color: #bf0811;
+  height: 100%;
+  margin: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+body header {
+  width: 94%;
+  padding: 0 3%;
+  height: 8%;
+  padding-top: 3%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+body header .salir {
+  width: 8%;
+}
+
+body header .logo {
+  width: 60%;
+  margin-top: -10px;
+}
+
+body header .actualizar {
+  width: 8%;
+}
+
+body .container {
+  background-color: #fff;
+  border-radius: 25px;
+  height: 83%;
+}
+
+body .container h2 {
+  font-size: 5.1vw;
+  font-weight: 300;
+  padding-top: 40px;
+  margin: 0;
+}
+
+body .container h1 {
+  font-size: 5vw;
+  font-weight: 600;
+  margin: 2px;
+}
+
+body .container h3 {
+  font-size: 4vw;
+  font-weight: 300;
+  margin: 2px;
+}
+
+body footer {
+  height: 5%;
+  padding-top: 2%;
+}
+
+body footer p {
+  text-align: center;
+  color: white;
+  font-size: 4vw;
+  font-weight: 300;
+  margin: 0;
+}
+
+body.login-centrado {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-image: url(../img/bg-login.png);
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
+body.login-centrado .login {
+  width: 90%;
+  margin-top: -50px;
+  max-width: 400px;
+}
+
+body.login-centrado .login .logo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-bottom: 30px;
+}
+
+body.login-centrado .login .logo img {
+  width: 80%;
+}
+
+body.login-centrado .login input {
+  border-radius: 30px;
+  height: 45px;
+  margin-top: 15px;
+  font-size: 17px;
+  font-weight: 300;
+  width: 80%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  outline: none;
+  opacity: 1;
+}
+
+body.login-centrado .login ::-webkit-input-placeholder {
+  color: white;
+  text-align: center;
+  width: 80%;
+  font-weight: 300;
+  font-size: 17px;
+}
+
+body.login-centrado .login :-ms-input-placeholder {
+  color: white;
+  text-align: center;
+  width: 80%;
+  font-weight: 300;
+  font-size: 17px;
+}
+
+body.login-centrado .login ::-ms-input-placeholder {
+  color: white;
+  text-align: center;
+  width: 80%;
+  font-weight: 300;
+  font-size: 17px;
+}
+
+body.login-centrado .login ::placeholder {
+  color: white;
+  text-align: center;
+  width: 80%;
+  font-weight: 300;
+  font-size: 17px;
+}
+
+body.login-centrado .login input.btn-principal {
+  border-radius: 30px;
+  height: 50px;
+  width: 50%;
+  background-color: white;
+  border: none;
+  color: #611818;
+  margin-top: 40px;
+  opacity: 1;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  -webkit-transition: all;
+  transition: all;
+  cursor: pointer;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+body.login-centrado .login input.btn-principal:hover {
+  background-color: #8da524;
+  color: white;
+}
+
+body.login-centrado .login a {
+  color: white;
+  text-decoration: none;
+  margin-top: 15px;
+  font-size: 16px;
+  display: block;
+  font-weight: 400;
+}
+
+body.login-centrado .login a:hover {
+  opacity: .5;
+}
+
+body.inicio .container .tareas {
+  margin-top: 40px;
+}
+
+body.inicio .container .tareas a {
+  background-color: #bf0811;
+  border-bottom: 3px solid #8d030a;
+  color: white;
+  text-decoration: none;
+  padding: 25px 0;
+  display: block;
+  width: 80%;
+  margin-left: 10%;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+body.rutas .container h1 {
+  padding-top: 20px;
+}
+
+body.rutas .container table {
+  width: 90%;
+  height: auto;
+  max-height: 600px;
+  background-color: white;
+  margin-left: 5%;
+  margin-top: 20px;
+  border-radius: 15px;
+  border-spacing: 0;
+  font-size: 4vw;
+  -webkit-box-shadow: 0px 6px 23px 0px rgba(0, 0, 0, 0.23);
+          box-shadow: 0px 6px 23px 0px rgba(0, 0, 0, 0.23);
+}
+
+body.rutas .container table tr th {
+  background-color: #343434;
+  color: white;
+  font-weight: 300;
+  padding: 3px 0;
+}
+
+body.rutas .container table tr th.radio_inicial {
+  border-radius: 10px 0 0 0;
+}
+
+body.rutas .container table tr th.radio_final {
+  border-radius: 0 10px 0 0;
+}
+
+body.rutas .container table tr td {
+  padding: 10px 0;
+}
+
+body.rutas .container table tr td a {
+  border-radius: 5px;
+  text-decoration: none;
+  color: white;
+  padding: 2px 5px;
+  display: block;
+  margin: 0 auto;
+  width: 70%;
+}
+
+body.rutas .container table tr td a svg {
+  width: 10px;
+  height: 10px;
+}
+
+body.rutas .container table tr td a.btn_realizado {
+  background-color: #93BD38;
+}
+
+body.rutas .container table tr td a.btn_en_curso {
+  background-color: #bf0811;
+}
+
+body.rutas .container table tr td a.btn_iniciar {
+  background-color: #343434;
+}
+
+body.rutas .container a.crear_ruta {
+  color: #343434;
+  text-decoration: none;
+  border: 1px solid #343434;
+  padding: 10px 0;
+  width: 90%;
+  margin-left: 5%;
+  display: block;
+  border-radius: 25px;
+  position: absolute;
+  bottom: 10vh;
+}
+/*# sourceMappingURL=estilos.css.map */

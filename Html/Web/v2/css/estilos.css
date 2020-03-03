@@ -1,0 +1,562 @@
+* {
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+/********** scroolbar **********/
+body::-webkit-scrollbar-track {
+  background-color: #F5F5F5;
+}
+
+body::-webkit-scrollbar {
+  width: 7px;
+  background-color: #F5F5F5;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #000000;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background-color: #bf0811;
+  height: 100%;
+  margin: 0;
+}
+
+body header {
+  width: 20%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  position: fixed;
+  left: 0;
+  height: 100%;
+}
+
+body header .logo {
+  width: 75%;
+  margin-left: 10%;
+  padding-top: 30px;
+}
+
+body header .user .user-content {
+  color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-left: 1.2vw;
+}
+
+body header .user .user-content .foto {
+  width: 30%;
+}
+
+body header .user .user-content .foto img {
+  width: 4vw;
+  border-radius: 50%;
+}
+
+body header .user .user-content .info-user {
+  width: 70%;
+}
+
+body header .user .user-content .info-user h2 {
+  font-size: 1.25vw;
+  text-align: left;
+  margin: 0;
+}
+
+body header .user .user-content .info-user h3 {
+  font-size: 1vw;
+  text-align: left;
+  margin: 0;
+  font-weight: 300;
+}
+
+body header .user .buscar {
+  margin-top: 10px;
+}
+
+body header .user .buscar input {
+  background-color: black;
+  border: none;
+  opacity: .4;
+  border-radius: 20px;
+  outline: none;
+  color: white;
+  padding: 10px;
+  padding-left: 15px;
+  padding-right: 13%;
+  width: 50%;
+  text-align: left;
+  font-weight: 300;
+}
+
+body header .user .buscar ::-webkit-input-placeholder {
+  color: white;
+  text-align: left;
+  width: 60%;
+  font-weight: 300;
+}
+
+body header .user .buscar :-ms-input-placeholder {
+  color: white;
+  text-align: left;
+  width: 60%;
+  font-weight: 300;
+}
+
+body header .user .buscar ::-ms-input-placeholder {
+  color: white;
+  text-align: left;
+  width: 60%;
+  font-weight: 300;
+}
+
+body header .user .buscar ::placeholder {
+  color: white;
+  text-align: left;
+  width: 60%;
+  font-weight: 300;
+}
+
+body header .user .buscar button {
+  background: transparent;
+  border: none;
+  position: relative;
+  left: -45px;
+  top: 10px;
+  cursor: pointer;
+  outline: none;
+}
+
+body header .user .buscar button svg {
+  width: 20px;
+}
+
+body header .user .buscar button:hover {
+  opacity: .6;
+}
+
+body header .user .buscar button:active {
+  opacity: .3;
+}
+
+body header .menu ul {
+  padding: 2.5vw;
+  list-style-type: none;
+}
+
+body header .menu ul li {
+  text-align: left;
+  font-size: 1vw;
+  line-height: 2.2vw;
+  font-weight: 300;
+}
+
+body header .menu ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+body header .menu ul li a:hover {
+  opacity: .5;
+}
+
+body header .copyright {
+  text-align: left;
+  padding-left: 2.5vw;
+  color: #000;
+  opacity: .5;
+  font-size: .85vw;
+  font-weight: 600;
+  padding-bottom: 8px;
+}
+
+body .bg {
+  width: 80%;
+  height: 100%;
+  position: fixed;
+  right: 0;
+  background-color: white;
+  border-radius: 20px 0 0 20px;
+}
+
+body .container {
+  position: relative;
+  float: right;
+  z-index: 2;
+  width: 72%;
+  padding-right: 80px;
+}
+
+body .container h1 {
+  text-align: left;
+  margin-top: 50px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #bebebe;
+  margin-bottom: 40px;
+}
+
+body.login-centrado {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-image: url(../img/bg-login.png);
+  background-size: cover;
+  background-position: bottom;
+}
+
+body.login-centrado .login {
+  width: 90%;
+  margin-top: -150px;
+  max-width: 400px;
+}
+
+body.login-centrado .login .logo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-bottom: 30px;
+}
+
+body.login-centrado .login .logo img {
+  width: 100%;
+}
+
+body.login-centrado .login input {
+  border-radius: 30px;
+  height: 45px;
+  margin-top: 15px;
+  font-size: 17px;
+  font-weight: 300;
+  width: 80%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  outline: none;
+  opacity: 1;
+}
+
+body.login-centrado .login .requerido {
+  color: #ecb140;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+body.login-centrado .login ::-webkit-input-placeholder {
+  color: white;
+  text-align: center;
+  width: 80%;
+  font-weight: 300;
+  font-size: 17px;
+}
+
+body.login-centrado .login :-ms-input-placeholder {
+  color: white;
+  text-align: center;
+  width: 80%;
+  font-weight: 300;
+  font-size: 17px;
+}
+
+body.login-centrado .login ::-ms-input-placeholder {
+  color: white;
+  text-align: center;
+  width: 80%;
+  font-weight: 300;
+  font-size: 17px;
+}
+
+body.login-centrado .login ::placeholder {
+  color: white;
+  text-align: center;
+  width: 80%;
+  font-weight: 300;
+  font-size: 17px;
+}
+
+body.login-centrado .login input.btn-principal {
+  border-radius: 30px;
+  height: 50px;
+  width: 50%;
+  background-color: white;
+  border: none;
+  color: #611818;
+  margin-top: 40px;
+  opacity: 1;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  -webkit-transition: all;
+  transition: all;
+  cursor: pointer;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+body.login-centrado .login input.btn-principal:hover {
+  background-color: #8da524;
+  color: white;
+}
+
+body.login-centrado .login a {
+  color: white;
+  text-decoration: none;
+  margin-top: 15px;
+  font-size: 16px;
+  display: block;
+  font-weight: 400;
+}
+
+body.login-centrado .login a:hover {
+  opacity: .5;
+}
+
+body.inicio .container {
+  height: 100%;
+  background-image: url(../img/home.jpg);
+  background-size: cover;
+}
+
+body.inicio .container h1 {
+  font-size: 2vw;
+  font-weight: 300;
+  color: #680404;
+  border: none;
+  margin: 180px 0 0 0;
+  padding: 0;
+  margin-left: 40px;
+}
+
+body.inicio .container h2 {
+  font-size: 1.5vw;
+  font-weight: 300;
+  color: rgba(0, 0, 0, 0.5);
+  text-align: left;
+  margin: 0;
+  margin-left: 40px;
+}
+
+body.inicio .container p {
+  font-size: 1vw;
+  font-weight: 300;
+  line-height: 27px;
+  text-align: left;
+  max-width: 28vw;
+  margin-left: 40px;
+}
+
+body.inicio .container a {
+  border-radius: 30px;
+  padding: 10px 30px;
+  width: 100%;
+  max-width: 12vw;
+  background-color: #930505;
+  border: none;
+  color: white;
+  margin-top: 20px;
+  opacity: 1;
+  font-size: 18px;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  float: left;
+  margin-left: 40px;
+}
+
+body.inicio .container a:hover {
+  background-color: #8da524;
+  color: white;
+}
+
+body.rutas .container .filtro .cuatro-columnas {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+body.rutas .container .filtro .cuatro-columnas select {
+  width: 24%;
+  height: 40px;
+  border-radius: 25px;
+  padding-left: 15px;
+  border: 1px solid #000;
+  outline: none;
+}
+
+body.rutas .container .filtro .dos-columnas {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-top: 17px;
+}
+
+body.rutas .container .filtro .dos-columnas select {
+  width: 49.3%;
+  height: 40px;
+  border-radius: 25px;
+  padding-left: 15px;
+  border: 1px solid #000;
+  outline: none;
+}
+
+body.rutas .container .filtro .tres-columnas {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-top: 17px;
+}
+
+body.rutas .container .filtro .tres-columnas input {
+  width: 31%;
+  height: 40px;
+  border-radius: 25px;
+  padding-left: 15px;
+  border: 1px solid #000;
+  outline: none;
+  text-align: left;
+  padding: 0 0 0 15px;
+}
+
+body.rutas .container .filtro .btn-principal {
+  border-radius: 30px;
+  padding: 10px 30px;
+  width: 100%;
+  max-width: 12vw;
+  background-color: #930505;
+  border: none;
+  color: white;
+  margin-top: 20px;
+  opacity: 1;
+  font-size: 18px;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+body.rutas .container .filtro .btn-principal:hover {
+  background-color: #8da524;
+  color: white;
+}
+
+body.rutas .container .caja-subtitulo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 20px;
+}
+
+body.rutas .container .caja-subtitulo h2 {
+  width: auto;
+}
+
+body.rutas .container .caja-subtitulo .botones {
+  width: auto;
+}
+
+body.rutas .container .caja-subtitulo .botones .btn-secundario {
+  border-radius: 30px;
+  padding: 10px 30px;
+  height: 40px;
+  width: 100%;
+  max-width: 300px;
+  background-color: black;
+  border: none;
+  color: white;
+  opacity: 1;
+  font-size: 18px;
+  font-weight: 400;
+  text-transform: uppercase;
+  -webkit-transition: all;
+  transition: all;
+  cursor: pointer;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  text-decoration: none;
+}
+
+body.rutas .container .caja-subtitulo .botones .btn-secundario:hover {
+  background-color: #930505;
+  color: white;
+}
+
+body.rutas .container .caja-subtitulo .botones .btn-alternativo {
+  border-radius: 30px;
+  padding: 10px 30px;
+  height: 40px;
+  width: 100%;
+  max-width: 300px;
+  background-color: white;
+  border: 1px solid #930505;
+  color: black;
+  opacity: 1;
+  font-size: 18px;
+  font-weight: 400;
+  text-transform: uppercase;
+  -webkit-transition: all;
+  transition: all;
+  cursor: pointer;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  text-decoration: none;
+}
+
+body.rutas .container .caja-subtitulo .botones .btn-alternativo:hover {
+  background-color: #930505;
+  color: white;
+}
+/*# sourceMappingURL=estilos.css.map */

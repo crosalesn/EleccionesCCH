@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mantenedor de rutas</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.semanticui.min.css">
+    <link rel="stylesheet" href="css/estilos.css" type="text/css" media="all" />
+
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.2.0/css/all.css" type="text/css" media="all" />
+
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="img/logo_correos.svg" alt="">
+        </div>
+        <div class="user">
+            <div class="user-content">
+                <div class="foto"><img src="img/user.jpg" alt="Foto de usuario"></div>
+                <div class="info-user">
+                    <h2>Manuel Hugueño</h2>
+                    <h3>Administrador</h3>
+                </div>
+            </div>
+        </div>
+        <div class="menu">
+            <ul>
+                <li><a href="inicio.html">Inicio</a></li>
+                <li><a href="rutas.html">Mantenedor de rutas</a></li>
+                <li><a href="agrupar_carga.html">Agrupar carga</a></li>
+                <li><a href="mantener_carga.html">Mantenedor de cargas</a></li>
+                <li><a href="recepcionar_carga.html">Recepción de cargas</a></li>
+                <li><a href="usuarios.html">Mantener usuarios</a></li>
+                <li><a href="perfil.html">Mantenedor de perfíl</a></li>
+                <li><a href="trazabilidad.html">Panel trazabilidad</a></li>
+                <li><a href="transaccional.html">Panel transaccional</a></li>
+                <li><a href="reportes.html">Reportes</a></li>
+            </ul>
+            <a class="btn-exit" href="#">Cerrar sesión</a>
+        </div>
+        
+        <div class="copyright">© Copyright 2020 Correos de Chile</div>
+    </header>
+    <div class="bg"></div>
+    <div class="container rutas">
+        <h1>Mantenedor de rutas</h1>
+        <form class="filtro" action="">
+            <div class="cuatro-columnas">
+                <select name="select">
+                    <option value="value1" selected>Ingrese región</option> 
+                    <option value="value2">I</option>
+                    <option value="value3">II</option>
+                </select>
+                <select name="select">
+                    <option value="value1" selected>Ingrese circunscripción</option> 
+                    <option value="value2">I</option>
+                    <option value="value3">II</option>
+                </select>
+                <select name="select">
+                    <option value="value1" selected>Ingrese comuna</option> 
+                    <option value="value2">I</option>
+                    <option value="value3">II</option>
+                </select>
+                <select name="select">
+                    <option value="value1" selected>Ingrese local</option> 
+                    <option value="value2">I</option>
+                    <option value="value3">II</option>
+                </select>
+            </div>
+            <div class="dos-columnas">
+                <select name="select">
+                    <option value="value1" selected>Seleccione origen</option> 
+                    <option value="value2">I</option>
+                    <option value="value3">II</option>
+                </select>
+                <select name="select">
+                    <option value="value1" selected>Seleccione destino</option> 
+                    <option value="value2">I</option>
+                    <option value="value3">II</option>
+                </select>
+            </div>
+            <div class="tres-columnas">
+                <input type="text" placeholder="Rut transportista">
+                <input type="text" placeholder="Patente de vehículo">
+                <input type="text" placeholder="Ingrese código">
+            </div>
+            <input type="submit" class="btn-principal" value="Filtrar">
+        </form class="filtro">
+
+        <div class="caja-subtitulo">
+            <h2>Mis rutas</h2>
+            <div class="botones">
+                <a href="#abrir-modal2" class="btn-secundario">EDICIÓN MASIVA</a>
+                <a href="#abrir-modal" class="btn-alternativo">CREAR NUEVA RUTA</a>
+            </div>
+        </div>
+
+        <table id="tabla_correos" class="display ui celled table">
+            <thead>
+                <tr>
+                    <th>
+                        <main class="fancy">
+                            <label for="check">
+                            <input id="check" name="yaybox" type="checkbox" value="Cookies"/>
+                            </label>
+                        </main>
+                    </th>
+                    <th>Hora de creación</th>
+                    <th>Código de ruta</th>
+                    <th>Transportista</th>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th>User creador</th>
+                    <th>Perfil creador</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <main class="fancy">
+                            <label for="check2">
+                            <input id="check2" name="yaybox" type="checkbox" value="Cookies"/>
+                            </label>
+                        </main>
+                    </td>
+                    <td>09:50 am</td>
+                    <td>rt-235</td>
+                    <td>Transportista</td>
+                    <td>Nombre origen</td>
+                    <td>Destino</td>
+                    <td>mhugueno</td>
+                    <td>Transportista</td>
+                    <td>
+                        <a href="#abrir-modal3" class="btn-editar">EDITAR</a>
+                        <a href="#" class="btn-detalle">DETALLE</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <main class="fancy">
+                            <label for="check3">
+                            <input id="check3" name="yaybox" type="checkbox" value="Cookies"/>
+                            </label>
+                        </main>
+                    </td>
+                    <td>09:50 am</td>
+                    <td>rt-235</td>
+                    <td>Transportista</td>
+                    <td>Nombre origen</td>
+                    <td>Destino</td>
+                    <td>mhugueno</td>
+                    <td>Transportista</td>
+                    <td>
+                        <a href="#abrir-modal3" class="btn-editar">EDITAR</a>
+                        <a href="#" class="btn-detalle">DETALLE</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!--Modal añadir nueva ruta-->
+        <div id="abrir-modal" class="modal-bg">
+            <div class="contenedor-modal">
+                <a href="#" title="Cerrar" class="modal-cerrar"><img src="img/cerrar.svg" alt=""></a>
+                
+                <h2>Añadir nueva ruta</h2>
+
+                <div class="nueva-ruta">
+                    <div class="caja-rut-patente">
+                        <form class="rut-patente" action="#">
+                            <input type="text" placeholder="Ingrese RUT">
+                            <input type="submit" class="btn-principal" value="Seleccionar">
+                        </form>
+        
+                        <form class="rut-patente" action="#">
+                            <input type="text" placeholder="Ingrese patente">
+                            <input type="submit" class="btn-principal" value="Seleccionar">
+                        </form>
+                    </div>
+    
+                    <div class="transportista">
+                        <h3>Manuel Hugueño</h3>
+                        <p>XD - 34 67</p>
+                    </div>
+    
+                    <div class="escanear">
+                        <img src="img/escanear.svg" alt="">
+                        <a href="#" class="btn-secundario">ESCANEAR CARGA</a>
+                    </div>
+                </div>
+
+                <div class="tabla">
+                    <table class="escanear-carga">
+                        <tr>
+                            <th>Código de carga</th>
+                            <th>Tipo de carga</th>
+                            <th>Acción</th>
+                        </tr>
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr>
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr>
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr>
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/eliminar.svg" alt=""></a></td>
+                        </tr> 
+
+                    </table>
+                </div>
+               
+                <div class="columnas">
+                    <a href="#" class="btn-alternativo btn-centrado">LIMPIAR CARGA</a>
+
+                    <div class="contenedor-select">
+
+                        <div class="columna">
+                            
+                            <div id="item-origen">
+                                <select name="select">
+                                    <option value="value1" selected>Seleccione un origen</option> 
+                                    <option value="value2">perfil 01</option>
+                                    <option value="value3">perfil 02</option>
+                                </select>
+                            </div>
+
+                            <div id="origen-region">
+                                <select name="select">
+                                    <option value="value1" selected>Seleccione region</option> 
+                                    <option value="value2">perfil 01</option>
+                                    <option value="value3">perfil 02</option>
+                                </select>
+                            </div>
+
+                            <div id="origen-circunscripcion">
+                                <select name="select">
+                                    <option value="value1" selected>Seleccione circunscripción</option> 
+                                    <option value="value2">perfil 01</option>
+                                    <option value="value3">perfil 02</option>
+                                </select>
+                            </div>
+
+                            <div id="origen-provincia">
+                                <select name="select">
+                                    <option value="value1" selected>Seleccione una provincia</option> 
+                                    <option value="value2">perfil 01</option>
+                                    <option value="value3">perfil 02</option>
+                                </select>
+                            </div>
+
+                            <div id="origen-comuna">
+                                <select name="select">
+                                    <option value="value1" selected>Seleccione una comuna</option> 
+                                    <option value="value2">perfil 01</option>
+                                    <option value="value3">perfil 02</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+
+                        <div class="columna">
+
+                            <div id="item-destino">
+                                <select name="select">
+                                    <option value="value1" selected>Seleccione un destino</option> 
+                                    <option value="value2">perfil 01</option>
+                                    <option value="value3">perfil 02</option>
+                                </select>
+                            </div>
+
+                            <div id="destino-region">
+                                <select name="select">
+                                    <option value="value1" selected>Seleccione region</option> 
+                                    <option value="value2">perfil 01</option>
+                                    <option value="value3">perfil 02</option>
+                                </select>
+                            </div>
+
+                            <div id="destino-circunscripcion">
+                                <select name="select">
+                                    <option value="value1" selected>Seleccione circunscripción</option> 
+                                    <option value="value2">perfil 01</option>
+                                    <option value="value3">perfil 02</option>
+                                </select>
+                            </div>
+
+                            <div id="destino-provincia">
+                                <select name="select">
+                                    <option value="value1" selected>Seleccione una provincia</option> 
+                                    <option value="value2">perfil 01</option>
+                                    <option value="value3">perfil 02</option>
+                                </select>
+                            </div>
+
+                            <div id="destino-comuna">
+                                <select name="select">
+                                    <option value="value1" selected>Seleccione una comuna</option> 
+                                    <option value="value2">perfil 01</option>
+                                    <option value="value3">perfil 02</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                    <input type="text" class="inactivo btn-centrado" placeholder="Ingresar O.S.">
+                    <a href="#" class="btn-principal btn-centrado">ASIGNAR RUTA</a>
+                </div>
+
+            </div>
+        </div>
+        <!--Modal Edición masiva-->
+        <div id="abrir-modal2" class="modal-bg">
+            <div class="contenedor-modal">
+                <a href="#" title="Cerrar" class="modal-cerrar"><img src="img/cerrar.svg" alt=""></a>
+                <h2 class="titulo-modal">Edición masiva</h2>
+                <h3>17 rutas</h3>
+                <div class="filtro">
+                    <div class="dos-columnas">
+                        <input type="text" class="inactivo btn-centrado" placeholder="MHUGUENO">
+                        <input type="text" class="btn-centrado" placeholder="Nuevo username">
+                    </div>
+                    <div class="dos-columnas">
+                        <input type="text" class="inactivo btn-centrado" placeholder="YS - 34 74">
+                        <input type="text" class="btn-centrado" placeholder="Nueva patente">
+                    </div>
+                    <br>
+                    <a href="#" class="btn-principal btn-centrado">EDITAR</a>
+                </div>
+            </div>
+        </div>
+
+        <!--Modal alertas-->
+        <div id="abrir-modal3" class="modal-bg">
+            <div class="contenedor-modal alerta">
+                <img src="img/error.svg" alt="">
+                <h2>¡ERROR!</h2>
+                <p>No puedes editar masivamente rutas destinadas a diferentes transportistas</p>
+                <a href="#" title="Cerrar" class="cerrar-alerta btn-principal">ACEPAR</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        $(document).ready( function () {
+            $('#tabla_correos').DataTable();
+        } );
+    </script>
+
+    <script>
+        // Simulation controls to illustrate differences
+        // This is not relevant to the implementing the fanciness
+        const element = document.querySelector('main')
+        // slider communication
+        const setProperty = (property, value) => document.body.style.setProperty(property, value)
+        // fanciness on/off
+        const toggleTheFancy = () => element.classList.toggle('fancy')
+        // shape shifting
+        const toggleTheShape = () => element.classList.toggle('square')
+
+        setProperty('--demo-width', 100)
+    </script>
+
+</body>
+</html>

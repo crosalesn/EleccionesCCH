@@ -1,0 +1,51 @@
+.filtro > *{
+    margin-bottom: 12px;
+}
+.una-columna{
+    display: flex;
+    justify-content: center;
+    input{
+        width: 49%;
+        @include select;
+        text-align: left;
+        padding: 0 0 0 15px;
+    }
+    select{
+        width: 49%;
+        @include select;
+    }
+}
+
+.dos-columnas{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    input{
+        width: 49%;
+        @include select;
+        text-align: left;
+        padding: 0 0 0 15px;
+    }
+    select{
+        width: 49%;
+        @include select;
+    } 
+}
+.tres-columnas{
+    display: flex;
+    justify-content: space-between;
+    input{
+        width: 31%;
+        @include select;
+        text-align: left;
+        padding: 0 0 0 15px;
+    }
+}
+.cuatro-columnas{
+    display: flex;
+    justify-content: space-between;
+    select{
+        width: 24%;
+        @include select;
+    }
+}

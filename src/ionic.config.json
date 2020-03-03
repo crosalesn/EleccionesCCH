@@ -1,0 +1,7 @@
+{
+  "name": "elecciones",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

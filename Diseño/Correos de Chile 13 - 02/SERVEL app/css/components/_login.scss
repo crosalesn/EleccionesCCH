@@ -1,0 +1,82 @@
+.login-centrado{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../img/bg-login.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    .login{
+        width: 90%;
+        margin-top: -50px;;
+        max-width: 400px;
+        .logo{
+            @include contenido-centrado;
+            margin-bottom: 30px;
+            img{
+                width: 80%;
+            }
+        }
+        input{
+            border-radius: 30px;
+            height: 45px;
+            margin-top: 15px;
+            font-size: 17px;
+            font-weight: 300;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            outline: none;
+            opacity: 1;    
+        }
+        ::placeholder{
+            color: white;
+            text-align: center;
+            width: 80%;
+            font-weight: 300;
+            font-size: 17px;
+        }
+        input.btn-principal{
+            border-radius: 30px;;
+            height: 50px;
+            width: 50%;
+            margin: 0 auto;
+            background-color: white;
+            border: none;
+            color: #611818;
+            margin-top: 40px;
+            opacity: 1;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            &:hover{
+                background-color:#8da524;
+                color: white;
+            }
+        }
+
+        a{
+            color: white;
+            text-decoration: none;
+            margin-top: 15px;
+            font-size: 16px;
+            display: block;
+            font-weight: 400;
+        }
+        a:hover{
+            opacity: .5;
+        }
+
+        button.ingresar{
+            background-color: white;
+            color: $rojo-correos;
+            outline: none;
+            width: 50%;
+            margin: 20px auto;
+        }
+    }
+}

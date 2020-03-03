@@ -1,0 +1,70 @@
+<ion-content>
+  <div class="cuerpo rutas">
+    <app-header></app-header>
+
+    <div class="container">
+      <h1>Mis rutas</h1>
+      <h3><strong>Cargo:</strong> Transportista</h3>
+      <h3><strong>Camión asignado:</strong> ZW - 45 56</h3>
+          <div class="tabla tabla-btn">
+          <table>
+            <thead>
+                <tr>
+                    <th class="radio_inicial">Origen</th>
+                    <th>Destino</th>
+                    <th  class="radio_final">Estado</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let ruta of rutas['RUTA']">
+              <tr>
+                <td>{{ruta.ORIGEN[0].LUG_NOMBRE}}</td>
+                <td>{{ruta.DESTINO[0].LUG_NOMBRE}}</td>
+                <td>
+                    <div *ngIf="ruta.ORIGEN[0].ESTADO == ruta.DESTINO[0].ESTADO && ruta.DESTINO[0].ESTADO == 0">
+                        <a class="btn_iniciar" href="rutas-detalle">
+                            <svg viewBox="0 0 288 320">
+                                <path class="svg_blanco" d="M279.8,146L23.8,2c-5-2.8-11-2.7-15.9,0.1C3,5.1,0,10.3,0,16v288c0,5.7,3,10.9,7.9,13.8
+                                c2.5,1.4,5.3,2.2,8.1,2.2c2.7,0,5.4-0.7,7.8-2l256-144c5-2.8,8.2-8.2,8.2-14S284.9,148.9,279.8,146z"/>
+                            </svg>
+                            Iniciar
+                        </a>
+                    </div>
+                    <div *ngIf="ruta.ORIGEN[0].ESTADO != ruta.DESTINO[0].ESTADO && ruta.DESTINO[0].ESTADO">
+                        <a class="btn_en_curso" href="rutas-detalle">
+                            <svg viewBox="0 0 512 512">
+                                <path class="svg_blanco" d="M61.5,279.6c-1-8.2-1.5-16.4-1.5-23.6c0-107.4,88.6-196,196-196c50.1,0,97,20.2,131.5,51.7l-17.3,17.6
+                                c-3.9,3.9-5.4,9.6-3.9,15c1.8,5.1,6,9,11.4,10.2c3,0.6,102.2,32.6,95.9,31.3c8,2.7,19.9-5.9,17.7-17.7c-0.6-3-22.6-113.2-21.3-106.9
+                                c-1.2-5.4-5.1-9.9-10.5-11.4c-5.1-1.5-10.8,0-14.7,3.9l-14.7,14.4C384.8,25.8,322.6,0,256,0C115.3,0,0,115.3,0,256v0.6
+                                c0,8.5,0.4,15,0.8,20c0.6,6.6,5.5,12.1,12,13.4l30.8,6.2C53.7,298.1,62.7,289.7,61.5,279.6z M499.3,222l-30.9-6.3
+                                c-10-2-19.1,6.4-17.9,16.5c1.1,8.8,1.5,17.3,1.5,23.8c0,107.4-88.6,196-196,196c-50.1,0-97-20.2-131.5-52l17.3-17.3
+                                c3.9-3.9,5.4-9.6,3.9-15c-1.8-5.1-6-9-11.4-10.2c-3-0.6-102.2-32.6-95.9-31.3c-5.1-0.9-10.2,0.6-13.5,4.2c-3.6,3.3-5.1,8.7-4.2,13.5
+                                c0.6,3,22.6,112.2,21.3,105.9c1.2,5.4,5.1,9.9,10.5,11.4c6.3,1.6,11.5-0.3,14.7-3.9l14.4-14.4C126.9,485.2,189.1,512,256,512
+                                c140.7,0,256-115.3,256-256v-0.9c0-6.6-0.2-13.2-0.8-19.7C510.6,228.8,505.8,223.4,499.3,222z"/>
+                            </svg>
+                            En curso
+                            
+                        </a>
+                    </div>
+                    <div *ngIf="ruta.ORIGEN[0].ESTADO == ruta.DESTINO[0].ESTADO && ruta.DESTINO[0].ESTADO == 2">
+                        <a class="btn_realizado" href="rutas-detalle">
+                            <svg viewBox="0 0 417 323.8">
+                                <path class="svg_blanco" d="M159.7,317.6c-4,4-9.4,6.2-15.1,6.2s-11.1-2.2-15.1-6.2L9.4,197.3c-12.5-12.5-12.5-32.7,0-45.2l15.1-15.1
+                                c12.5-12.5,32.7-12.5,45.2,0l75.1,75.1L347.4,9.4c12.5-12.5,32.7-12.5,45.2,0l15.1,15.1c12.5,12.5,12.5,32.7,0,45.2L159.7,317.6z"/>
+                            </svg>
+                            Realizado
+                        </a>
+                    </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="caja-cuadrar">
+          <a class="btn-alternativo" href="crear-rutas">CREAR RUTA</a>
+      </div>
+
+    </div>
+    <app-footer></app-footer>
+  </div>
+</ion-content>

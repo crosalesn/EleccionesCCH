@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Recepcionar carga</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Courier+Prime&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.semanticui.min.css">
+    <link rel="stylesheet" href="css/estilos.css" type="text/css" media="all" />
+
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="img/logo_correos.svg" alt="">
+        </div>
+        <div class="user">
+            <div class="user-content">
+                <div class="foto"><img src="img/user.jpg" alt="Foto de usuario"></div>
+                <div class="info-user">
+                    <h2>manuel Hugueño</h2>
+                    <h3>Administrador</h3>
+                </div>
+            </div>
+            <div class="buscar">
+                <form>
+                    <input type="text" placeholder="Buscar..." name="">
+                    <button>
+                        <svg  x="0px" y="0px" width="30.24px" height="30.24px" viewBox="0 0 30.24 30.24" style="enable-background:new 0 0 30.24 30.24;" xml:space="preserve" fill="white">
+                            <g>
+                                <path d="M20.19,3.46c-4.61-4.61-12.12-4.61-16.73,0c-4.61,4.61-4.61,12.12,0,16.74c4.11,4.11,10.51,4.55,15.12,1.34
+                                    c0.1,0.46,0.32,0.9,0.68,1.25l6.72,6.72c0.98,0.98,2.56,0.98,3.53,0c0.98-0.98,0.98-2.56,0-3.53l-6.72-6.72
+                                    c-0.35-0.35-0.79-0.58-1.25-0.67C24.74,13.97,24.3,7.57,20.19,3.46z M18.07,18.07c-3.44,3.44-9.05,3.44-12.49,0
+                                    c-3.44-3.44-3.44-9.05,0-12.49c3.44-3.44,9.05-3.44,12.49,0C21.52,9.03,21.52,14.63,18.07,18.07z"/>
+                            </g>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="menu">
+            <ul>
+                <li><a href="inicio.html">Inicio</a></li>
+                <li><a href="rutas.html">Mantenedor de rutas</a></li>
+                <li><a href="agrupar_carga.html">Agrupar carga</a></li>
+                <li><a href="mantener_carga.html">Mantenedor de cargas</a></li>
+                <li><a href="recepcionar_carga.html">Recepción de cargas</a></li>
+                <li><a href="usuarios.html">Mantener usuarios</a></li>
+                <li><a href="perfil.html">Mantenedor de perfíl</a></li>
+                <li><a href="trazabilidad.html">Panel trazabilidad</a></li>
+                <li><a href="transaccional.html">Panel transaccional</a></li>
+                <li><a href="reportes.html">Reportes</a></li>
+            </ul>
+        </div>
+        <div class="copyright">© Copyright 2020 Correos de Chile</div>
+    </header>
+
+    <div class="bg"></div>
+    <div class="container rutas">
+        <h1>Recepcionar carga</h1>
+        <form class="filtro" action="">
+            <div class="dos-columnas">
+                <select name="select">
+                    <option value="value1" selected>Seleccione un tipo de recepción</option> 
+                    <option value="value2">I</option>
+                    <option value="value3">II</option>
+                </select>
+                <select name="select">
+                    <option value="value1" selected>Seleccione un destino</option> 
+                    <option value="value2">I</option>
+                    <option value="value3">II</option>
+                </select>
+            </div>
+            <div class="dos-columnas">
+                <select name="select">
+                    <option value="value1" selected>Seleccione RUT o patente</option> 
+                    <option value="value2">I</option>
+                    <option value="value3">II</option>
+                </select>
+                <select name="select">
+                    <option value="value1" selected>Seleccione estado de carga</option> 
+                    <option value="value2">I</option>
+                    <option value="value3">II</option>
+                </select>
+            </div>
+
+            <input type="submit" class="btn-principal" value="Filtrar">
+        </form>
+
+        <div class="caja-subtitulo">
+            <h2>Mis recepciones</h2>
+        </div>
+
+        <table id="tabla_correos" class="display ui celled table">
+            <thead>
+                <tr>
+                    <th>Rut</th>
+                    <th>Patente</th>
+                    <th>Username</th>
+                    <th>Tipo de recepción</th>
+                    <th>Destino</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>12.435.358-3</td>
+                    <td>HS - 23 55</td>
+                    <td>mhugueno</td>
+                    <td>Terrestre</td>
+                    <td>Bodega correos</td>
+                    <td>
+                        <a href="#abrir-modal" class="btn-detalle">PENDIENTE</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>12.435.358-3</td>
+                    <td>HS - 23 55</td>
+                    <td>LATAM</td>
+                    <td>Recepción de O.S.</td>
+                    <td>Aeropuerto SCL</td>
+                    <td>
+                        <a href="#abrir-modal" class="btn-detalle">PENDIENTE</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+        <!--Modal Recepción de carga-->
+
+        <div id="abrir-modal" class="modal-bg">
+            <div class="contenedor-modal recepcion">
+                <a href="#" title="Cerrar" class="modal-cerrar"><img src="img/cerrar.svg" alt=""></a>
+                
+                <div class="cabecera-recepcion">
+                    <h2>Recepción de carga</h2>
+                    <span class="code">SKY Airlines</span>
+                    <h3 class="estado">Recepción de O.S.</h3>
+                    <h3 class="tipo-carga">Aeropuerto SCL</h3>
+                </div>
+
+                <div class="fila-recepcion"> 
+                    <div class="carga-esperada">
+                        <h2>Carga esperada</h2>
+                        <h3>18 cajas - 15 cubetas</h3>
+                    </div>
+
+                    <div class="transportista">
+                        <div>
+                            <h3><strong>Rut:</strong> 16.357.456-3</h3>
+                            <h3><strong>Patente:</strong> YS - 34 78</h3>
+                        </div>
+                    </div>
+    
+                    <div class="escanear">
+                        <img src="img/escanear.svg" alt="">
+                        <a href="#" class="btn-secundario">ESCANEAR CARGA</a>
+                    </div>
+                </div>
+              
+                <div class="tabla">
+                    <table class="escanear-carga">
+                        <tr>
+                            <th>Código de carga</th>
+                            <th>Tipo de carga</th>
+                            <th>Estado</th>
+                        </tr>
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/guion.svg" alt=""></a></td>
+                        </tr>
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Caja</td>
+                            <td><a href="#"><img src="img/check.svg" alt=""></a></td>
+                        </tr>
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/guion.svg" alt=""></a></td>
+                        </tr>
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Caja</td>
+                            <td><a href="#"><img src="img/check.svg" alt=""></a></td>
+                        </tr>
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Pallet</td>
+                            <td><a href="#"><img src="img/guion.svg" alt=""></a></td>
+                        </tr>
+                        <tr>
+                            <td>EFTV-35766878564</td>
+                            <td>Caja</td>
+                            <td><a href="#"><img src="img/check.svg" alt=""></a></td>
+                        </tr>
+                    </table>
+                </div>
+               
+                <div class="caja-cuadrar">
+                    <div class="caja-acta-comentario">
+                        <div class="cargar-acta">
+                            <a class="ver-archivo-cuadratura" href="#">3</a>
+                            <a class="btn-acta" href="#">
+                                <svg viewBox="0 0 420.8 331.2">
+                                <path class="svg_negro" d="M406.8,51.6c-8.4-8.8-20-14-33.2-14h-66.4v-0.8c0-10-4-19.6-10.8-26C289.6,4,280.4,0,270.4,0h-120
+                                C140,0,130.8,4,124,10.8s-10.8,16-10.8,26v0.8h-66c-13.2,0-24.8,5.2-33.2,14C5.6,60,0,72,0,84.8V284c0,13.2,5.2,24.8,14,33.2
+                                c8.4,8.4,20.4,14,33.2,14h326.4c13.2,0,24.8-5.2,33.2-14c8.4-8.4,14-20.4,14-33.2V84.8C420.8,71.6,415.6,60,406.8,51.6z M400,284
+                                h-0.4c0,7.2-2.8,13.6-7.6,18.4s-11.2,7.6-18.4,7.6H47.2c-7.2,0-13.6-2.8-18.4-7.6c-4.8-4.8-7.6-11.2-7.6-18.4V84.8
+                                c0-7.2,2.8-13.6,7.6-18.4s11.2-7.6,18.4-7.6h77.2c6,0,10.8-4.8,10.8-10.8V36.4c0-4.4,1.6-8.4,4.4-11.2s6.8-4.4,11.2-4.4h119.6
+                                c4.4,0,8.4,1.6,11.2,4.4c2.8,2.8,4.4,6.8,4.4,11.2V48c0,6,4.8,10.8,10.8,10.8H374c7.2,0,13.6,2.8,18.4,7.6
+                                c4.8,4.8,7.6,11.2,7.6,18.4V284z M210.4,86c-27.2,0-52,11.2-69.6,28.8c-18,18-28.8,42.4-28.8,69.6s11.2,52,28.8,69.6
+                                c18,18,42.4,28.8,69.6,28.8s52-11.2,69.6-28.8c18-18,28.8-42.4,28.8-69.6s-11.2-52-28.8-69.6C262.4,97.2,237.6,86,210.4,86z
+                                M264.8,239.2c-14,13.6-33.2,22.4-54.4,22.4s-40.4-8.8-54.4-22.4c-14-14-22.4-33.2-22.4-54.4s8.8-40.4,22.4-54.4
+                                c14-14,33.2-22.4,54.4-22.4s40.4,8.8,54.4,22.4c14,14,22.4,33.2,22.4,54.4C287.6,206,278.8,225.2,264.8,239.2z M352.8,85.6
+                                c10.8,0,19.6,8.8,19.6,19.6s-8.8,19.6-19.6,19.6s-19.6-8.8-19.6-19.6S342,85.6,352.8,85.6z"/>
+                                </svg>
+                                Cargar acta
+                            </a>
+                        </div>
+                        <div class="cargar-comentario">
+                            <a class="ver-archivo-cuadratura" href="#">3</a>
+                            <a class="btn-comentario" href="#">
+                                <svg viewBox="0 0 639.4 588.2">
+                                <path class="svg_negro" d="M551.5,0H87.9C39.4,0,0,39.4,0,87.9v283.7c0,48.4,39.3,87.7,87.6,87.9v128.7l185-128.7h278.9c48.5,0,87.9-39.4,87.9-87.9
+                                V87.9C639.4,39.4,599.9,0,551.5,0z M601.9,371.6c0,27.8-22.6,50.4-50.4,50.4H260.8l-135.8,94.5V422H87.9
+                                c-27.8,0-50.4-22.6-50.4-50.4V87.9c0-27.8,22.6-50.4,50.4-50.4h463.6c27.8,0,50.4,22.6,50.4,50.4V371.6z M171.1,132.4h297.1v37.5
+                                H171.1V132.4z M171.1,212.3h297.1v37.5H171.1V212.3z M171.1,292.2h297.1v37.5H171.1V292.2z"/>
+                                </svg>
+                                Comentario
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#" class="btn-principal btn-centrado">CUADRAR</a>
+
+            </div>
+        </div>
+
+        <!--Fin modal Recepción de carga-->
+
+      
+    </div>
+
+
+
+
+    <script>
+        $(document).ready( function () {
+            $('#tabla_correos').DataTable();
+        } );
+    </script>
+
+</body>
+</html>

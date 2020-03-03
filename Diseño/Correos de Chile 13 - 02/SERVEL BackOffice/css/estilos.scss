@@ -1,0 +1,274 @@
+$rojo-correos: #bf0811;
+$verde: #93BD38;
+$negro: #343434;
+
+.svg_blanco{fill: white;}
+.svg_negro{fill: $negro;}
+.svg_verde{fill:$verde;}
+.svg_rojo{fill: $rojo-correos;}
+
+@mixin contenido-centrado{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+@mixin select{
+    height: 40px;
+    border-radius: 25px;
+    padding-left: 15px;
+    border: 1px solid #cacaca;
+    outline: none;
+    box-shadow: inset 5px 5px 15px -10px rgba(0,0,0,0.3);
+}
+
+@import "components/botones";
+
+/********** scrollbar **********/
+body::-webkit-scrollbar-track{background-color: #F5F5F5;}
+body::-webkit-scrollbar{width: 7px; background-color: #F5F5F5;}
+body::-webkit-scrollbar-thumb{background-color: #000000;}
+
+
+
+
+
+
+*{
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+html{
+    height: 100%;
+}
+
+body {
+    background-color: $rojo-correos;
+    height: 100%;
+    margin: 0;
+    @import "components/header";
+    .bg{
+        width: 80%;
+        height: 100%;
+        position: fixed;
+        right: 0;
+        background-color: white;
+        border-radius: 0;
+    }
+    .container{
+        position: relative;
+        float: right;
+        z-index: 2;
+        width: 75%;
+        padding-right: 80px;
+        padding-bottom: 100px;
+        h1{
+            text-align: left;
+            margin-top: 50px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #bebebe;
+            margin-bottom: 40px;
+        }
+        @import "components/filtro";
+        .caja-subtitulo{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0;
+            h2{
+                width: auto;
+            }
+            .botones{
+                width: auto;
+                display: flex;
+                .btn-secundario{
+                    @include btn-secundario;
+                }
+                .btn-alternativo{
+                    @include btn-alternativo;
+                    margin-left: 10px;
+                }
+            }
+        }
+        
+        .funcionalidades{
+            display: flex;
+            justify-content: space-evenly;
+            margin-top: 17px;
+            .cajas{
+                width: 48%;
+                padding: 2% 2% 0.3% 2%;
+                border: 1px dotted #cacaca;
+                h3{
+                    text-align: left;
+                    color: $rojo-correos;
+                    font-weight: 700;
+                }
+                ul{
+                    display: flex;
+                    flex-flow: wrap;
+                    justify-content: space-around;
+                    list-style: none;
+                    padding: 0;
+                    li{
+                        width: 45%;
+                        text-align: left; 
+                        font-weight: 500;
+                        margin-bottom: 8px;    
+                    }
+
+                    li::before {
+                        content: "•"; 
+                        color: $rojo-correos;
+                        display: inline-block;
+                        position: relative;
+                        left: -5px;
+                        top: 5px;
+                        font-size: 26px;
+                    }
+                }
+            }
+        }
+
+
+        .tabla{
+            height: 200px;
+            overflow-y: scroll;
+            margin-top: 3vh;
+            border-radius: 15px;
+            border: 1px solid #cacaca;
+            max-height: 25vh;
+            table.escanear-carga{
+                width: 100%;
+                overflow: scroll;
+                border-radius: 15px;
+                height: auto;
+                max-height: 43vh;
+                min-height: 12vh;
+                border-spacing: 0;
+                tr:nth-child(odd) {
+                    background-color:#ededed;
+                }
+                tr:nth-child(even) {
+                    background-color:#f8f8f8;
+                }
+                tr{
+                    th{
+                        color: $rojo-correos;
+                        font-weight: 500;
+                        padding: 8px 0;
+                    }
+                    td{
+                        padding: 5px;
+                        font-size: 15px;
+                        a{
+                            img{
+                                width: 25px;
+                                height: 25px;
+                            }
+                        }
+                    }
+                } 	 
+            }
+        }
+
+        .tabla::-webkit-scrollbar-track {
+            border-radius: 10px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        .tabla::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            border-radius: 10px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            background-color: rgba(0, 0, 0, 0.45);
+        }
+
+        .escanear{
+            display: flex;
+            align-items: center;
+            img{
+                width: 70px;
+                margin-right: 25px;
+            }
+        }
+
+    }
+}
+
+
+@import "components/login";
+@import "components/inicio";
+@import "components/modal";
+@import "components/tabs";
+@import "components/switch";
+@import "components/tabla_correos";
+
+
+.trazabilidad{
+    height: 100%;
+    .contenedor-mapa{
+        height: auto;
+        display: flex;
+        margin-bottom: 70px;
+        .mapa{
+            height: auto;
+            width: 75%;
+        }
+        .sidebar{
+            width: 25%;
+            height: 100%;
+            label{
+                float: left;
+                margin-left: 10%;
+                padding-bottom: 5px;
+                font-weight: 500;            
+            }
+            select{
+                @include select;
+                width: 95%;
+                margin-left: 5%;
+                margin-bottom: 10px;
+                height: 4.5vh;
+                min-height: 30px;
+            }
+
+
+            .lugares{
+                display: flex;
+                flex-flow: column;
+                padding: 5vh 5%;
+                .lugar{
+                    display: flex;
+                    align-items: center;
+                    .fancy{
+                        margin-right: 15px;
+                    }
+                    span{
+                        font-weight: 500;
+                        font-size: 14px;
+                    }
+                }
+            }
+            .busqueda{
+                input{
+                    @include select;
+                    width: 95%;
+                    margin-left: 5%;
+                    margin-bottom: 10px;
+                    text-align: left;
+                    height: 4.5vh;
+                    min-height: 30px;
+                }
+            }
+            button{
+                margin-left: 5%;
+                width: 95%;
+            }
+        }
+    }
+}

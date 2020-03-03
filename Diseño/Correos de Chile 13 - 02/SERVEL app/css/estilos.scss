@@ -1,0 +1,482 @@
+$rojo-correos: #bf0811;
+$verde: #93BD38;
+$negro: #343434;
+
+.svg_blanco{fill: white;}
+.svg_negro{fill: $negro;}
+.svg_verde{fill:$verde;}
+.svg_rojo{fill: $rojo-correos;}
+
+*{
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+@mixin contenido-centrado{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+@mixin select{
+    height: 40px;
+    margin-top: 10px;
+    border-radius: 25px;
+    padding-left: 15px;
+    border: 1px solid #000;
+    outline: none;
+}
+
+@mixin btn{
+    display: block;
+    border-radius: 30px;
+    padding: 10px 0;
+    width: 90vw;
+    margin-left: 5vw;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-top: 10px;
+    opacity: 1;
+    font-weight: 400;
+    transition: all 0.5s ease;
+    font-size: 16px;
+}
+
+@mixin btn-principal{
+    @include btn;
+    background-color: $rojo-correos;
+    border: none;
+    color: white;
+    &:hover {
+        background-color: $verde;
+        color: white;
+    }
+}
+
+@mixin btn-secundario{
+    @include btn;
+    background-color: black;
+    border: none;
+    color: white;
+    &:hover {
+        background-color:$rojo-correos;
+        color: white;
+    }
+}
+
+@mixin btn-alternativo{
+    @include btn;
+    background-color: white;
+    border: 1px solid $rojo-correos;
+    color: black;
+    &:hover {
+        background-color: $negro;
+        color: white;
+    }
+}
+
+.icono-home{
+    width: 50px;
+    margin: 8px;
+}
+
+/********** toggle switch **********/
+$switch: #4ba744;
+$switch-bg: #c8d1b6;
+$gris: #9A9999;
+
+.toggle{
+    position: relative;
+    display: block;
+    width: 40px;
+    height: 20px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transform: translate3d(0,0,0);
+    &:before{
+        content: "";
+        position: relative;
+        top: 3px;
+        left: 3px;
+        width: 34px;
+        height: 14px;
+        display: block;
+        background: $gris;
+        border-radius: 8px;
+        transition: background .2s ease;
+    }
+    span{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        display: block;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 8px rgba($gris,.5);
+        transition: all .2s ease;
+        &:before{
+            content: "";
+            position: absolute;
+            display: block;
+            margin: -18px;
+            width: 56px;
+            height: 56px;
+            background: rgba($switch,.5);
+            border-radius: 50%;
+            transform: scale(0);
+            opacity: 1;
+            pointer-events: none;
+        }
+    }
+}
+
+#cbx:checked + .toggle, #cbx2:checked + .toggle, #cbx3:checked + .toggle, #cbx4:checked + .toggle{
+    &:before{
+        background:
+        $switch-bg;
+    }
+    span{
+        background: $switch;
+        transform: translateX(20px);
+        transition: all .2s cubic-bezier(.8,.4,.3,1.25), background .15s ease;
+        box-shadow: 0 3px 8px rgba($switch,.2);
+        &:before{
+            transform: scale(1);
+            opacity: 0;
+            transition: all .4s ease;
+        }
+    }
+}
+
+.switch-center{
+    position: relative;
+    top: calc(50% - 10px);
+    left: calc(50% - 20px);
+}
+/********** Fin toggle switch **********/
+
+/********** scroolbar **********/
+.cuerpo::-webkit-scrollbar-track{background-color: #F5F5F5;}
+.cuerpo::-webkit-scrollbar{width: 7px; background-color: #F5F5F5;}
+.cuerpo::-webkit-scrollbar-thumb{background-color: #000000;}
+/********** Fin scroolbar **********/
+
+html{height: 100%;}
+
+.inactivo{opacity: .3;}
+.btn-principal{@include btn-principal}
+.btn-secundario{@include btn-secundario}
+.btn-alternativo{@include btn-alternativo}
+
+.cuerpo{
+    background-color: $rojo-correos;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .cabecera{
+        width: 94%;
+        padding: 0 3%;
+        height: 8%;
+        padding-top: 3%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        .salir{
+            width: 8%;
+        }
+        .logo{
+            width: 60%;
+            margin-top: -10px;
+        }
+        .actualizar{
+            width: 8%;
+        } 
+    }
+    .container{
+        background-color: #fff;
+        border-radius: 25px;
+        height: 83%;
+        h1{
+            color: $negro;
+            font-size: 5vw;
+            font-weight: 600;
+            margin: 3px;
+            margin-top: 3vh;
+        }
+        h2{
+            font-size: 5.8vw;
+            font-weight: 400;
+            padding-top: 40px;
+            margin: 0;
+            color: $rojo-correos;
+        }
+        h3{
+            strong{
+                color: $rojo-correos;
+            }
+            font-size: 4vw;
+            font-weight: 300;
+            margin: 2px;
+        }
+        
+        p.progreso{
+            margin: 0;
+            padding-top: 4px;
+            font-size: 3.2vw;
+            font-weight: 300;
+            color: #8b8b8b;
+        }
+
+        .tabla{
+            box-shadow: 0px 6px 23px 0px rgba(0, 0, 0, 0.23);
+            width: 90%;
+            overflow: scroll;
+            margin-left: 5%;
+            margin-top: 20px;
+            border-radius: 15px;
+            height: auto;
+            max-height: 63vh;
+            min-height: 12vh;
+            table{
+                width: 100%;
+                background-color: white;
+                border-spacing: 0;
+                font-size: 4vw;
+                tr{
+                    th{
+                        background-color: #343434;
+                        color: white;
+                        font-weight: 300;
+                        padding: 3px 0;
+                    }
+                    th.radio_inicial{
+                        border-radius: 10px 0 0 0;
+                    }
+                    th.radio_final{
+                        border-radius: 0 10px 0 0;
+                    }
+                    td{
+                        padding: 5px;
+                        font-size: 15px;
+                        a{
+                            font-size: 3.5vw;
+                            font-weight: 300;
+                            border-radius: 5px;
+                            text-decoration: none;
+                            color: white;
+                            padding: 5px 5px;
+                            display: block;
+                            margin: 0 auto;
+                            width: 70%;
+                            min-width: 77px;
+                            svg{
+                                width: 10px;
+                                height: 10px;
+                            }
+                        }
+                        div.estado{
+                            svg{
+                                width: 12px;
+                                height: 12px;
+                            }
+                        }
+                        a.btn_realizado{
+                            background-color: $verde;
+                        }
+                        a.btn_en_curso{
+                            background-color: $rojo-correos; 
+                        }
+                        a.btn_iniciar{
+                            background-color: #343434;
+                        }
+                    }
+                } 
+            }
+        }
+
+        .tabla-btn{
+            height: 54vh;
+        }
+
+        .tabla-cuadrar{
+            height: 25vh;
+            td{
+                font-family: 'Courier Prime', monospace;
+            }
+        }
+
+        .tabla-sobrantes{
+            height: 10vh;
+            td{
+                font-family: 'Courier Prime', monospace;
+            }
+        }
+
+        .tabla-carga-asignada{
+            height: 31vh;
+            td{
+                font-family: 'Courier Prime', monospace;
+            }
+        }
+
+        .tabla-asignar-carga{
+            height: 54vh;
+            td{
+                font-family: 'Courier Prime', monospace;
+            }
+        }
+
+        .caja-cuadrar{
+            display: flex;
+            flex-flow: column;
+            position: absolute;
+            bottom: 10vh;
+            .caja-acta-comentario{
+                display: flex;
+                justify-content: space-evenly;
+                margin-bottom: 1.7vh;
+                    .cargar-acta, .cargar-comentario{
+                    display: flex;
+                    .ver-archivo-cuadratura{
+                        background-image: url(../img/bg-acta.svg);
+                        width: 21px;
+                        height: 25px;
+                        color: white;
+                        text-decoration: none;
+                        font-weight: 300;
+                        padding-right: 7px;
+                        padding-top: 3px;
+                        margin-right: 4px;
+                    }
+                    .btn-acta, .btn-comentario{
+                        display: flex;
+                        align-items: center;
+                        text-decoration: none;
+                        color: $negro;
+                        font-size: 14px;
+                        font-weight: 500;
+                        width: auto;
+                        svg{
+                            margin-right: 5px;
+                        }
+                    }
+                    .btn-acta{
+                        svg{
+                            width: 30px;    
+                        }
+                    }
+                    .btn-comentario{
+                        svg{
+                            width: 26px;
+                            margin-bottom: -3px;
+                        }
+                    }
+                } 
+            }
+
+            .btn-cuadrar{
+                @include btn-alternativo;
+            }
+            .btn-escanear{
+                @include btn-principal;
+            }
+        }  
+
+        .crear-ruta{
+            margin-top: 3vh;
+            select{
+                @include select;
+                width: 90vw;
+            }
+        }
+    }
+
+    .pie{
+        height: 5%;
+        padding-top: 2%;
+        p{
+            text-align: center;
+            color: white;
+            font-size: 4vw;
+            font-weight: 300;
+            margin: 0;
+        }
+    }
+}
+
+@import "components/login";
+@import "components/inicio";
+@import "components/rutas_detalle";
+
+
+
+
+
+
+
+
+
+
+
+// Color Variables ======================================
+$green: #75b800;
+$gray-light: #eef1f3;
+
+// Bar Variables ========================================
+$bar-size: 5px;
+$bar-radius: 60px;
+$bar-bg: rgba(0,0,0,0.075);
+
+// Animation =============================================
+// Edit these at random intervals to change the animation.
+@keyframes loader {
+	0% {width: 0;}
+	20% {width: 10%;}
+	25% {width: 24%;}
+	43% {width: 41%;}
+	56% {width: 50%;}
+	66% {width: 52%;}
+	71% {width: 60%;}
+	75% {width: 76%;}
+	94% {width: 86%;}
+	100% {width: 100%;}
+}
+// Bar ============================================
+.progress-bar {
+	border-radius: $bar-radius;
+	overflow: hidden;
+    width: 100%;
+
+	span {
+		display: block;
+	}
+
+}
+
+.bar {
+  background: $bar-bg;
+}
+
+.progress {
+  animation: loader 8s ease infinite;
+  // Change the animation fill mode 'infinite' to 'forwards' to stop the animation from repeating.
+  background: $green;
+  color: #fff;
+  padding: $bar-size;
+  width: 0;
+}
+
+// Vertical Centering ==============================
+// You don't need this to make it work on your site.
+.progress-bar {
+  width: 60vw;
+  margin-left: 20vw;
+  margin-top: 3vh;
+}

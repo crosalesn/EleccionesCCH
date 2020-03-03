@@ -1,0 +1,19 @@
+body.inicio {
+    .container{
+        .tareas{
+            margin-top: 40px;
+            a{
+                background-color: $rojo-correos;
+                border-bottom: 3px solid #8d030a;
+                color: white;
+                text-decoration: none;
+                padding: 25px 0;
+                display: block;
+                width: 80%;
+                margin-left: 10%;
+                border-radius: 20px;
+                margin-bottom: 10px;;
+            }
+        }
+    }
+}

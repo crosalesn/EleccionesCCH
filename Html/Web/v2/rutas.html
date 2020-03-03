@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mantenedor de rutas</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.semanticui.min.css">
+    <link rel="stylesheet" href="css/estilos.css" type="text/css" media="all" />
+
+</head>
+<body class="rutas">
+
+    <header>
+        <div class="logo">
+            <img src="img/logo_correos.svg" alt="">
+        </div>
+        <div class="user">
+            <div class="user-content">
+                <div class="foto"><img src="img/user.jpg" alt="Foto de usuario"></div>
+                <div class="info-user">
+                    <h2>manuel Hugueño</h2>
+                    <h3>Administrador</h3>
+                </div>
+            </div>
+            <div class="buscar">
+                <form>
+                    <input type="text" placeholder="Buscar..." name="">
+                    <button>
+                        <svg  x="0px" y="0px" width="30.24px" height="30.24px" viewBox="0 0 30.24 30.24" style="enable-background:new 0 0 30.24 30.24;" xml:space="preserve" fill="white">
+                            <g>
+                                <path d="M20.19,3.46c-4.61-4.61-12.12-4.61-16.73,0c-4.61,4.61-4.61,12.12,0,16.74c4.11,4.11,10.51,4.55,15.12,1.34
+                                    c0.1,0.46,0.32,0.9,0.68,1.25l6.72,6.72c0.98,0.98,2.56,0.98,3.53,0c0.98-0.98,0.98-2.56,0-3.53l-6.72-6.72
+                                    c-0.35-0.35-0.79-0.58-1.25-0.67C24.74,13.97,24.3,7.57,20.19,3.46z M18.07,18.07c-3.44,3.44-9.05,3.44-12.49,0
+                                    c-3.44-3.44-3.44-9.05,0-12.49c3.44-3.44,9.05-3.44,12.49,0C21.52,9.03,21.52,14.63,18.07,18.07z"/>
+                            </g>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="menu">
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Mantenedor de rutas</a></li>
+                <li><a href="#">Agrupar carga</a></li>
+                <li><a href="#">Mantenedor de cargas</a></li>
+                <li><a href="#">Recepción de cargas</a></li>
+                <li><a href="#">Mantener usuarios</a></li>
+                <li><a href="#">Mantenedor de perfíl</a></li>
+                <li><a href="#">Panel trazabilidad</a></li>
+                <li><a href="#">Panel transaccional</a></li>
+                <li><a href="#">Reportes</a></li>
+            </ul>
+        </div>
+        <div class="copyright">© Copyright 2020 Correos de Chile</div>
+    </header>
+
+    
+    <div class="bg"></div>
+    <div class="container">
+        <h1>Mantenedor de rutas</h1>
+        <div class="filtro">
+            <form action="">
+                <div class="cuatro-columnas">
+                    <select name="select">
+                        <option value="value1" selected>Ingrese región</option> 
+                        <option value="value2">I</option>
+                        <option value="value3">II</option>
+                    </select>
+                    <select name="select">
+                        <option value="value1" selected>Ingrese circunscripción</option> 
+                        <option value="value2">I</option>
+                        <option value="value3">II</option>
+                    </select>
+                    <select name="select">
+                        <option value="value1" selected>Ingrese comuna</option> 
+                        <option value="value2">I</option>
+                        <option value="value3">II</option>
+                    </select>
+                    <select name="select">
+                        <option value="value1" selected>Ingrese local</option> 
+                        <option value="value2">I</option>
+                        <option value="value3">II</option>
+                    </select>
+                </div>
+                <div class="dos-columnas">
+                    <select name="select">
+                        <option value="value1" selected>Seleccione origen</option> 
+                        <option value="value2">I</option>
+                        <option value="value3">II</option>
+                    </select>
+                    <select name="select">
+                        <option value="value1" selected>Seleccione destino</option> 
+                        <option value="value2">I</option>
+                        <option value="value3">II</option>
+                    </select>
+                </div>
+                <div class="tres-columnas">
+                    <input type="text" placeholder="Rut transportista">
+                    <input type="text" placeholder="Patente de vehículo">
+                    <input type="text" placeholder="Ingrese código">
+                </div>
+                <input type="submit" class="btn-principal" value="Buscar">
+            </form>
+        </div>
+
+
+        <div class="caja-subtitulo">
+            <h2>Mis rutas</h2>
+            <div class="botones">
+                <a href="#" class="btn-secundario">EDICIÓN MASIVA</a>
+                <a href="#" class="btn-alternativo">CREAR NUEVA RUTA</a>
+            </div>
+        </div>
+
+        <table id="tabla_rutas" class="display ui celled table">
+            <thead>
+                <tr>
+                    <th>.</th>
+                    <th>Hora de creación</th>
+                    <th>Código de ruta</th>
+                    <th>Transportista</th>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th>User creador</th>
+                    <th>Perfil creador</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>.</td>
+                    <td>09:50 am</td>
+                    <td>rt-235</td>
+                    <td>Transportista</td>
+                    <td>Nombre origen</td>
+                    <td>Destino</td>
+                    <td>mhugueno</td>
+                    <td>Transportista</td>
+                    <td>
+                        <a href="#">EDITAR</a>
+                        <a href="#">DETALLE</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>09:50 am</td>
+                    <td>rt-235</td>
+                    <td>Transportista</td>
+                    <td>Nombre origen</td>
+                    <td>Destino</td>
+                    <td>mhugueno</td>
+                    <td>Transportista</td>
+                    <td>
+                        <a href="#">EDITAR</a>
+                        <a href="#">DETALLE</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>09:50 am</td>
+                    <td>rt-235</td>
+                    <td>Transportista</td>
+                    <td>Nombre origen</td>
+                    <td>Destino</td>
+                    <td>mhugueno</td>
+                    <td>Transportista</td>
+                    <td>
+                        <a href="#">EDITAR</a>
+                        <a href="#">DETALLE</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>09:50 am</td>
+                    <td>rt-235</td>
+                    <td>Transportista</td>
+                    <td>Nombre origen</td>
+                    <td>Destino</td>
+                    <td>mhugueno</td>
+                    <td>Transportista</td>
+                    <td>
+                        <a href="#">EDITAR</a>
+                        <a href="#">DETALLE</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready( function () {
+            $('#tabla_rutas').DataTable();
+        } );
+    </script>
+
+</body>
+</html>

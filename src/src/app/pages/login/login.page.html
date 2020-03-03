@@ -1,0 +1,18 @@
+<ion-content>
+    <div class="cuerpo">
+        <div class="login-centrado">
+            <div class="login">
+                <div class="logo">
+                    <img src="../../../assets/img/logo_correos.svg" alt="Correos de Chile">
+                </div>
+                <div class="form">
+                    <form [formGroup]="loginForm" (ngSubmit)="Ingresar(loginForm.value)">
+                            <ion-input type="text" formControlName="usuario" maxlength="20" (keypress)="caracteresPermitidos($event)" placeholder="Usuario"></ion-input>
+                            <ion-input type="password" formControlName="clave" maxlength="50" placeholder="Contraseña"></ion-input>
+                            <button type="submit" class="btn-principal ingresar" >Ingresar</button>
+                    </form>
+                </div>
+            </div> 
+        </div>
+    </div>
+</ion-content>

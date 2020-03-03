@@ -1,0 +1,55 @@
+body.rutas{
+    .container{  
+        .filtro{
+            .cuatro-columnas{
+                display: flex;
+                justify-content: space-between;
+                select{
+                    width: 24%;
+                    @include select;
+                }
+            }
+            .dos-columnas{
+                display: flex;
+                justify-content: space-between;
+                margin-top: 17px;
+                select{
+                    width: 49.3%;
+                    @include select;
+                }
+            }
+            .tres-columnas{
+                display: flex;
+                justify-content: space-between;
+                margin-top: 17px;
+                input{
+                    width: 31%;
+                    @include select;
+                    text-align: left;
+                    padding: 0 0 0 15px;
+                }
+            } 
+            .btn-principal{
+                @include btn-principal;
+            }  
+        }
+        .caja-subtitulo{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            h2{
+                width: auto;
+            }
+            .botones{
+                width: auto;
+                .btn-secundario{
+                    @include btn-secundario;
+                }
+                .btn-alternativo{
+                    @include btn-alternativo;
+                }
+            }
+        } 
+    }
+}

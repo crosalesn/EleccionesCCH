@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Trazabilidad</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.semanticui.min.css">
+    <link rel="stylesheet" href="estilos.css" type="text/css" media="all" />
+
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.2.0/css/all.css" type="text/css" media="all" />
+
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="img/logo_correos.svg" alt="">
+        </div>
+        <div class="user">
+            <div class="user-content">
+                <div class="foto"><img src="img/user.jpg" alt="Foto de usuario"></div>
+                <div class="info-user">
+                    <h2>manuel Hugueño</h2>
+                    <h3>Administrador</h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="menu">
+            <ul>
+                <li><a href="inicio.html">Inicio</a></li>
+                <li><a href="rutas.html">Mantenedor de rutas</a></li>
+                <li><a href="agrupar_carga.html">Agrupar carga</a></li>
+                <li><a href="mantener_carga.html">Mantenedor de cargas</a></li>
+                <li><a href="recepcionar_carga.html">Recepción de cargas</a></li>
+                <li><a href="usuarios.html">Mantener usuarios</a></li>
+                <li><a href="perfil.html">Mantenedor de perfíl</a></li>
+                <li class="activo"><a href="trazabilidad.html">Panel trazabilidad</a></li>
+                <li><a href="transaccional.html">Panel transaccional</a></li>
+                <li><a href="reportes.html">Reportes</a></li>
+            </ul>
+            <a class="btn-exit" href="#abrir-modal">Cerrar sesión</a>
+        </div>
+        <div class="copyright">© Copyright 2020 Correos de Chile</div>
+    </header>
+
+    <!--Modal cerrar sesion-->
+    <div id="abrir-modal" class="modal-bg">
+        <div class="contenedor-modal">
+            <a href="#" title="Cerrar" class="modal-cerrar"><img src="img/cerrar.svg" alt=""></a>
+
+            <h2>¿Estás seguro que quieres salir?</h2>
+            <div class="botones-centrados">
+                <a href="#" class="btn-alternativo">si</a>
+                <a href="#" class="btn-principal">no</a>
+            </div>  
+
+        </div>
+    </div>
+
+    <div class="bg"></div>
+    <div class="container trazabilidad">
+        <h1>Trazabilidad</h1>
+        <div class="contenedor-mapa">
+            <div class="mapa">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d106511.16796422204!2d-70.6872316868164!3d-33.46300806460841!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2scl!4v1581534039944!5m2!1ses!2scl" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+            </div>
+            <div class="sidebar">
+                <div class="filtro-cascada">
+                    <label for="#">Región</label>
+                    <select name="select">
+                        <option value="value1" selected>Seleccione una región</option> 
+                        <option value="value2">opcion 01</option>
+                        <option value="value3">opcion 02</option>
+                    </select>
+
+                    <label for="#">Circunscripción</label>
+                    <select name="select">
+                        <option value="value1" selected>Seleccione circunscripción</option> 
+                        <option value="value2">opcion 01</option>
+                        <option value="value3">opcion 02</option>
+                    </select>
+
+                    <label for="#">Comuna</label>
+                    <select name="select">
+                        <option value="value1" selected>Seleccione una comuna</option> 
+                        <option value="value2">opcion 01</option>
+                        <option value="value3">opcion 02</option>
+                    </select>
+
+                    <label for="#">Local de votación</label>
+                    <select name="select">
+                        <option value="value1" selected>Seleccione local</option> 
+                        <option value="value2">opcion 01</option>
+                        <option value="value3">opcion 02</option>
+                    </select>
+                </div>
+               
+                <div class="lugares">
+                    <div class="lugar">
+                        <main class="fancy">
+                            <label for="check">
+                            <input id="check" name="yaybox" type="checkbox" value="Cookies"/>
+                            </label>
+                        </main>
+                        <span>Plantas Correos de Chile</span>
+                    </div>
+
+                    <div class="lugar">
+                        <main class="fancy">
+                            <label for="check2">
+                            <input id="check2" name="yaybox" type="checkbox" value="Cookies"/>
+                            </label>
+                        </main>
+                        <span>Bodegas Servel</span>
+                    </div>
+
+                    <div class="lugar">
+                        <main class="fancy">
+                            <label for="check3">
+                            <input id="check3" name="yaybox" type="checkbox" value="Cookies"/>
+                            </label>
+                        </main>
+                        <span>Tricel</span>
+                    </div>
+
+                    <div class="lugar">
+                        <main class="fancy">
+                            <label for="check4">
+                            <input id="check4" name="yaybox" type="checkbox" value="Cookies"/>
+                            </label>
+                        </main>
+                        <span>TGR</span>
+                    </div>
+                </div>
+
+                <div class="busqueda">
+                    <label for="#">Buscar por transportista</label>
+                    <input type="text" placeholder="Ingrese Rut">
+                    <label for="#">Buscar por transporte</label>
+                    <input type="text" placeholder="Ingrese patente">
+                </div>
+
+                <button class="btn-principal">Buscar</button>
+                <a class="btn-exit" href="#abrir-modal-detalles">detalles</a>
+
+
+            </div>
+        </div>
+
+
+     <!--Modal detalle de trazabilidad-->
+     <div id="abrir-modal-detalles" class="modal-bg">
+        <div class="contenedor-modal">
+            <a href="#" title="Cerrar" class="modal-cerrar"><img src="img/cerrar.svg" alt=""></a>
+            
+            <h2>Detalle de trazabilidad</h2>
+
+            <div class="trazabilidad">
+                <div class="detalle-trazabilidad">
+                     <img src="img/icon-camion.svg" alt="">
+                    <div class="transportista-left">
+                        
+                        <h3>Manuel Hugueño</h3>
+                        <p>XD - 34 67</p>
+                        
+                    </div>
+
+                    <div class="columna-track">
+                        <div class="track">
+                            <p>Track cuadrado</p>
+                            <img src="img/icono-cuadrado.svg" alt="">
+                        </div>
+                        <div class="track">
+                            <p>Track descuadrado</p>
+                            <img src="img/icono-descuadrado.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subtitulo">
+                    <h3>Rutas finalizadas:</h3>
+                </div>
+
+                <div class="contenedor-ruta">
+                        <h4>RUTA RT-237</h4>
+                        <div class="contenedor-info">
+                            <img src="img/icono-cuadrado.svg" alt="">
+                            <div class="text-info">
+                                <h4>Origen</h4>
+                                <p>16 cajas - 5cubetas</p>
+                                <p>26/04/20 - 9:30am</p>
+                            </div>
+                        </div>
+                        
+                        <img src="img/row-der.svg" alt="">
+                     
+                        <div class="contenedor-info">
+                            <img src="img/icono-descuadrado.svg" alt="">
+                            <div class="text-info">
+                                <h4>Destino</h4>
+                                <p>16 cajas - 5cubetas</p>
+                                <p>26/04/20 - 9:30am</p>
+                            </div>
+                        </div>
+                </div>
+
+                <div class="contenedor-ruta">
+                    <h4>RUTA RT-237</h4>
+                    <div class="contenedor-info">
+                        <img src="img/icono-cuadrado.svg" alt="">
+                        <div class="text-info">
+                            <h4>Origen</h4>
+                            <p>16 cajas - 5cubetas</p>
+                            <p>26/04/20 - 9:30am</p>
+                        </div>
+                    </div>
+                    
+                    <img src="img/row-der.svg" alt="">
+                 
+                    <div class="contenedor-info">
+                        <img src="img/icono-descuadrado.svg" alt="">
+                        <div class="text-info">
+                            <h4>Destino</h4>
+                            <p>16 cajas - 5cubetas</p>
+                            <p>26/04/20 - 9:30am</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subtitulo">
+                    <h3>Rutas pendientes:</h3>
+                </div>
+
+                <div class="contenedor-ruta">
+                        <h4>RUTA RT-237</h4>
+                        <div class="contenedor-info">
+                            <img src="img/icono-cuadrado.svg" alt="">
+                            <div class="text-info">
+                                <h4>Origen</h4>
+                                <p>16 cajas - 5cubetas</p>
+                                <p>26/04/20 - 9:30am</p>
+                            </div>
+                        </div>
+                        
+                        <img src="img/row-der.svg" alt="">
+                     
+                        <div class="contenedor-info">
+                            <img src="img/icono-descuadrado.svg" alt="">
+                            <div class="text-info">
+                                <h4>Destino</h4>
+                                <p>16 cajas - 5cubetas</p>
+                                <p>26/04/20 - 9:30am</p>
+                            </div>
+                        </div>
+                </div>
+
+                <div class="contenedor-ruta">
+                    <h4>RUTA RT-237</h4>
+                    <div class="contenedor-info">
+                        <img src="img/icono-cuadrado.svg" alt="">
+                        <div class="text-info">
+                            <h4>Origen</h4>
+                            <p>16 cajas - 5cubetas</p>
+                            <p>26/04/20 - 9:30am</p>
+                        </div>
+                    </div>
+                    
+                    <img src="img/row-der.svg" alt="">
+                 
+                    <div class="contenedor-info">
+                        <img src="img/icono-descuadrado.svg" alt="">
+                        <div class="text-info">
+                            <h4>Destino</h4>
+                            <p>16 cajas - 5cubetas</p>
+                            <p>26/04/20 - 9:30am</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            
+
+
+        </div>
+    </div>    
+
+    </div>
+        
+    <script>
+        $(document).ready( function () {
+            $('#tabla_correos').DataTable();
+        } );
+    </script>
+
+    <script>
+        // Simulation controls to illustrate differences
+        // This is not relevant to the implementing the fanciness
+        const element = document.querySelector('main')
+        // slider communication
+        const setProperty = (property, value) => document.body.style.setProperty(property, value)
+        // fanciness on/off
+        const toggleTheFancy = () => element.classList.toggle('fancy')
+        // shape shifting
+        const toggleTheShape = () => element.classList.toggle('square')
+
+        setProperty('--demo-width', 100)
+    </script>
+
+</body>
+</html>

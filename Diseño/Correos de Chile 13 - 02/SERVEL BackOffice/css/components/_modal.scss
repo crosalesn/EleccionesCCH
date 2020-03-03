@@ -1,0 +1,445 @@
+.modal-bg {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.85);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    &:target {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .contenedor-modal {
+        width: 70%;
+        border-radius: 25px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 1% 3%;
+        background: white;
+        .modal-cerrar {
+            position: absolute;
+            right: 25px;
+            top: -30px;
+            width: 20px;
+            &:hover {
+                opacity: .5;
+            }
+        }
+        h3{
+            margin-top: 0;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            color: #cacaca;
+            font-weight: 600;
+        }
+        h3.titulo-aplicaciones{
+            color: #666;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-transform: none;
+        }
+        
+        .nueva-ruta{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0;
+            .caja-rut-patente{
+                width: 35%;
+                form.rut-patente{
+                    display: flex;
+                    margin-top: 15px;
+                    :first-child{
+                        @include select;
+                        border: 1px solid $rojo-correos;
+                        border-radius: 30px 0 0 30px;
+                        height: 40px;
+                        width: 50%;
+                        border-right: none;
+                    }
+                    :last-child{
+                        border-radius: 0 30px 30px 0;
+                        margin-top: 0;
+                        width: 40%;
+                        font-size: .9vw;
+                        height: 40px;
+                    }
+                }
+            }
+
+            .transportista{
+                display: flex;
+                flex-flow: column;
+                width: 30%;
+
+                h3{
+                    margin-bottom: 0;
+                    text-align: center;
+                    font-size: 1vw;
+                    color: #666;
+                }
+                p{
+                    color: $rojo-correos;
+                    font-weight: 600;
+                    font-size: 17px;
+                    text-align: center;
+                }
+            }
+    
+            .escanear{
+                display: flex;
+                align-items: center;
+                width: 35%;
+                img{
+                    width: 4vw;
+                }
+                a{
+                    height: 40px;
+                }
+            }
+        }
+
+        .columnas{
+            display: flex;
+            flex-flow: column;
+            align-items: stretch;
+            > *{
+                margin-top: 12px;
+            }
+            .dos-columnas{
+                margin: 30px 0 15px 0;
+            }
+            input{
+                @include select;
+                width: 300px;
+            }
+        }
+        
+
+         
+        
+        .no-tab{
+            font-family: 'Roboto', sans-serif;
+            color: $negro;
+            text-transform: uppercase;
+            font-size: 16px;
+            font-weight: 600;
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid $rojo-correos;
+            line-height: 1em;
+            padding: 2rem 0;
+            text-align: center;
+        }
+    }
+
+    .contenedor-modal.editar-carga{
+        padding: 1% 3%;
+        .cabecera-editar-carga{
+            h2{
+                margin-bottom: 20px;
+                font-size: 30px;
+                font-weight: 700;
+            }
+            .code{
+                font-family: 'Courier Prime', monospace;
+                font-size: 24px;
+                color: $rojo-correos;
+            }
+            .nombre{
+                text-transform: none;
+                margin-top: 3px;
+                margin-bottom: 3px;
+                color: $negro;
+            }
+            .tipo-carga{
+                color: #999;
+                text-transform: none;
+                font-size: 14px;
+                margin-bottom: 3px;
+            }
+            p{
+                font-size: 14px;
+                margin-bottom: 6px;
+            }
+            .descripcion{
+                color: $negro;
+                margin: 0 auto;
+                margin-bottom: 5px;
+                max-width: 400px;
+            }
+            .barcode{
+                font-family: 'Courier Prime', monospace;
+            }
+        }
+
+        .fila-editar-carga{
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            div{
+                width: 49%;
+                border: 1px dotted #cacaca;
+                padding: 1%;
+                border-radius: 20px;
+            }
+            p{
+                text-align: center;
+                font-size: 14px;
+                margin-bottom: 0;
+            }
+        }
+
+        .tabla{
+            height: 170px;
+            margin-top: 25px;
+            td{
+                font-family: 'Courier Prime', monospace;
+                font-size: 14px; 
+                img{
+                    width: 20px;
+                }
+            }
+        }
+    }
+
+    h3.deshabilitar{
+        text-transform: none;
+        color:#666;
+        font-size: 18px;
+        margin-top: 30px;
+        margin-bottom: 5px;
+    }
+
+    h2.titulo-modal{
+        margin-bottom: 30px;
+    }
+    
+    .contenedor-modal.editar-grupo{
+        padding: 2% 3%;
+        .cabecera-editar-grupo{
+            h2{
+                margin-bottom: 20px;
+                font-size: 30px;
+                font-weight: 700;
+            }
+            .code{
+                font-family: 'Courier Prime', monospace;
+                font-size: 24px;
+                color: $rojo-correos;
+            }
+            .nombre{
+                text-transform: none;
+                margin-top: 3px;
+                margin-bottom: 3px;
+                color: $negro;
+            }
+            .tipo-carga{
+                color: #999;
+                text-transform: none;
+                font-size: 14px;
+                margin-bottom: 3px;
+            }
+            p{
+                font-size: 14px;
+                margin-bottom: 6px;
+            }
+        }
+        
+        h3{
+            color: $negro;
+            text-transform: none;
+        }
+    }
+
+    .contenedor-modal.recepcion{
+        padding: 2% 3%;
+        .cabecera-recepcion{
+            h2{
+                font-size: 30px;
+                font-weight: 700;
+            }
+            .code{
+                font-family: 'Courier Prime', monospace;
+                font-size: 28px;
+                color: $rojo-correos;
+            }
+            .estado{
+                text-transform: none;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                color: #999;
+            }
+            .tipo-carga{
+                color: #999;
+                opacity: .7;
+                text-transform: none;
+                font-size: 15px;
+            }
+        }
+
+        .fila-recepcion{
+            display: flex;
+            justify-content: space-between;
+            .carga-esperada{
+                width: 30%;
+                h2{
+                    color: $negro;
+                    font-size: 22px;
+                    font-weight: 700;
+                    text-align: left;
+                    margin: 0;
+                }
+                h3{
+                    color: #999;
+                    font-size: 16px;
+                    font-weight: 700;
+                    text-align: left;
+                    margin: 0;
+                }
+            }
+            .transportista{
+                width: 30%;
+                display: flex;
+                justify-content: center;
+                flex-flow: column;
+                h3{
+                    color: #999;
+                    text-align: center;
+                    font-size: 15px;
+                    
+                    margin-bottom: 0;
+                    strong{
+                        color: $negro;
+                    }
+                }
+            }
+
+            .escanear{
+                width: 30%;
+                img{
+                    height: 50px;
+                    margin-right: 0;
+                }
+            }
+        }
+
+        .caja-cuadrar{
+            display: flex;
+            flex-flow: column;
+            .caja-acta-comentario{
+                display: flex;
+                justify-content: space-evenly;
+                margin-bottom: 4vh;
+                margin-top: 4vh;
+                    .cargar-acta, .cargar-comentario{
+                    display: flex;
+                    .ver-archivo-cuadratura{
+                        background-image: url(../img/bg-acta.svg);
+                        background-repeat: no-repeat;
+                        width: 31px;
+                        height: 35px;
+                        color: white;
+                        text-decoration: none;
+                        font-weight: 300;
+                        padding-right: 7px;
+                        padding-top: 3px;
+                        margin-right: 4px;
+                    }
+                    .btn-acta, .btn-comentario{
+                        display: flex;
+                        align-items: center;
+                        text-decoration: none;
+                        color: $negro;
+                        font-size: 17px;
+                        font-weight: 500;
+                        width: auto;
+                        svg{
+                            margin-right: 5px;
+                        }
+                    }
+                    .btn-acta{
+                        svg{
+                            width: 35px;    
+                        }
+                    }
+                    .btn-comentario{
+                        svg{
+                            width: 35px;
+                            margin-bottom: -5px;
+                        }
+                    }
+                } 
+            }
+
+            .btn-cuadrar{
+                @include btn-alternativo;
+            }
+            .btn-escanear{
+                @include btn-principal;
+            }
+        }
+    }
+
+    .contenedor-modal.alerta{
+        width: 70%;
+        border-radius: 25px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 1% 3%;
+        background:transparent;
+        color: white;
+        img{
+            width: 80px;
+        }
+        p{
+            font-size: 18px;
+            font-weight: 400;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .modal-cerrar {
+            position: initial;
+            width: 250px;
+            margin: 30px auto;
+            &:hover {
+                opacity: .5;
+            }
+        }
+    }
+}
+
+
+.aplicaciones{
+    display: flex;
+    width: 100%;
+    flex-flow: wrap;
+    .aplicacion{
+        width: 33.3%;
+        display: flex;
+        align-items: center;
+        justify-content: center; 
+        span{
+            margin-bottom: -3px;
+            margin-left: 10px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+    }
+}
+
+.cerrar-alerta{
+    position: initial;
+    width: 250px;
+    margin: 30px auto;
+}

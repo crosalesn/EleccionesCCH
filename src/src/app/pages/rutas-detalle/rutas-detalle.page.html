@@ -1,0 +1,31 @@
+<ion-content>
+  <div class="cuerpo detalle_rutas">
+    <app-header></app-header>
+
+      <div class="container">
+        <h1>Detalle de ruta</h1>
+        <div class="origen">
+            <svg viewBox="0 0 444.5 639.4">
+                <path class="svg_rojo" d="M222.2,0C99.7,0,0,99.7,0,222.2c0,154,222.5,417.1,222.5,417.1s222-270.7,222-417.1C444.5,99.7,344.8,0,222.2,0z
+                M289.3,287.3c-18.5,18.5-42.8,27.7-67.1,27.7c-24.3,0-48.6-9.2-67.1-27.7c-37-37-37-97.1,0-134.1c17.9-17.9,41.7-27.8,67.1-27.8
+                s49.1,9.9,67.1,27.8C326.3,190.2,326.3,250.3,289.3,287.3z"/>
+            </svg>
+            <h2><strong>Origen</strong></h2>
+            <h3>{{rutas['RUTA'][0].ORIGEN[0].LUG_CALLE}} {{rutas['RUTA'][0].ORIGEN[0].LUG_NUMERO}}, {{rutas['RUTA'][0].ORIGEN[0].LUG_COMUNA}}</h3>
+            <a href="rutas-escanear" class="btn-principal">Escanear</a>
+        </div>
+        <div class="origen">
+            <svg viewBox="0 0 444.5 639.4">
+                <path class="svg_rojo" d="M222.2,0C99.7,0,0,99.7,0,222.2c0,154,222.5,417.1,222.5,417.1s222-270.7,222-417.1C444.5,99.7,344.8,0,222.2,0z
+                M289.3,287.3c-18.5,18.5-42.8,27.7-67.1,27.7c-24.3,0-48.6-9.2-67.1-27.7c-37-37-37-97.1,0-134.1c17.9-17.9,41.7-27.8,67.1-27.8
+                s49.1,9.9,67.1,27.8C326.3,190.2,326.3,250.3,289.3,287.3z"/>
+            </svg>
+            <h2><strong>Destino</strong></h2>
+            <h3>{{rutas['RUTA'][0].DESTINO[0].LUG_CALLE}} {{rutas['RUTA'][0].DESTINO[0].LUG_NUMERO}}, {{rutas['RUTA'][0].DESTINO[0].LUG_COMUNA}}</h3>
+            <a href="rutas-escanear" class="btn-principal">Escanear</a>
+        </div>
+    </div>
+    <app-footer></app-footer>
+
+  </div>
+</ion-content>
