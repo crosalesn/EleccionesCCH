@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { EleccionesService } from './services/elecciones.service';
 import { DbEleccionesService } from './services/db-elecciones.service';
+import { FuncionesService } from './services/funciones.service';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 
 
@@ -19,6 +20,7 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private eleccionesService: EleccionesService,
+    private funcionesService: FuncionesService,
     private dbElecciones: DbEleccionesService,
     private sqlite: SQLite
   ) {

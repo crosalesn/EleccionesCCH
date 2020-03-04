@@ -214,10 +214,6 @@ export class DbEleccionesService {
                                   console.log(parametro.usuario.PER_ID);
                                   console.log(param.APLI_ID);
                                   console.log("Perfiles_Aplicaciones guardados");
-                                  this.database.executeSql('INSERT OR IGNORE INTO PARAMETROS ('
-                                    +'PAR_VALOR) VALUES (?)', [parametro.parametroGps.PAR_VALOR]).then(data => {
-                                      console.log("Parametro GPS insertado");
-                                    });
                                 });
                           });
                         
@@ -227,6 +223,23 @@ export class DbEleccionesService {
           });
       }
     });
+  }
+
+  GuardarParametrosLocal(parametro): Promise<any> {
+    return this.database.executeSql('SELECT PAR_ID FROM PARAMETROS WHERE PAR_ID = ?', [parametro.PAR_ID]).then(data => {
+      if(data.rows.length > 0){
+        return this.database.executeSql('UPDATE PARAMETROS '
+        +'SET PAR_VALOR = ? WHERE PAR_ID = ?', [parametro.PAR_VALOR, parametro.PAR_ID]).then(data => {
+          console.log("Parametro actualizado");
+        });
+      }else{
+        return this.database.executeSql('INSERT OR IGNORE INTO PARAMETROS (PAR_ID ,'
+        +'PAR_VALOR) VALUES (?, ?)', [parametro.PAR_ID, parametro.PAR_VALOR]).then(data => {
+          console.log("Parametro GPS insertado");
+        });
+      }
+    });
+    
   }
 
   ObtenerUsuarioLocal(parametro): Promise<any> {
@@ -419,27 +432,24 @@ export class DbEleccionesService {
 
 
   //Obtiene todas las coordenadas que no estan sincronizadas
-  public async GetCoordenadasUsuarios(): Promise<any>{
+  GetCoordenadasUsuarios(): Promise<any>{
     var query: string = "SELECT CUS_LATITUD, CUS_LONGITUD, CUS_FECHA_DISPOSITIVO, USU_ID FROM COORDENADAS_USUARIOS WHERE CUS_SYNC = 0";
     console.log(query);
     return this.database.executeSql(query,[]).then(data =>{
       console.log("En GetCoordenadasUsuarios")
       console.log(data);
+      let GuardarCoordenadasUsuarioParam =  {
+        LISTA_COORDENADAS: []
+      };
       if(data.rows.length > 0){
-        var LISTA_COORDENADAS: any[] = [];
-        var GuardarCoordenadasUsuarioParam: Object;
         for (var i = 0; i < data.rows.length; i++) {
-          
-          LISTA_COORDENADAS.push({
+  
+          GuardarCoordenadasUsuarioParam.LISTA_COORDENADAS.push({
               CUS_LATITUD: data.rows.item(i).CUS_LATITUD,
               CUS_LONGITUD: data.rows.item(i).CUS_LONGITUD,
               CUS_FECHA_DISPOSITIVO: data.rows.item(i).CUS_FECHA_DISPOSITIVO,
               USU_ID: data.rows.item(i).USU_ID
-			  
           });
-        }
-        GuardarCoordenadasUsuarioParam = {
-          LISTA_COORDENADAS: LISTA_COORDENADAS
         }
          return GuardarCoordenadasUsuarioParam;
       }else{
@@ -448,23 +458,26 @@ export class DbEleccionesService {
     });
   }
 
-  public async UpdateCoordenadasUsuarios(): Promise<boolean>{
+  UpdateCoordenadasUsuarios(): Promise<any>{
     var query: string = "UPDATE COORDENADAS_USUARIOS SET CUS_SYNC = 1";
-    return this.database.executeSql(query,[]).then(result =>{
-      console.log("COORDENADAS_USUARIOS Sincronizada: "+result);
-      return result;
-    });
+    return this.database.executeSql(query,[]);
   }
 
-  public async InsertCoordenadasUsuarios(idUsuario:number, lat:number, lon:number): Promise<boolean>{
-    var query: string = "INSERT INTO COORDENADAS_USUARIOS(CUS_LATITUD, CUS_LONGITUD, CUS_FECHA_DISPOSITIVO, USU_ID, CUS_SYNC)" ;
+  InsertCoordenadasUsuarios(idUsuario:number, lat:number, lon:number): Promise<any>{
+    debugger
+    var query: string = "INSERT INTO COORDENADAS_USUARIOS(CUS_LATITUD, CUS_LONGITUD, CUS_FECHA_DISPOSITIVO, USU_ID, CUS_SYNC)"
                         +" VALUES ('"+lat+"','"+lon+"','"+this.GetFechaHora(true)+"',"+idUsuario+",0); ";
+    console.log(query);
+    return this.database.executeSql(query,[]);
+  }
 
-    return this.database.executeSql(query,[]).then(result =>{
+  public ObtenerParametroGps(): Promise<number>{
+    var query = "SELECT PAR_VALOR FROM PARAMETROS WHERE PAR_ID = ?";
 
-      console.log("Coordenadas registradas correctamente: "+result);
-      return result;
+    return this.database.executeSql(query, [2]).then(valor =>{
+      return valor.rows.item(0).PAR_VALOR;
     });
+
   }
 
   /**

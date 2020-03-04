@@ -31,8 +31,8 @@ export class EleccionesService {
     return this.http.post(this.urlServicios+'ObtenerLoginUsuario',parametro, {headers:this.headers});
   }
 
-  ObtenerParametroGPS(): Observable<any> {
-    return this.http.post(this.urlServicios+'ObtenerParametroGPS','',{headers:this.headers});
+  ObtenerParametros(): Observable<any> {
+    return this.http.post(this.urlServicios+'ObtenerParametros','',{headers:this.headers});
   }
 
   ObtenerEstadoInicioFinDia(parametro): Observable<any>{

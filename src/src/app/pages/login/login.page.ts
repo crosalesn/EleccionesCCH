@@ -4,7 +4,10 @@ import { Router } from '@angular/router';
 
 import { EleccionesService } from '../../services/elecciones.service';
 import { DbEleccionesService } from '../../services/db-elecciones.service';
+import { NetworkService } from '../../services/network.service';
+import { AlertasService } from '../../services/alertas.service';
 import { FuncionesService } from '../../services/funciones.service';
+import { SincronizarService } from '../../services/sincronizar.service';
 
 @Component({
   selector: 'app-login',
@@ -18,8 +21,11 @@ export class LoginPage implements OnInit {
   usuarioLocal: any;
 
   constructor(private eleccionesService: EleccionesService, private router: 
-    Router, private builder: FormBuilder, private dbElecciones: DbEleccionesService, 
-    private funciones: FuncionesService) {
+    Router, private builder: FormBuilder, private dbElecciones: DbEleccionesService,
+    private net: NetworkService, 
+    private alertas: AlertasService,
+    private funciones: FuncionesService,
+    private sincronizar: SincronizarService) {
       this.loginForm = this.builder.group({
         usuario: [''],
         clave: ['']
@@ -44,71 +50,72 @@ export class LoginPage implements OnInit {
   this.datosFormulario = {USU_NOMBRE_USUARIO: camposFormulario.usuario, USU_CLAVE: camposFormulario.clave};																	 
     
 	if(!camposFormulario.usuario.trim()){
-        this.funciones.msn("Usuario no ingresado");
+        this.alertas.Alerta("Usuario no ingresado");
         return;
     }
 
     if(!camposFormulario.clave.trim()){
-      this.funciones.msn("Contraseña no ingresada");
+      this.alertas.Alerta("Contraseña no ingresada");
       return;
     }
 
-    var usuarioConectado : boolean =  this.funciones.getNetworkStatus();
-
-    if(!usuarioConectado){
-      this.dbElecciones.ObtenerUsuarioLocal(this.datosFormulario).then(data => {
-        this.usuarioLocal = data;
-        if(this.usuarioLocal === "No existe usuario"){
-          this.funciones.msn("Debe estar conectado a la red para acceder por primera vez",1);
-        }else{
-          this.funciones.SetUsuarioLogeado(this.usuarioLocal);
-          const token = this.usuarioLocal.usuario.USU_ID;
-          this.funciones.SetToken(token);                      
-          this.router.navigateByUrl('/home');
-        }
-      });
-    }else{
-
-      var GpsConectado : boolean =  this.funciones.GpsValidar();
-
-      if(!GpsConectado){
-        console.log("Debe activar el GPS");
-      }
-
-      this.eleccionesService.ObtenerLoginUsuario(this.datosFormulario)
-        .subscribe(
-          (info)=>{
-            if(info.error === null){
-              this.funciones.SetUsuarioLogeado(info);
-              this.dbElecciones.BorrarPerfilesLocal();
-              this.dbElecciones.BorrarUsuarioLocal();
-              this.dbElecciones.BorrarAplicacionesLocal();
-		      this.dbElecciones.BorrarParametrosLocal();										
-              this.dbElecciones.BorrarPerfilesAplicacionesLocal();
-              this.dbElecciones.AgregarUsuarioLocal(info);
-              const token = info.usuario.USU_ID;
-              this.funciones.SetToken(token);                       
-              this.router.navigateByUrl('/sincronizar');
-            }else {
-              switch(info.error !== null) { 
-                case info.error.codigo == 1: { 
-                  this.funciones.msn(info.error.mensaje);
-                  break; 
-                } 
-                case info.error.codigo == 2: { 
-                  this.funciones.msn(info.error.mensaje);
-                  break; 
-                } 
-                default: { 
-                  this.funciones.msn("Datos incorrectos");
-                  break;
-                } 
-            }
+    
+    this.net.checkNetworkStatusNow().then(usuarioConectado => {
+      if(!usuarioConectado){
+        this.dbElecciones.ObtenerUsuarioLocal(this.datosFormulario).then(data => {
+          this.usuarioLocal = data;
+          if(this.usuarioLocal === "No existe usuario"){
+            this.alertas.Alerta("Debe estar conectado a la red para acceder por primera vez");
+          }else{
+            this.funciones.SetUsuarioLogeado(this.usuarioLocal);
+            const token = this.usuarioLocal.usuario.USU_ID;
+            this.funciones.SetToken(token);
+            this.router.navigateByUrl('/home');
           }
-        },
-        error => {
-          this.funciones.msn("Error de conexion al servidor - Intente reconectar el wifi");
-      });
-    }
+        });
+      }else{
+  
+        this.eleccionesService.ObtenerLoginUsuario(this.datosFormulario)
+          .subscribe(
+            (info)=>{
+              if(info.error === null){
+                this.funciones.SetUsuarioLogeado(info);
+                this.dbElecciones.BorrarPerfilesLocal();
+                this.dbElecciones.BorrarUsuarioLocal();
+                this.dbElecciones.BorrarAplicacionesLocal();
+                this.dbElecciones.BorrarParametrosLocal();										
+                this.dbElecciones.BorrarPerfilesAplicacionesLocal();
+                this.dbElecciones.AgregarUsuarioLocal(info);
+                const token = info.usuario.USU_ID;
+                this.funciones.SetToken(token);
+                this.sincronizar.Sincronizar().then(sincronizacionFueExitosa => {
+                  if (sincronizacionFueExitosa) {
+                    this.router.navigateByUrl('/home');
+                    return;
+                  }
+                });
+                
+              }else {
+                switch(info.error !== null) { 
+                  case info.error.codigo == 1: { 
+                    this.alertas.Alerta(info.error.mensaje);
+                    break; 
+                  } 
+                  case info.error.codigo == 2: { 
+                    this.alertas.Alerta(info.error.mensaje);
+                    break; 
+                  } 
+                  default: { 
+                    this.alertas.Alerta("Datos incorrectos");
+                    break;
+                  } 
+              }
+            }
+          },
+          error => {
+            this.alertas.Alerta("Error de conexion al servidor - Intente reconectar el wifi");
+        });
+      }
+    });
   }
 }
