@@ -133,9 +133,10 @@ export class HomePage implements OnInit {
               }
             }
           });
-        } if(this.diaIniciado == 'ACTIVIDADES TERMINADAS'){
-          
-        }else{
+        } 
+        if (this.diaIniciado == 'ACTIVIDADES TERMINADAS') {
+          console.log("");
+        } else {
           this.diaIniciado = 'INICIANDO...';
         }
       }else{
@@ -188,8 +189,8 @@ export class HomePage implements OnInit {
                   });
                 }
               });
-        }else if(this.diaIniciado == 'ACTIVIDADES TERMINADAS'){
-          
+        }else if(this.diaIniciado == 'ACTIVIDADES TERMINADAS') {
+          console.log("");
         }else{
           this.diaIniciado = 'INICIANDO...';
         }

@@ -7,7 +7,11 @@ const routes: Routes = [
   {
     path: '',
     component: MisRutasPage
+  },  {
+    path: 'crear-ruta',
+    loadChildren: () => import('./crear-ruta/crear-ruta.module').then( m => m.CrearRutaPageModule)
   }
+
 ];
 
 @NgModule({

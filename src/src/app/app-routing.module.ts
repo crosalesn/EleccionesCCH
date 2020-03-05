@@ -46,7 +46,7 @@ const routes: Routes = [
   {
     path: 'sincronizar',
     loadChildren: () => import('./pages/sincronizar/sincronizar.module').then( m => m.SincronizarPageModule)
-  },
+  },  
 ];
 
 @NgModule({

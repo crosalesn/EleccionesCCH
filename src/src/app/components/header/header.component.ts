@@ -15,9 +15,15 @@ import { SincronizarService } from 'src/app/services/sincronizar.service';
 export class HeaderComponent implements OnInit {
 
   public sincronizarPage = SincronizarPage;
-  constructor(public navCtrl: NavController, private eleccionesService:EleccionesService, private router: Router, private zone: NgZone,
-    private funciones: FuncionesService, private sincronizar: SincronizarService) { 
-   }
+  constructor(
+    public navCtrl: NavController, 
+    private eleccionesService:EleccionesService, 
+    private router: Router, private zone: NgZone,
+    private funciones: FuncionesService, 
+    private sincronizar: SincronizarService
+  ) { 
+  
+  }
 
   ngOnInit() {
     
