@@ -45,9 +45,11 @@ export class RutasDetallePage implements OnInit {
   escanearRuta(tipo: number) {
     if (tipo === 0) {
       console.log("origen");
+      this.route.navigate(['/escanear-bolsa']);
     } else if (tipo === 1) {
       // escanear destino
       console.log("destino");
+      this.route.navigate(['/escanear-bolsa']);
     }
 
   }
