@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-crear-ruta',
@@ -55,9 +56,13 @@ export class CrearRutaPage implements OnInit {
       }
     ]
   }
-  constructor() { }
+  constructor(private route: Router) { }
   
   ngOnInit() {
   }
 
+
+  asignarCarga() {
+    this.route.navigate(['/asignar-cargas']);
+  }
 }

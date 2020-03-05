@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-rutas-detalle',
@@ -9,7 +10,7 @@ export class RutasDetallePage implements OnInit {
 
   private rutas: object;
 
-  constructor() {
+  constructor(private route: Router) {
     this.rutas = {
       "RUTA": [
         {
@@ -40,4 +41,14 @@ export class RutasDetallePage implements OnInit {
   ngOnInit() {
   }
 
+  // 0 origen 1 destino
+  escanearRuta(tipo: number) {
+    if (tipo === 0) {
+      console.log("origen");
+    } else if (tipo === 1) {
+      // escanear destino
+      console.log("destino");
+    }
+
+  }
 }

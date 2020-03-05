@@ -12,7 +12,7 @@
             </svg>
             <h2><strong>Origen</strong></h2>
             <h3>{{rutas['RUTA'][0].ORIGEN[0].LUG_CALLE}} {{rutas['RUTA'][0].ORIGEN[0].LUG_NUMERO}}, {{rutas['RUTA'][0].ORIGEN[0].LUG_COMUNA}}</h3>
-            <a href="rutas-escanear" class="btn-principal">Escanear</a>
+            <a (click)="escanearRuta(0)" class="btn-principal">Escanear</a>
         </div>
         <div class="origen">
             <svg viewBox="0 0 444.5 639.4">
@@ -22,7 +22,7 @@
             </svg>
             <h2><strong>Destino</strong></h2>
             <h3>{{rutas['RUTA'][0].DESTINO[0].LUG_CALLE}} {{rutas['RUTA'][0].DESTINO[0].LUG_NUMERO}}, {{rutas['RUTA'][0].DESTINO[0].LUG_COMUNA}}</h3>
-            <a href="rutas-escanear" class="btn-principal">Escanear</a>
+            <a (click)="escanearRuta(1)" class="btn-principal">Escanear</a>
         </div>
     </div>
     <app-footer></app-footer>

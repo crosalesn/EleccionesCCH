@@ -1,33 +1,24 @@
 <ion-content>
-  <div class="cuerpo bolsa">
-    <app-header></app-header>
+    <div class="cuerpo bolsa">
+        <app-header></app-header>
 
-    <div class="container">
-      <h1>Asignar carga</h1>
-      <div class="tabla tabla-asignar-carga">
-          <table>
-              <tr>
-                  <th class="radio_inicial">Carga escaneada</th>
-              </tr>
-              <tr>
-                  <td>EFTV-35766878564</td>
-              </tr>
-              <tr>
-                  <td>EFTV-35766878564</td>
-              </tr>
-              <tr>
-                  <td>EFTV-35766878564</td>
-              </tr>
-              <tr>
-                  <td>EFTV-35766878564</td>
-              </tr>
-          </table>
-      </div>
-      <div class="caja-cuadrar">
-          <a class="btn-cuadrar" href="crear_ruta.html">ASIGNAR</a>
-          <a class="btn-escanear" href="#">ESCANEAR</a>
-      </div>
+        <div class="container">
+            <h1>Asignar carga</h1>
+            <div class="tabla tabla-asignar-carga">
+                <table>
+                    <tr>
+                        <th class="radio_inicial">Carga escaneada</th>
+                    </tr>
+                    <tr *ngFor="let codigo of codigos; let i = index">
+                        <td>{{codigo}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="caja-cuadrar">
+                <a class="btn-cuadrar" (click)="asignarCarga()">ASIGNAR</a>
+                <a class="btn-escanear" (click)="abrirCamara()">ESCANEAR</a>
+            </div>
+        </div>
+        <app-footer></app-footer>
     </div>
-    <app-footer></app-footer>
-  </div>
 </ion-content>
