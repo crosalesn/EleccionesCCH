@@ -44,12 +44,10 @@ export class HomePage implements OnInit {
     let parametro = {
       USU_ID: this.usuario.usuario.USU_ID
     }
-
-    if(this.usuario.usuario.PER_NOMBRE === 'OPERADOR')
-    {
-      this.net.checkNetworkStatusNow().then(usuarioConectado => {
-        if(!usuarioConectado){
-          console.log("Entrando a home sin conexion");
+    this.net.checkNetworkStatusNow().then(usuarioConectado => {
+      if(!usuarioConectado) {
+        console.log("Entrando a home sin conexion");
+        if(this.usuario.aplicaciones.filter(aplicacion => aplicacion.APLI_NOMBRE == "INICIO DIA").length > 0) {
           this.dbElecciones.ObtenerEstadoInicioFinDiaLocal(parametro).then(data => {
             if(data == null){
               console.log("No ha comenzado el dia")
@@ -66,31 +64,32 @@ export class HomePage implements OnInit {
               this.diaIniciado = 'ACTIVIDADES TERMINADAS';
             }
           });
-        }else{
-         
-          this.eleccionesService.ObtenerEstadoInicioFinDia(parametro)
-            .subscribe(
-            (info) => {
-              if(info.RIN_ESTADO == 0){
-                this.diaIniciado = 'INICIAR DÍA';
-                this.dbElecciones.BorraRegistroInicioFinDiaLocal();
-              }else if(info === null){
-                this.diaIniciado = '';
-              }else if(info.RIN_ESTADO == 1){
-                  var elements = document.querySelectorAll('.dia');
-                  for(var i = 0; i < elements.length; i++)
-                  {
-                    this.renderer.removeClass(elements[i], 'inactivo');
-                    this.renderer.removeClass(elements[i], 'disabled');
-                  }
-                this.diaIniciado = 'FINALIZAR DÍA';
-              }else{
-                this.diaIniciado = 'ACTIVIDADES TERMINADAS';
-              }
-          });
         }
-      });
-    }
+      }else{
+        if(this.usuario.aplicaciones.filter(aplicacion => aplicacion.APLI_NOMBRE == "INICIO DIA").length > 0) {
+          this.eleccionesService.ObtenerEstadoInicioFinDia(parametro)
+          .subscribe(
+          (info) => {
+            if(info.RIN_ESTADO == 0){
+              this.diaIniciado = 'INICIAR DÍA';
+              this.dbElecciones.BorraRegistroInicioFinDiaLocal();
+            }else if(info === null){
+              this.diaIniciado = '';
+            }else if(info.RIN_ESTADO == 1){
+                var elements = document.querySelectorAll('.dia');
+                for(var i = 0; i < elements.length; i++)
+                {
+                  this.renderer.removeClass(elements[i], 'inactivo');
+                  this.renderer.removeClass(elements[i], 'disabled');
+                }
+              this.diaIniciado = 'FINALIZAR DÍA';
+            }else{
+              this.diaIniciado = 'ACTIVIDADES TERMINADAS';
+            }
+        });
+        }
+      }
+    });
   }
 
   ClickIniciarDia(event)
@@ -133,10 +132,9 @@ export class HomePage implements OnInit {
               }
             }
           });
-        } 
-        if (this.diaIniciado == 'ACTIVIDADES TERMINADAS') {
-          console.log("");
-        } else {
+        } if(this.diaIniciado == 'ACTIVIDADES TERMINADAS'){
+          
+        }else{
           this.diaIniciado = 'INICIANDO...';
         }
       }else{
@@ -189,8 +187,8 @@ export class HomePage implements OnInit {
                   });
                 }
               });
-        }else if(this.diaIniciado == 'ACTIVIDADES TERMINADAS') {
-          console.log("");
+        }else if(this.diaIniciado == 'ACTIVIDADES TERMINADAS'){
+          
         }else{
           this.diaIniciado = 'INICIANDO...';
         }
