@@ -15,12 +15,29 @@
               <th class="radio_final">Estado</th>
             </tr>
           </thead>
-          <tbody *ngFor="let ruta of rutas['RUTA']">
+          <ng-container *ngIf="rutas.length > 0">
+          <tbody  *ngFor="let ruta of rutas" >
             <tr>
+              <td>CODIGO</td>
+              <td>{{ruta.origen}}</td>
+              <td>{{ruta.destino}}</td>
+              <td>
+                <div *ngIf="ruta.estado == 3">
+                  <a class="btn_iniciar" href="rutas-detalle">
+                    <svg viewBox="0 0 288 320">
+                      <path class="svg_blanco"
+                        d="M279.8,146L23.8,2c-5-2.8-11-2.7-15.9,0.1C3,5.1,0,10.3,0,16v288c0,5.7,3,10.9,7.9,13.8
+                                c2.5,1.4,5.3,2.2,8.1,2.2c2.7,0,5.4-0.7,7.8-2l256-144c5-2.8,8.2-8.2,8.2-14S284.9,148.9,279.8,146z" />
+                    </svg>
+                    Iniciar
+                  </a>
+                </div>
+              </td>
+              <!--
               <td>{{ruta.ORIGEN[0].LUG_CODIGO}}</td>
               <td>{{ruta.ORIGEN[0].LUG_NOMBRE}}</td>
               <td>{{ruta.DESTINO[0].LUG_NOMBRE}}</td>
-
+              
               <td>
                 <div *ngIf="ruta.ORIGEN[0].ESTADO == ruta.DESTINO[0].ESTADO && ruta.DESTINO[0].ESTADO == 0">
                   <a class="btn_iniciar" href="rutas-detalle">
@@ -60,8 +77,10 @@
                   </a>
                 </div>
               </td>
+               -->
             </tr>
           </tbody>
+        </ng-container>
         </table>
       </div>
 

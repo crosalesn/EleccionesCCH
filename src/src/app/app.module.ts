@@ -27,12 +27,15 @@ import { SQLite } from '@ionic-native/sqlite/ngx';
 
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
+import { IonicStorageModule } from '@ionic/storage';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule, 
-    IonicModule.forRoot(), 
+    IonicModule.forRoot(),
+    IonicStorageModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
     FormsModule,

@@ -4,6 +4,8 @@ import { ModalController } from '@ionic/angular';
 import { AsignarCargasPage } from '../../asignar-cargas/asignar-cargas.page';
 import { AlertasService } from 'src/app/services/alertas.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { RutaService } from 'src/app/services/ruta.service';
+import { IRuta } from 'src/app/interfaces/ruta.interface';
 
 @Component({
   selector: 'app-crear-ruta',
@@ -14,7 +16,8 @@ export class CrearRutaPage implements OnInit {
   ruta: IRuta = {
     codigos: [],
     destino: '',
-    origen: ''
+    origen: '',
+    estado: ''
   };
 
   codigos: string[] = [];
@@ -71,7 +74,8 @@ export class CrearRutaPage implements OnInit {
     private route: Router,
     private modalController: ModalController,
     private alert: AlertasService,
-    private user: UsuarioService
+    private user: UsuarioService,
+    private rutaServ: RutaService
   ) { }
 
   ngOnInit() {
@@ -103,21 +107,17 @@ export class CrearRutaPage implements OnInit {
     this.ruta.codigos = this.codigos;
     console.log('rutaIngresar: ', this.ruta);
     if (this.ruta.origen !== '' && this.ruta.destino !== '' && this.ruta.codigos.length > 0) {
+      this.ruta.estado = '3';
       // guardar ruta
       console.log('ruta:', this.ruta);
+      this.rutaServ.insertarRutas(this.ruta);
       // redireccionar
       this.route.navigate(['/mis-rutas']);
     } else {
       this.alert.Toast('Debe ingresar todos los campos');
     }
-
   }
 }
 
 
-interface IRuta {
-  origen: string;
-  destino: string;
-  codigos: string[];
-  usuario?: any;
-}
+

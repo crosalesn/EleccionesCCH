@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DbEleccionesService } from '../../services/db-elecciones.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { RutaService } from 'src/app/services/ruta.service';
+import { IRuta } from 'src/app/interfaces/ruta.interface';
 
 
 @Component({
@@ -12,17 +14,18 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 export class MisRutasPage implements OnInit {
   ruta: any;
 
-  rutas: any;
+  rutas: IRuta[] = [];
 
   usuario: any;
   constructor(
     private route: Router,
     private dbElecciones: DbEleccionesService,
-    private user: UsuarioService
+    private user: UsuarioService,
+    private rutaServ: RutaService
   ) {
       this.usuario = user.obtenerUsuario();
       console.log('usuarioLogeado: ', this.usuario);
-
+      /*
       this.rutas = {
         RUTA: [
           {
@@ -72,14 +75,18 @@ export class MisRutasPage implements OnInit {
           }
         ]
       };
+      */
   }
 
   ngOnInit() {
+    
   }
 
+  ionViewDidEnter() {
+    this.rutas = this.rutaServ.rutas;
+  } 
+
   crearRuta() {
-
-
     this.route.navigate(['/mis-rutas/crear-ruta']);
   }
 

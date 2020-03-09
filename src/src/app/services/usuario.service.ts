@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-
+import { Storage } from '@ionic/storage';
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
   usuarioLogeado: any;
 
-  constructor() {
+  constructor(private storage: Storage) {
     this.usuarioLogeado = this.obtenerUsuario();
   }
 
@@ -14,8 +14,4 @@ export class UsuarioService {
     return JSON.parse(localStorage.getItem('usuarioActual'));
   }
 
-
-  crearRuta() {
-
-  }
 }
