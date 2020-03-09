@@ -15,7 +15,8 @@ import { DbEleccionesService } from './db-elecciones.service';
 export class GpsService {
   private hasGPS = new BehaviorSubject(false);
 
-  constructor(private backgroundgeolocation: BackgroundGeolocation, 
+  constructor(
+    private backgroundgeolocation: BackgroundGeolocation, 
     private alertas: AlertasService, 
     private funciones: FuncionesService,
     private db: DbEleccionesService) { 
@@ -73,7 +74,7 @@ export class GpsService {
   //Validaciones de estados del GPS
   private onGps(): void{
 
-    this.GpsAutorizacion().then(dato =>{
+    this.GpsAutorizacion().then(dato =>{     
       if(!dato){
         this.backgroundgeolocation.showAppSettings();
         this.alertas.Alerta("Debe activar los permisos de ubicación");

@@ -12,7 +12,7 @@ export class DbEleccionesService {
 
   private database: SQLiteObject = null;
   private dbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
+  parametro: any;
   constructor(private plt: Platform, private sqlitePorter: SQLitePorter, private sqlite: SQLite, 
     private http: HttpClient) {
     console.log("Se llama constructor de Db-Elecciones");
@@ -83,13 +83,13 @@ export class DbEleccionesService {
   GetDatabaseState(){
     return this.dbReady.asObservable();
   }
-  BorrarUsuarioLocal(){
+  BorrarUsuarioLocal() {
     return this.database.executeSql('DELETE FROM USUARIOS', []).then(data =>{
       console.log("Usuarios borrado");
     });
   }
 
-  BorrarParametrosLocal(){
+  BorrarParametrosLocal() {
     return this.database.executeSql('DELETE FROM PARAMETROS', []).then(data =>{
       console.log("Parametros borrados");
     });
@@ -121,6 +121,7 @@ export class DbEleccionesService {
 
 
   AgregarUsuarioLocal(parametro) {
+    this.parametro = parametro;
     console.log("Se ejecuta la funcion AgregarUsuarioLocal del archivo db-elecciones.service.ts");
     let data = [parametro.usuario.USU_CLAVE, parametro.usuario.USU_NOMBRE_USUARIO];
     return this.database.executeSql('SELECT USU_ID FROM USUARIOS WHERE USU_CLAVE = ? AND USU_NOMBRE_USUARIO = ?', data).then(data => {

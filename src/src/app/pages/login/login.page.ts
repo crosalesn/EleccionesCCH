@@ -58,7 +58,6 @@ export class LoginPage implements OnInit {
       this.alertas.Alerta("Contraseña no ingresada");
       return;
     }
-
     
     this.net.checkNetworkStatusNow().then(usuarioConectado => {
       if(!usuarioConectado){

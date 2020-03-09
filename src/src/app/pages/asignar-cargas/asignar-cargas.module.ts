@@ -17,6 +17,9 @@ import { ComponentsModule } from '../../components/components.module';
     AsignarCargasPageRoutingModule,
     ComponentsModule
   ],
+  exports:[
+    AsignarCargasPage
+  ],
   declarations: [AsignarCargasPage]
 })
 export class AsignarCargasPageModule {}

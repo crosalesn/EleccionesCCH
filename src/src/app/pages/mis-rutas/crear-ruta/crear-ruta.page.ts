@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
+import { AsignarCargasPage } from '../../asignar-cargas/asignar-cargas.page';
 
 @Component({
   selector: 'app-crear-ruta',
@@ -7,6 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./crear-ruta.page.scss'],
 })
 export class CrearRutaPage implements OnInit {
+  
+  codigos: string[] = [];
   rutas = {
     "RUTA": [
       {
@@ -56,13 +60,33 @@ export class CrearRutaPage implements OnInit {
       }
     ]
   }
-  constructor(private route: Router) { }
+  constructor(
+    private route: Router,
+    private modalController: ModalController
+  ) { }
   
   ngOnInit() {
   }
 
+  async asignarCarga() {
+    
+    const modal = await this.modalController.create({
+      component: AsignarCargasPage
+    });
+    
+    modal.onDidDismiss().then((dataReturned) => {
+      console.log( "dataReturned: ", dataReturned);
+      if (dataReturned.data.length > 0) {
+        dataReturned.data.forEach((element: string) => {
+          this.codigos.push(element);
+        });
+      }
+    });
 
-  asignarCarga() {
-    this.route.navigate(['/asignar-cargas']);
+    return await modal.present();
+  }
+
+  crearRuta() {
+    this.route.navigate(['/mis-rutas']);
   }
 }

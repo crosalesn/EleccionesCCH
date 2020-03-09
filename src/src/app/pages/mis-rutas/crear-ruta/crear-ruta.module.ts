@@ -8,6 +8,7 @@ import { CrearRutaPageRoutingModule } from './crear-ruta-routing.module';
 
 import { CrearRutaPage } from './crear-ruta.page';
 import { ComponentsModule } from '../../../components/components.module';
+import { AsignarCargasPageModule } from '../../asignar-cargas/asignar-cargas.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ComponentsModule } from '../../../components/components.module';
     FormsModule,
     IonicModule,
     CrearRutaPageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    AsignarCargasPageModule
   ],
   declarations: [CrearRutaPage]
 })

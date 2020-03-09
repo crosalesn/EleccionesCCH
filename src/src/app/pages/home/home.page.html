@@ -7,18 +7,23 @@
       <h3><strong>Local:</strong> Liceo A-3</h3>
       <div class="tareas">
         <div class="dia-bolsa" *ngFor="let aplicacion of usuario.aplicaciones">
-          <button class="dia"  (click)="ClickIniciarDia($event)" *ngIf="aplicacion.APLI_METODO === 'SIN METODO'; else mostrarAplicaciones">				
+          <button 
+            class="dia"  
+            (click)="ClickIniciarDia($event)" 
+            *ngIf="aplicacion.APLI_METODO === 'SIN METODO'; else mostrarAplicaciones">				
             <img class="icono-home" src={{aplicacion.APLI_IMG}} alt="" />{{diaIniciado}}
           </button>
           <ng-template #mostrarAplicaciones >
-            <a class="dia inactivo disabled" routerLink={{aplicacion.APLI_METODO}}>
+            <!--<a class="dia inactivo disabled" routerLink={{aplicacion.APLI_METODO}}>
+              <img class="icono-home" src={{aplicacion.APLI_IMG}}  alt="" /> {{aplicacion.APLI_NOMBRE}}
+            </a>-->
+            <a class="dia " routerLink={{aplicacion.APLI_METODO}}>
               <img class="icono-home" src={{aplicacion.APLI_IMG}}  alt="" /> {{aplicacion.APLI_NOMBRE}}
             </a>
           </ng-template>
        </div>
       </div>
    </div>
-
    <app-footer></app-footer>
  </div>
 </ion-content>

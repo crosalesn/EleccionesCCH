@@ -2,20 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { Router } from '@angular/router';
 import { AlertasService } from 'src/app/services/alertas.service';
+import { ModalController } from '@ionic/angular';
 @Component({
   selector: 'app-asignar-cargas',
   templateUrl: './asignar-cargas.page.html',
   styleUrls: ['./asignar-cargas.page.scss'],
 })
 export class AsignarCargasPage implements OnInit {
-  codigos: string[] = [
-    "EFTV-35766878564",
-    "EFTV-35766878565"
-  ];
+  codigos: string[] = [];
   constructor(
     private barcodeScanner: BarcodeScanner,
     private route: Router,
-    private alert: AlertasService
+    private alert: AlertasService,
+    private modalController: ModalController,
   ) { }
 
   ngOnInit() {
@@ -30,9 +29,10 @@ export class AsignarCargasPage implements OnInit {
      });
   }
   
-  asignarCarga() {
-    console.log("asignar carga servicio");
-    this.route.navigate(['/mis-rutas']);
+  async asignarCarga() {
+    console.log("asignar carga servicio"); 
+    await this.modalController.dismiss(this.codigos);
+    //this.route.navigate(['/mis-rutas']);
     this.alert.Toast("Se a asigandor correctamente.");
   }
 }

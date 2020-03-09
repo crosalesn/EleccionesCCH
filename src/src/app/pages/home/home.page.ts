@@ -31,6 +31,7 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     this.gps.GpsIniciar().then(dato =>{
+      console.log("dato:", dato);
       if(!dato){
         console.error("No se inicio el GPS");
       }else{

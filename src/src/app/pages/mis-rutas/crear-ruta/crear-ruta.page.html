@@ -30,44 +30,14 @@
                <tr>
                    <th class="radio_inicial">Carga asignada</th>
                </tr>
-               <tr>
-                   <td>EFTV-35766878564</td>
-               </tr>
-               <tr>
-                   <td>EFTV-35766878564</td>
-               </tr>
-               <tr>
-                   <td>EFTV-35766878564</td>
-               </tr>
-               <tr>
-                   <td>EFTV-35766878564</td>
-               </tr>
-               <tr>
-                   <td>EFTV-35766878564</td>
-               </tr>
-               <tr>
-                   <td>EFTV-35766878564</td>
-               </tr>
-               <tr>
-                   <td>EFTV-35766878564</td>
-               </tr>
-               <tr>
-                   <td>EFTV-35766878564</td>
-               </tr>
-               <tr>
-                   <td>EFTV-35766878564</td>
-               </tr>
-               <tr>
-                   <td>EFTV-35766878564</td>
-               </tr>
-               <tr>
-                   <td>EFTV-35766878564</td>
-               </tr>
+               <tr *ngFor="let cod of codigos">
+                   <td>{{cod}}</td>
+               </tr>               
            </table>
        </div>
 
        <div class="caja-cuadrar">
-           <a class="btn-alternativo" href="mis_rutas.html">CREAR RUTA</a>
+           <a class="btn-alternativo" (click)="crearRuta()">CREAR RUTA</a>
        </div>
   </div>
   <footer class="pie">
