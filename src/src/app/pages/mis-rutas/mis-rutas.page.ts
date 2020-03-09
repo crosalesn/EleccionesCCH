@@ -77,9 +77,12 @@ export class MisRutasPage implements OnInit {
   }
 
   crearRuta() {
-    console.log('ir al login');
+    
+
     this.route.navigate(['/mis-rutas/crear-ruta']);
   }
 
 }
+
+
 

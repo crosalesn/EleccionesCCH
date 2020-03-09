@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { AsignarCargasPage } from '../../asignar-cargas/asignar-cargas.page';
+import { AlertasService } from 'src/app/services/alertas.service';
 
 @Component({
   selector: 'app-crear-ruta',
@@ -9,7 +10,12 @@ import { AsignarCargasPage } from '../../asignar-cargas/asignar-cargas.page';
   styleUrls: ['./crear-ruta.page.scss'],
 })
 export class CrearRutaPage implements OnInit {
-  
+  ruta: IRuta = {
+    codigos: [],
+    destino: '',
+    origen: ''
+  };
+
   codigos: string[] = [];
   rutas = {
     "RUTA": [
@@ -62,7 +68,8 @@ export class CrearRutaPage implements OnInit {
   }
   constructor(
     private route: Router,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private alert: AlertasService
   ) { }
   
   ngOnInit() {
@@ -76,17 +83,38 @@ export class CrearRutaPage implements OnInit {
     
     modal.onDidDismiss().then((dataReturned) => {
       console.log( "dataReturned: ", dataReturned);
-      if (dataReturned.data.length > 0) {
-        dataReturned.data.forEach((element: string) => {
-          this.codigos.push(element);
-        });
+      if(dataReturned.data != undefined) {
+        if (dataReturned.data.length > 0) {
+          dataReturned.data.forEach((element: string) => {
+            this.codigos.push(element);
+            
+          });
+        }
       }
+      
     });
 
     return await modal.present();
   }
 
   crearRuta() {
-    this.route.navigate(['/mis-rutas']);
+    this.ruta.codigos = this.codigos;    
+    console.log("rutaIngresar: ", this.ruta);
+    if (this.ruta.origen != '' && this.ruta.destino != '' && this.ruta.codigos.length > 0  ) {
+       // guardar ruta
+      console.log("ruta:", this.ruta)
+      // redireccionar
+      this.route.navigate(['/mis-rutas']);
+    } else {
+      this.alert.Toast("Debe ingresar todos los campos");
+    }
+   
   }
+}
+
+
+interface IRuta {
+  origen: string;
+  destino: string;
+  codigos: string[];
 }

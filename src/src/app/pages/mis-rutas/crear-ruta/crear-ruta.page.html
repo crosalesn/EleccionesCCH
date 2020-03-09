@@ -6,7 +6,7 @@
        <h3><strong>Camión asignado:</strong> ZW - 45 56</h3>
 
        <div class="crear-ruta">
-           <select name="select">
+           <select name="select" [(ngModel)]="ruta.origen">
                <option value="value1" selected>Seleccione un origen</option> 
                <option value="value2">Origen 01</option>
                <option value="value3">Origen 02</option>
@@ -16,8 +16,8 @@
 
            <a class="btn-principal" (click)="asignarCarga()" >ASIGNAR CARGA</a>
 
-           <select name="select">
-               <option value="value1" selected>Seleccione un destino</option> 
+           <select name="select" [(ngModel)]="ruta.destino">
+               <option value="value1" selected >Seleccione un destino</option> 
                <option value="value2">Destino 01</option>
                <option value="value3">Destino 02</option>
                <option value="value2">Destino 03</option>
@@ -35,9 +35,8 @@
                </tr>               
            </table>
        </div>
-
        <div class="caja-cuadrar">
-           <a class="btn-alternativo" (click)="crearRuta()">CREAR RUTA</a>
+           <button class="btn-alternativo" (click)="crearRuta()">CREAR RUTA</button>
        </div>
   </div>
   <footer class="pie">
