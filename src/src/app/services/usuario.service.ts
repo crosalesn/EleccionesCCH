@@ -5,15 +5,17 @@ import { Injectable } from '@angular/core';
 })
 export class UsuarioService {
   usuarioLogeado: any;
-  
-  constructor() { }
+
+  constructor() {
+    this.usuarioLogeado = this.obtenerUsuario();
+  }
 
   obtenerUsuario() {
-    return JSON.parse(localStorage.getItem("usuarioActual"));
-  } 
+    return JSON.parse(localStorage.getItem('usuarioActual'));
+  }
 
 
   crearRuta() {
-    
+
   }
 }
