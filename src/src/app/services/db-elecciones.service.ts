@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ResolvedReflectiveFactory } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Platform } from '@ionic/angular';
+import { strictEqual } from 'assert';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class DbEleccionesService {
 
   private database: SQLiteObject = null;
   private dbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  parametro: any;
+
   constructor(private plt: Platform, private sqlitePorter: SQLitePorter, private sqlite: SQLite, 
     private http: HttpClient) {
     console.log("Se llama constructor de Db-Elecciones");
@@ -83,13 +84,13 @@ export class DbEleccionesService {
   GetDatabaseState(){
     return this.dbReady.asObservable();
   }
-  BorrarUsuarioLocal() {
+  BorrarUsuarioLocal(){
     return this.database.executeSql('DELETE FROM USUARIOS', []).then(data =>{
       console.log("Usuarios borrado");
     });
   }
 
-  BorrarParametrosLocal() {
+  BorrarParametrosLocal(){
     return this.database.executeSql('DELETE FROM PARAMETROS', []).then(data =>{
       console.log("Parametros borrados");
     });
@@ -121,7 +122,6 @@ export class DbEleccionesService {
 
 
   AgregarUsuarioLocal(parametro) {
-    this.parametro = parametro;
     console.log("Se ejecuta la funcion AgregarUsuarioLocal del archivo db-elecciones.service.ts");
     let data = [parametro.usuario.USU_CLAVE, parametro.usuario.USU_NOMBRE_USUARIO];
     return this.database.executeSql('SELECT USU_ID FROM USUARIOS WHERE USU_CLAVE = ? AND USU_NOMBRE_USUARIO = ?', data).then(data => {
@@ -143,7 +143,13 @@ export class DbEleccionesService {
           parametro.usuario.USU_CLAVE,
           USU_FECHA_REGISTRO,
           parseInt(parametro.usuario.USU_ESTADO),
-          parseInt(parametro.usuario.PER_ID)
+          parseInt(parametro.usuario.PER_ID),
+          parseInt(parametro.usuario.REG_ID),
+          parseInt(parametro.usuario.LUGAR_ASIGNADO_ID),
+          parametro.usuario.USU_CODIGO_RESET_CONTRASENA,
+          parametro.usuario.USU_TELEFONO,
+          parseInt(parametro.usuario.TUS_ID),
+          parseInt(parametro.usuario.ETR_ID)
         ];
 
         let perfil = [
@@ -174,10 +180,12 @@ export class DbEleccionesService {
             +'USU_NOMBRE_USUARIO,' 
             +'USU_CLAVE, '
             +'USU_FECHA_REGISTRO, '
-            +'USU_ESTADO, PER_ID) '
-            +'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            +'USU_ESTADO, PER_ID, '
+            +'REG_ID, LUGAR_ASIGNADO_ID, USU_CODIGO_RESET_CONTRASENA, '
+            +'USU_TELEFONO, TUS_ID, ETR_ID) '
+            +'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             usuario).then(data => {
-              console.log("Usuario guardado")
+              console.log("Usuario guardado: " + JSON.stringify(parametro.usuario));
               for(var i = 0; i < parametro.aplicaciones.length; i++)
                       {
                         ((param) => {
@@ -225,21 +233,200 @@ export class DbEleccionesService {
       }
     });
   }
-
-  GuardarParametrosLocal(parametro): Promise<any> {
-    return this.database.executeSql('SELECT PAR_ID FROM PARAMETROS WHERE PAR_ID = ?', [parametro.PAR_ID]).then(data => {
-      if(data.rows.length > 0){
-        return this.database.executeSql('UPDATE PARAMETROS '
-        +'SET PAR_VALOR = ? WHERE PAR_ID = ?', [parametro.PAR_VALOR, parametro.PAR_ID]).then(data => {
-          console.log("Parametro actualizado");
-        });
-      }else{
-        return this.database.executeSql('INSERT OR IGNORE INTO PARAMETROS (PAR_ID ,'
-        +'PAR_VALOR) VALUES (?, ?)', [parametro.PAR_ID, parametro.PAR_VALOR]).then(data => {
-          console.log("Parametro GPS insertado");
-        });
+  GuardarRegionesLocal(regiones): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM REGIONES"));
+      for(let j=0; j<regiones.length; j++) {
+        ((singleRegion) => {
+          arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO REGIONES " +
+           "(REG_ID, REG_CODIGO, REG_NOMBRE) VALUES (?,?,?)", [singleRegion.REG_ID, singleRegion.REG_CODIGO, singleRegion.REG_NOMBRE]).then(data => {
+             console.log("Region insertada: " + JSON.stringify(singleRegion));
+           })
+          );
+        })(regiones[j])
       }
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
     });
+    return promise;
+  }
+  GuardarProvinciasLocal(provincias): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM PROVINCIAS"));
+      for(let j=0; j<provincias.length; j++) {
+        ((singleProvince) => {
+          arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO PROVINCIAS " +
+           "(PRO_ID, PRO_NOMBRE, REG_ID, PRO_CODIGO) VALUES (?,?,?,?)", [singleProvince.PRO_ID, singleProvince.PRO_NOMBRE, singleProvince.REG_ID, singleProvince.PRO_CODIGO]).then(data => {
+             console.log("Provincia insertada:" + JSON.stringify(singleProvince));
+           })
+          );
+        })(provincias[j])
+      }
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+    return promise;
+  }
+  GuardarComunasLocal(comunas): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM COMUNAS"));
+      for(let j=0; j<comunas.length; j++) {
+        ((singleComune) => {
+          arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO COMUNAS " +
+           "(COM_ID, COM_NOMBRE, PRO_ID, COM_CODIGO) VALUES (?,?,?,?)", [singleComune.COM_ID, singleComune.COM_NOMBRE, singleComune.PRO_ID, singleComune.COM_CODIGO]).then(data => {
+             console.log("Comuna insertada:" + JSON.stringify(singleComune));
+           })
+          );
+        })(comunas[j])
+      }
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+    return promise;
+  }
+  GuardarTipoLugaresLocal(tipoLugares): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM TIPO_LUGARES"));
+      for(let j=0; j<tipoLugares.length; j++) {
+        ((singlePlaceType) => {
+          arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO TIPO_LUGARES " +
+           "(TIL_ID, TIL_CODIGO, TIL_NOMBRE, TIL_DESCRIPCION, TIL_ESTADO) VALUES (?,?,?,?,?)", [singlePlaceType.TIL_ID, singlePlaceType.TIL_CODIGO, singlePlaceType.TIL_DESCRIPCION, singlePlaceType.TIL_ESTADO]).then(data => {
+             console.log("Tipo Lugar insertado:" + JSON.stringify(singlePlaceType));
+           })
+          );
+        })(tipoLugares[j])
+      }
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+    return promise;
+  }
+  GuardarLugaresLocal(lugares): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM LUGARES"));
+      for(let j=0; j<lugares.length; j++) {
+        ((singlePlace) => {
+          arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO LUGARES " +
+           "(LUG_ID, LUG_NOMBRE, COM_ID, LUG_CALLE, LUG_CALLE, LUG_NUMERO, LUG_LATITUD, LUG_LONGITUD, LUG_DESCRIPCION, TIL_ID) VALUES (?,?,?,?,?,?,?,?,?,?)", 
+              [singlePlace.LUG_ID, singlePlace.LUG_NOMBRE, singlePlace.COM_ID, singlePlace.LUG_CALLE, singlePlace.LUG_NUMERO, singlePlace.LUG_LATITUD, singlePlace.LUG_LONGITUD, singlePlace.LUG_DESCRIPCION, singlePlace.TIL_ID]).then(data => {
+             console.log("Lugar insertado:" + JSON.stringify(singlePlace));
+           })
+          );
+        })(lugares[j])
+      }
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+    return promise;
+  }
+  GuardarEmpresasTransporteLocal(empresaTransporte): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM EMPRESAS_TRANSPORTES"));
+      arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO EMPRESAS_TRANSPORTES " +
+        "(ETR_ID, ETR_CODIGO, ETR_NOMBRE, ETR_DESCRIPCION, ETR_RUT, ETR_DV, ETR_TELEFONO) VALUES (?,?,?,?,?,?,?)", 
+          [empresaTransporte.ETR_ID, empresaTransporte.ETR_CODIGO, empresaTransporte.ETR_NOMBRE, empresaTransporte.ETR_DESCRIPCION, empresaTransporte.ETR_RUT, empresaTransporte.ETR_DV, empresaTransporte.ETR_TELEFONO]).then(data => {
+          console.log("Empresa de Transporte insertada:" + JSON.stringify(empresaTransporte));
+        })
+      );
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+    return promise;
+  }
+  GuardarTransportesLocal(transportes): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM TRANSPORTES"));
+      for(let j=0; j<transportes.length; j++) {
+        ((singleTransport) => {
+          arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO TRANSPORTES " +
+           "(TRA_ID, TRA_PATENTE, TRA_NOMBRE, TRA_DESCRIPCION, ETR_ID, REG_ID, TIT_ID) VALUES (?,?,?,?,?,?,?)", 
+              [singleTransport.TRA_ID, singleTransport.TRA_PATENTE, singleTransport.TRA_NOMBRE, singleTransport.TRA_DESCRIPCION, singleTransport.ETR_ID, singleTransport.REG_ID, singleTransport.TIT_ID]).then(data => {
+             console.log("Transporte insertado:" + JSON.stringify(singleTransport));
+           })
+          );
+        })(transportes[j])
+      }
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+    return promise;
+  }
+
+  
+
+  GuardarParametrosLocal(parametros): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise<boolean>(function(resolve, reject) {
+      var arregloDePromesas = [];
+
+      for(let j=0; j<parametros.length; j++)   {
+        ((singleParam) => {
+          let innerPromise = new Promise ((resolver, rechazar) => {
+            outerThis.database.executeSql('SELECT PAR_ID FROM PARAMETROS WHERE PAR_ID = ?', [singleParam.PAR_ID]).then(data => {
+              if (data.rows.length > 0) {
+                outerThis.database.executeSql('UPDATE PARAMETROS SET PAR_VALOR = ? WHERE PAR_ID = ?', [singleParam.PAR_VALOR, singleParam.PAR_ID]).then(data => {
+                  console.log("Parametro actualizado: " + JSON.stringify(singleParam));
+                  resolver();
+                }, error => {
+                  rechazar();
+                });
+              } else {
+                outerThis.database.executeSql('INSERT OR IGNORE INTO PARAMETROS (PAR_ID, PAR_CODIGO, PAR_VALOR) VALUES (?,?,?)', [singleParam.PAR_ID, singleParam.PAR_CODIGO, singleParam.PAR_VALOR]).then(data => {
+                  console.log("Parametro insertado: " + JSON.stringify(singleParam));
+                  resolver();
+                }, error => {
+                  rechazar();
+                });
+              }
+            });
+          });
+          arregloDePromesas.push(innerPromise);
+        })(parametros[j])
+      }
+
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+
+    return promise;
     
   }
 
@@ -465,7 +652,6 @@ export class DbEleccionesService {
   }
 
   InsertCoordenadasUsuarios(idUsuario:number, lat:number, lon:number): Promise<any>{
-    debugger
     var query: string = "INSERT INTO COORDENADAS_USUARIOS(CUS_LATITUD, CUS_LONGITUD, CUS_FECHA_DISPOSITIVO, USU_ID, CUS_SYNC)"
                         +" VALUES ('"+lat+"','"+lon+"','"+this.GetFechaHora(true)+"',"+idUsuario+",0); ";
     console.log(query);
@@ -473,9 +659,9 @@ export class DbEleccionesService {
   }
 
   public ObtenerParametroGps(): Promise<number>{
-    var query = "SELECT PAR_VALOR FROM PARAMETROS WHERE PAR_ID = ?";
+    var query = "SELECT PAR_VALOR FROM PARAMETROS WHERE PAR_CODIGO = ?";
 
-    return this.database.executeSql(query, [2]).then(valor =>{
+    return this.database.executeSql(query, ['INTERVALOGPS']).then(valor =>{
       return valor.rows.item(0).PAR_VALOR;
     });
 

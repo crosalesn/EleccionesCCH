@@ -79,6 +79,10 @@ export class EleccionesService {
     return this.http.post(this.urlServicios+'provincia/'+'ObtenerProvincias','', {headers: this.headers});
   }
 
+  ObtenerComunas(): Observable<any>{
+    return this.http.post(this.urlServicios+'comuna/'+'ObtenerComunas','', {headers: this.headers});
+  }
+
   ObtenerMesas(): Observable<any>{
     return this.http.post(this.urlServicios+'mesa/'+'ObtenerMesas','',{headers: this.headers});
   }
@@ -106,6 +110,28 @@ export class EleccionesService {
   ObtenerCircunscripciones(): Observable<any>{
     return this.http.post(this.urlServicios+'circunscripcion/'+'ObtenerCircunscripciones','',{headers: this.headers});
   }
+
+  ObtenerCircunscripcionesServel(parametro): Observable<any>{
+    return this.http.post(this.urlServicios+'circunscripcion/'+'ObtenerCircunscripcionesServel',parametro,{headers: this.headers});
+  }
+
+  ObtenerCargasCircunscripcionesServel(parametro): Observable<any>{
+    return this.http.post(this.urlServicios+'carga/'+'ObtenerCargasCircunscripciones',parametro,{headers: this.headers});
+  }
+
+  ObtenerCargas(): Observable<any>{
+    return this.http.post(this.urlServicios+'carga/'+'ObtenerCargas','',{headers: this.headers});
+  }
+
+  ObtenerEmpresasTransporte(parametro): Observable<any>{
+    return this.http.post(this.urlServicios+'empresatransporte/'+'ObtenerEmpresasTransporte',parametro,{headers: this.headers});
+  }
+
+  ObtenerTransportes(parametro): Observable<any>{
+    return this.http.post(this.urlServicios+'transporte/'+'ObtenerTransportes',parametro,{headers: this.headers});
+  }
+
+
 
 
 
