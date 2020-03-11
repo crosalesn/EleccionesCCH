@@ -5,6 +5,9 @@ import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Platform } from '@ionic/angular';
 import { strictEqual } from 'assert';
+import { IRegion } from '../interfaces/region.interface';
+import { ITipoLugar } from '../interfaces/tipo_lugar.interface';
+import { IProvincia } from '../interfaces/provincia.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,11 @@ export class DbEleccionesService {
 
   private database: SQLiteObject = null;
   private dbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  regiones = new BehaviorSubject([]);
+  provincias = new BehaviorSubject([]);
+  comnuas = new BehaviorSubject([]);
+  tipoLugares = new BehaviorSubject([]);
 
   constructor(private plt: Platform, private sqlitePorter: SQLitePorter, private sqlite: SQLite, 
     private http: HttpClient) {
@@ -74,6 +82,8 @@ export class DbEleccionesService {
       this.sqlitePorter.importSqlToDb(this.database, sql)
         .then(_ => {
           console.log("la importacion se realizó correctamente");
+          this.ObtenerRegionesLocal();
+          this.ObtenerTipoLugares();
           this.dbReady.next(true);
         })
         .catch(e => console.error(e));
@@ -233,6 +243,7 @@ export class DbEleccionesService {
       }
     });
   }
+
   GuardarRegionesLocal(regiones): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -255,6 +266,25 @@ export class DbEleccionesService {
     });
     return promise;
   }
+
+
+  ObtenerRegionesLocal() {
+    const query = 'SELECT * FROM REGIONES';
+    return this.database.executeSql(query,[]).then( data => {
+      var regiones: IRegion[] = [];
+      if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+          regiones.push({
+            regId: data.rows.item(i).REG_ID,
+            regCodigo: data.rows.item(i).REG_CODIGO,
+            regNombre: data.rows.item(i).REG_NOMBRE
+          });          
+        }
+      }
+      this.regiones.next(regiones);
+    });
+  }
+
   GuardarProvinciasLocal(provincias): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -264,6 +294,7 @@ export class DbEleccionesService {
         ((singleProvince) => {
           arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO PROVINCIAS " +
            "(PRO_ID, PRO_NOMBRE, REG_ID, PRO_CODIGO) VALUES (?,?,?,?)", [singleProvince.PRO_ID, singleProvince.PRO_NOMBRE, singleProvince.REG_ID, singleProvince.PRO_CODIGO]).then(data => {
+
              console.log("Provincia insertada:" + JSON.stringify(singleProvince));
            })
           );
@@ -274,9 +305,32 @@ export class DbEleccionesService {
       }, anyWasRejected => {
         resolve(false);
       });
-    });
+    });    
     return promise;
   }
+
+  ObtenerProvinciasPorRegion(idRegion: number) {
+    console.log('service:', idRegion);  
+    var provincias: IProvincia[] = [];
+    let promise = new Promise( (resolve, reject)  => {
+      this.database.executeSql("SELECT * FROM PROVINCIAS WHERE REG_ID = ?", [idRegion]).then( data => {
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {                                       
+            provincias.push({
+              proCodigo: data.rows.item(i).PRO_CODIGO,
+              proId:  data.rows.item(i).PRO_ID,
+              proNombre: data.rows.item(i).PRO_NOMBRE,
+              regid: data.rows.item(i).REG_ID            
+            });          
+          }
+        }
+        resolve(provincias);
+      });
+    });
+
+    return promise;
+  }
+
   GuardarComunasLocal(comunas): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -299,6 +353,28 @@ export class DbEleccionesService {
     });
     return promise;
   }
+
+  ObtenerComunasPorProvincias(idProv: number) {
+    const query = 'SELECT * FROM COMUNAS WHERE PRO_ID = ? ';
+    let promise = new Promise( (resolve, reject) => {
+      this.database.executeSql(query,[idProv]).then( data => {
+        var comunas= [];
+        if (data.rows.length > 0) {
+          for (var i = 0; i < data.rows.length; i++) {                                        
+            comunas.push({
+              COM_ID: data.rows.item(i).COM_ID,
+              COM_NOMBRE: data.rows.item(i).COM_NOMBRE,
+              PRO_ID : data.rows.item(i).PRO_ID ,
+              COM_CODIGO: data.rows.item(i).COM_CODIGO,            
+            });          
+          }
+        }
+        resolve(comunas);
+      });
+    });
+    return promise;
+  }
+
   GuardarTipoLugaresLocal(tipoLugares): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -321,6 +397,27 @@ export class DbEleccionesService {
     });
     return promise;
   }
+
+
+  ObtenerTipoLugares() {
+    const query = 'SELECT * FROM TIPO_LUGARES';
+    return this.database.executeSql(query,[]).then( data => {
+      var tipoLugares: ITipoLugar[] = [];
+      if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+          tipoLugares.push({
+            tilId: data.rows.item(i).TIL_ID,
+            tilCodigo: data.rows.item(i).TIL_CODIGO,
+            tilNombre: data.rows.item(i).TIL_NOMBRE,
+            tilDesripcion: data.rows.item(i).TIL_DESCRIPCION,
+            tilEstado: data.rows.item(i).TIL_ESTADO,
+          });          
+        }
+      }
+      this.tipoLugares.next(tipoLugares);
+    });
+  }
+
   GuardarLugaresLocal(lugares): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -344,6 +441,7 @@ export class DbEleccionesService {
     });
     return promise;
   }
+
   GuardarEmpresasTransporteLocal(empresaTransporte): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -363,6 +461,7 @@ export class DbEleccionesService {
     });
     return promise;
   }
+
   GuardarTransportesLocal(transportes): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -385,10 +484,7 @@ export class DbEleccionesService {
       });
     });
     return promise;
-  }
-
-  
-
+  }  
   GuardarParametrosLocal(parametros): Promise<any> {
     let outerThis = this;
     let promise = new Promise<boolean>(function(resolve, reject) {

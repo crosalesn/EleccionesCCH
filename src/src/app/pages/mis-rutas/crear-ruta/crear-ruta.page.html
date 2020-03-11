@@ -1,45 +1,79 @@
 <body class="cuerpo rutas">
-  <app-header></app-header>
-  <div class="container">
-       <h1>Crear ruta</h1>
-       <h3><strong>Cargo:</strong> Transportista</h3>
-       <h3><strong>Camión asignado:</strong> ZW - 45 56</h3>
+    <app-header></app-header>
+    <div class="container">
+        <h1>Crear ruta</h1>
+        <h3><strong>Cargo:</strong> Transportista</h3>
+        <h3><strong>Camión asignado:</strong> ZW - 45 56</h3>
 
-       <div class="crear-ruta">
-           <select name="select" [(ngModel)]="ruta.origen">
-               <option value="value1" selected>Seleccione un origen</option> 
-               <option value="value2">Origen 01</option>
-               <option value="value3">Origen 02</option>
-               <option value="value2">Origen 03</option>
-               <option value="value3">Origen 04</option>
-           </select>
+        <div class="crear-ruta" style="text-align: start;">
+            <ion-title>Origen</ion-title>
+            <ion-item>
+                <ion-label>Región</ion-label>
+                <ion-select placeholder="Seleccione" [(ngModel)]="ruta.regionOrigen"
+                    (ionChange)="cambioComuna(ruta.regionOrigen, 0)">
+                    <ion-select-option *ngFor="let reg of regiones" [value]="reg.regId">{{reg.regNombre}}
+                    </ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Tipo Lugar</ion-label>
+                <ion-select placeholder="Seleccione" [(ngModel)]="ruta.tipoLugarOrigen">
+                    <ion-select-option *ngFor="let tipLug of tipoLugares" [value]="tipLug.tilId">{{tipLug.tilNombre}}
+                    </ion-select-option>
 
-           <a class="btn-principal" (click)="asignarCarga()" >ASIGNAR CARGA</a>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Comuna</ion-label>
+                <ion-select placeholder="Seleccione" [(ngModel)]="ruta.comumaOrigen">
+                    <ion-select-option *ngFor="let com of comumas" [value]="com.COM_ID">{{com.COM_NOMBRE}}
+                    </ion-select-option>
+                </ion-select>
+            </ion-item>
 
-           <select name="select" [(ngModel)]="ruta.destino">
-               <option value="value1" selected >Seleccione un destino</option> 
-               <option value="value2">Destino 01</option>
-               <option value="value3">Destino 02</option>
-               <option value="value2">Destino 03</option>
-               <option value="value3">Destino 04</option>
-           </select>
-       </div>
+            <ion-title>Destino</ion-title>
+            
+            <ion-item>
+                <ion-label>Región</ion-label>
+                <ion-select placeholder="Seleccione" [(ngModel)]="ruta.regionDestino"
+                    (ionChange)="cambioComuna(ruta.regionDestino, 1)">
+                    <ion-select-option *ngFor="let reg of regionDestino" [value]="reg.regId">{{reg.regNombre}}
+                    </ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Tipo Lugar</ion-label>
+                <ion-select placeholder="Seleccione" [(ngModel)]="ruta.tipoLugarDestino">
+                    <ion-select-option *ngFor="let tipLug of tipoLugares" [value]="tipLug.tilId">{{tipLug.tilNombre}}
+                    </ion-select-option>
 
-       <div class="tabla tabla-carga-asignada">
-           <table>
-               <tr>
-                   <th class="radio_inicial">Carga asignada</th>
-               </tr>
-               <tr *ngFor="let cod of codigos">
-                   <td>{{cod}}</td>
-               </tr>               
-           </table>
-       </div>
-       <div class="caja-cuadrar">
-           <button class="btn-alternativo" (click)="crearRuta()">CREAR RUTA</button>
-       </div>
-  </div>
-  <footer class="pie">
-      <p>© Derechos reservados Correos de Chile</p>
-  </footer>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label>Comuna</ion-label>
+                <ion-select placeholder="Seleccione" [(ngModel)]="ruta.comumaDestino">
+                    <ion-select-option *ngFor="let com of comumasDestino" [value]="com.COM_ID">{{com.COM_NOMBRE}}
+                    </ion-select-option>
+                </ion-select>
+            </ion-item>           
+        </div>
+
+        <div class="tabla tabla-carga-asignada">
+            <table>
+                <tr>
+                    <th class="radio_inicial">Carga asignada</th>
+                </tr>
+                <tr *ngFor="let cod of codigos">
+                    <td>{{cod}}</td>
+                </tr>
+            </table>
+        </div>
+        <a class="btn-principal" (click)="asignarCarga()">ASIGNAR CARGA</a>
+        <div class="caja-cuadrar">
+            <button class="btn-alternativo" (click)="crearRuta()">CREAR RUTA</button>
+        </div>
+    </div>
+    <footer class="pie">
+        <p>© Derechos reservados Correos de Chile</p>
+    </footer>
 </body>

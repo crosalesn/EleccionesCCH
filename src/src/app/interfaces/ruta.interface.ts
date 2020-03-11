@@ -1,7 +1,13 @@
 export interface IRuta {
-    origen: string;
-    destino: string;
+    destino?: string;
+    regionOrigen: number;
+    comumaOrigen: number;
+    regionDestino: number;
+    comumaDestino: number;   
+    tipoLugarOrigen: number;
+    tipoLugarDestino: number 
     codigos: string[];
-    estado: string;
+    estado: number;
     usuario?: any;
+    
 }

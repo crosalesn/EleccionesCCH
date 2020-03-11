@@ -47,6 +47,7 @@ export class LoginPage implements OnInit {
   }
 
   Ingresar(camposFormulario){
+  debugger;
   this.datosFormulario = {USU_NOMBRE_USUARIO: camposFormulario.usuario, USU_CLAVE: camposFormulario.clave};																	 
     
 	if(!camposFormulario.usuario.trim()){

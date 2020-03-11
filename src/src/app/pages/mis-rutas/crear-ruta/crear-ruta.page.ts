@@ -6,6 +6,10 @@ import { AlertasService } from 'src/app/services/alertas.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { RutaService } from 'src/app/services/ruta.service';
 import { IRuta } from 'src/app/interfaces/ruta.interface';
+import { DbEleccionesService } from 'src/app/services/db-elecciones.service';
+import { IRegion } from 'src/app/interfaces/region.interface';
+import { ITipoLugar } from 'src/app/interfaces/tipo_lugar.interface';
+import { IProvincia } from 'src/app/interfaces/provincia.interface';
 
 @Component({
   selector: 'app-crear-ruta',
@@ -13,11 +17,26 @@ import { IRuta } from 'src/app/interfaces/ruta.interface';
   styleUrls: ['./crear-ruta.page.scss'],
 })
 export class CrearRutaPage implements OnInit {
+  
+  tipoLugares: ITipoLugar[] = [];
+  
+  regiones: IRegion[] = [];
+  provincias = [];
+  comumas = [];
+
+  regionesDestino: IRegion[] = [];
+  provinciasDestino = [];
+  comumasDestino = [];
+
   ruta: IRuta = {
+    regionOrigen: null,
+    comumaOrigen: null,
+    regionDestino: null,
+    comumaDestino: null,
     codigos: [],
-    destino: '',
-    origen: '',
-    estado: ''
+    estado: 2,
+    tipoLugarDestino: null,
+    tipoLugarOrigen: null,
   };
 
   codigos: string[] = [];
@@ -70,15 +89,63 @@ export class CrearRutaPage implements OnInit {
       }
     ]
   };
+  regionDestino: any;
+  comumaDestino: any;
+  estado: any;
+  tipoLugarDestino: any;
+  tipoLugarOrigen: any;
+
   constructor(
     private route: Router,
     private modalController: ModalController,
     private alert: AlertasService,
     private user: UsuarioService,
-    private rutaServ: RutaService
+    private rutaServ: RutaService,
+    private db: DbEleccionesService
   ) { }
 
   ngOnInit() {
+    this.db.GetDatabaseState().subscribe(ready => {
+      if (ready) {
+        this.db.regiones.subscribe( (data: IRegion[]) => {
+          this.regiones = data;
+          this.regionDestino = data;
+          console.log("regiones:", this.regiones);
+        });
+
+        this.db.tipoLugares.subscribe( (data: ITipoLugar[]) => {
+          this.tipoLugares = data;
+          console.log("tipoLugares:", this.tipoLugares);
+        });
+      }
+    });
+  }
+  
+  ionionViewWillEnter() {
+    
+  }
+  // origen 0 destino origen 1 destino
+
+  cambioComuna(idRegion: number, origen: number) {
+    this.comumas = [];
+    console.log(idRegion);          
+    this.db.ObtenerProvinciasPorRegion(idRegion).then((provincias: IProvincia[]) =>{            
+      provincias.forEach(dato => {         
+        this.comunasPorProvincia(dato.proId).then((com: any[]) => {
+            com.forEach(c => {             
+              if (origen === 0) {
+                this.comumas.push(c);
+              } else if (origen === 1)  {
+                this.comumasDestino.push(c);
+              }              
+            });         
+        });
+      });                           
+    });
+  }
+
+  comunasPorProvincia(idProv: number) {
+    return this.db.ObtenerComunasPorProvincias(idProv);
   }
 
   async asignarCarga() {
@@ -105,9 +172,11 @@ export class CrearRutaPage implements OnInit {
 
   crearRuta() {
     this.ruta.codigos = this.codigos;
+
     console.log('rutaIngresar: ', this.ruta);
-    if (this.ruta.origen !== '' && this.ruta.destino !== '' && this.ruta.codigos.length > 0) {
-      this.ruta.estado = '3';
+
+    if (this.isValidRuta()) {
+      this.ruta.estado = 2;
       // guardar ruta
       console.log('ruta:', this.ruta);
       this.rutaServ.insertarRutas(this.ruta);
@@ -116,6 +185,22 @@ export class CrearRutaPage implements OnInit {
     } else {
       this.alert.Toast('Debe ingresar todos los campos');
     }
+  }
+
+  isValidRuta(): boolean {
+    var resp = false;
+    if (
+      this.ruta.regionOrigen != null 
+      && this.ruta.regionDestino != null 
+      && this.ruta.regionDestino != null
+      && this.ruta.comumaDestino != null
+      && this.ruta.codigos .length > 0      
+      && this.ruta.tipoLugarDestino != null
+      && this.ruta.tipoLugarOrigen != null      
+    ) {
+      resp = true;
+    }                                            
+    return resp;
   }
 }
 
