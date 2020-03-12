@@ -3,11 +3,11 @@ import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { EleccionesService } from './services/elecciones.service';
-import { DbEleccionesService } from './services/db-elecciones.service';
-import { FuncionesService } from './services/funciones.service';
+import { EleccionesService } from './app/services/elecciones.service';
+import { DbEleccionesService } from './app/services/db-elecciones.service';
+import { FuncionesService } from './app/services/funciones.service';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-import { DbSincroService } from './services/db-sincro.service';
+import { DbSincroService } from './app/services/db-sincro.service';
 
 @Component({
   selector: 'app-root',
