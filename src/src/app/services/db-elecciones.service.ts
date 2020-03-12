@@ -453,6 +453,7 @@ export class DbEleccionesService {
     return promise;
   }
   GuardarCargasLocal(cargas): Promise<any> {
+    console.log('cargas: ', cargas);
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
       var arregloDePromesas = [];
@@ -463,8 +464,9 @@ export class DbEleccionesService {
            "(CAR_ID, TVO_ID, CAR_CODIGO, CAR_BARRA, TCG_TD, CAR_BARRA_PALLET, CAR_BARRA_CUBETA, CAR_BARRA_BOLSA,"+
            "CAR_FECHA_REGISTRO, CAR_USUARIO_CREACION, CAR_FECHA_MODIFICACION, CAR_USUARIO_MODIFICACION, MES_ID, LUG_ID,"+
            "CAR_NOMBRE, CAR_DESCRIPCION, ECA_ID, TRC_ID, TDC_ID)"+
-           " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 
-              [singleLoad.CAR_ID,
+           " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 
+              [
+                singleLoad.CAR_ID,
                 singleLoad.TVO_ID,
                 singleLoad.CAR_CODIGO, 
                 singleLoad.CAR_BARRA,
@@ -482,7 +484,8 @@ export class DbEleccionesService {
                 singleLoad.CAR_DESCRIPCION,
                 singleLoad.ECA_ID,
                 singleLoad.TRC_ID,
-                singleLoad.TDC_ID]).then(data => {
+                singleLoad.TDC_ID
+              ]).then(data => {
              console.log("Lugar insertado:" + JSON.stringify(singleLoad));
            })
           );

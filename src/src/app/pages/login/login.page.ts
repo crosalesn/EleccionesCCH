@@ -15,28 +15,28 @@ import { SincronizarService } from '../../services/sincronizar.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  
+
   datosFormulario: any;
   loginForm: FormGroup;
   usuarioLocal: any;
 
-  constructor(private eleccionesService: EleccionesService, private router: 
+  constructor(private eleccionesService: EleccionesService, private router:
     Router, private builder: FormBuilder, private dbElecciones: DbEleccionesService,
-    private net: NetworkService, 
+    private net: NetworkService,
     private alertas: AlertasService,
     private funciones: FuncionesService,
     private sincronizar: SincronizarService) {
-      this.loginForm = this.builder.group({
-        usuario: [''],
-        clave: ['']
-       });
-    }
+    this.loginForm = this.builder.group({
+      usuario: [''],
+      clave: ['']
+    });
+  }
 
-  ngOnInit() { 
+  ngOnInit() {
 
   }
-  
-  caracteresPermitidos(event: any){
+
+  caracteresPermitidos(event: any) {
     let tecla = (document.all) ? event.keyCode : event.which;
     if (tecla == 8) {
       return true;
@@ -46,44 +46,43 @@ export class LoginPage implements OnInit {
     return patron.test(tecla_final);
   }
 
-  Ingresar(camposFormulario){
-  debugger;
-  this.datosFormulario = {USU_NOMBRE_USUARIO: camposFormulario.usuario, USU_CLAVE: camposFormulario.clave};																	 
-    
-	if(!camposFormulario.usuario.trim()){
-        this.alertas.Alerta("Usuario no ingresado");
-        return;
+  Ingresar(camposFormulario) {
+    this.datosFormulario = { USU_NOMBRE_USUARIO: camposFormulario.usuario, USU_CLAVE: camposFormulario.clave };
+
+    if (!camposFormulario.usuario.trim()) {
+      this.alertas.Alerta("Usuario no ingresado");
+      return;
     }
 
-    if(!camposFormulario.clave.trim()){
+    if (!camposFormulario.clave.trim()) {
       this.alertas.Alerta("Contraseña no ingresada");
       return;
     }
-    
+
     this.net.checkNetworkStatusNow().then(usuarioConectado => {
-      if(!usuarioConectado){
+      if (!usuarioConectado) {
         this.dbElecciones.ObtenerUsuarioLocal(this.datosFormulario).then(data => {
           this.usuarioLocal = data;
-          if(this.usuarioLocal === "No existe usuario"){
+          if (this.usuarioLocal === "No existe usuario") {
             this.alertas.Alerta("Debe estar conectado a la red para acceder por primera vez");
-          }else{
+          } else {
             this.funciones.SetUsuarioLogeado(this.usuarioLocal);
             const token = this.usuarioLocal.usuario.USU_ID;
             this.funciones.SetToken(token);
             this.router.navigateByUrl('/home');
           }
         });
-      }else{
-  
+      } else {
+
         this.eleccionesService.ObtenerLoginUsuario(this.datosFormulario)
           .subscribe(
-            (info)=>{
-              if(info.error === null){
+            (info) => {
+              if (info.error === null) {
                 this.funciones.SetUsuarioLogeado(info);
                 this.dbElecciones.BorrarPerfilesLocal();
                 this.dbElecciones.BorrarUsuarioLocal();
                 this.dbElecciones.BorrarAplicacionesLocal();
-                this.dbElecciones.BorrarParametrosLocal();										
+                this.dbElecciones.BorrarParametrosLocal();
                 this.dbElecciones.BorrarPerfilesAplicacionesLocal();
                 this.dbElecciones.AgregarUsuarioLocal(info);
                 const token = info.usuario.USU_ID;
@@ -94,27 +93,27 @@ export class LoginPage implements OnInit {
                     return;
                   }
                 });
-                
-              }else {
-                switch(info.error !== null) { 
-                  case info.error.codigo == 1: { 
+
+              } else {
+                switch (info.error !== null) {
+                  case info.error.codigo == 1: {
                     this.alertas.Alerta(info.error.mensaje);
-                    break; 
-                  } 
-                  case info.error.codigo == 2: { 
+                    break;
+                  }
+                  case info.error.codigo == 2: {
                     this.alertas.Alerta(info.error.mensaje);
-                    break; 
-                  } 
-                  default: { 
+                    break;
+                  }
+                  default: {
                     this.alertas.Alerta("Datos incorrectos");
                     break;
-                  } 
+                  }
+                }
               }
-            }
-          },
-          error => {
-            this.alertas.Alerta("Error de conexion al servidor - Intente reconectar el wifi");
-        });
+            },
+            error => {
+              this.alertas.Alerta("Error de conexion al servidor - Intente reconectar el wifi");
+            });
       }
     });
   }
