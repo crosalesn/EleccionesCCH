@@ -5,6 +5,7 @@ import { DbEleccionesService } from './db-elecciones.service';
 import { Router } from '@angular/router';
 import { NetworkService } from './network.service';
 import { AlertasService } from './alertas.service';
+import { DbSincroService } from './db-sincro.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +19,23 @@ export class SincronizarService {
     private eleccionesService: EleccionesService,
     private dbElecciones: DbEleccionesService,
     public alert: AlertasService,
-    private router: Router, private net: NetworkService) { }
+    private router: Router, private net: NetworkService,
+    private dbSincro: DbSincroService) { }
 
   Sincronizar(): Promise<boolean> {
+    let modal: HTMLIonLoadingElement;
+    let loading = this.loadingController.create({
+      spinner: 'circles',
+      duration: 15000,
+      message: 'Sincronizando...',
+      translucent: true,
+      cssClass: 'custom-class custom-loading',
+      backdropDismiss: false,
+      id: 'cerrar'
+    }).then(t => {
+      modal = t;
+      modal.present();
+    });
 
     let outerThis = this;
     var promise = new Promise<boolean>(function (resolve, reject) {
@@ -31,7 +46,7 @@ export class SincronizarService {
           resolve(false);
         }
 
-        outerThis.Loading();
+        
         var arregloDePromesas = [];
         // Sincronizacion COORDENADAS
         var syncCoords = outerThis.dbElecciones.GetCoordenadasUsuarios().then((data) => {
@@ -174,7 +189,7 @@ export class SincronizarService {
             }
           })
         });
-        arregloDePromesas.push(promesaComunas);
+        arregloDePromesas.push(promesaTipoLugares);
         
         let promesaLugares = new Promise((resolve, reject) => {
           outerThis.eleccionesService.ObtenerLugares().subscribe(data => {
@@ -194,6 +209,25 @@ export class SincronizarService {
           })
         });
         arregloDePromesas.push(promesaLugares);
+
+        let promesaCargas = new Promise((resolve, reject) => {
+          outerThis.eleccionesService.ObtenerCargas().subscribe(data => {
+            console.log("Obteniendo Cargas del servidor");
+            if (data != null) {
+              outerThis.dbElecciones.GuardarCargasLocal(data).then(data => {
+                resolve();
+                console.log("Cargas guardadas");
+              }, error => {
+                console.log("Ocurrió un error al guardar las Cargas localmente");
+                reject();
+              });
+            } else {
+              console.log("No se obtuvo respuesta de la API al obtener Cargas");
+              reject();
+            }
+          })
+        });
+        arregloDePromesas.push(promesaCargas);
 
         let promesaEmpresasTransporte = new Promise((resolve, reject) => {
           var usr_string = localStorage.getItem("usuarioActual");
@@ -241,29 +275,152 @@ export class SincronizarService {
         });
         arregloDePromesas.push(promesaTransportes);
 
+
+        let promesaUniversoRutas = new Promise((resolverUniverso, rechazar) => {
+          var arregloDePromesasRecepcionTablasRutas = [];
+          var usr_string = localStorage.getItem("usuarioActual");
+          var usuario = JSON.parse(usr_string).usuario;
+          let parametros = {
+            "USU_ID": usuario.USU_ID,
+          }
+          // Envío
+          outerThis.dbSincro.ObtenerRutasNoSincronizadas().then(data => {
+            // Acá se debe ir a consultar las demás tablas del universo rutas y
+            // armar el JSON necesario para enviar a la API, que incluirá todas las tablas
+            // asociadas a la ruta. 
+
+            /*
+              Code here
+            */
+
+            // Una vez realizado el envío de toda la información, se deben updatear todas las tablas
+            // del universo rutas a SYNC = 1 (Sincronizadas)
+            outerThis.dbSincro.UpdateRutasSincronizadas().then(r => {
+              /*
+                Code here
+              */
+
+              // Finalmente comienza la recepción de datos. Una vez que ya terminamos de enviar todo, vamos a borrar las tablas locales
+              // y recibir toda la data nuevamente.
+              let promesaRutas = new Promise((resolve, reject) => {
+                var usr_string = localStorage.getItem("usuarioActual");
+                var usuario = JSON.parse(usr_string).usuario;
+                let parametros = {
+                  "USU_ID": usuario.USU_ID,
+                }
+                outerThis.eleccionesService.ObtenerRutas(parametros).subscribe(data => {
+                  console.log("Obteniendo Rutas del servidor");
+                  if (data != null) {
+                    outerThis.dbElecciones.GuardarRutasLocal(data).then(data => {
+                      resolve();
+                      console.log("Rutas guardadas");
+                    }, error => {
+                      console.log("Ocurrió un error al guardar las Rutas localmente");
+                      reject();
+                    });
+                  } else {
+                    console.log("No se obtuvo respuesta de la API al obtener Rutas");
+                    reject();
+                  }
+                });
+              });
+              arregloDePromesasRecepcionTablasRutas.push(promesaRutas);
+
+              let promesaEstadosRutas = new Promise((resolve, reject) => {
+                outerThis.eleccionesService.ObtenerEstadosRutas().subscribe(data => {
+                  console.log("Obteniendo EstadosRutas del servidor");
+                  if (data != null) {
+                    outerThis.dbElecciones.GuardarEstadosRutasLocal(data).then(data => {
+                      resolve();
+                      console.log("EstadosRutas guardadas");
+                    }, error => {
+                      console.log("Ocurrió un error al guardar los EstadosRutas localmente");
+                      reject();
+                    });
+                  } else {
+                    console.log("No se obtuvo respuesta de la API al obtener EstadosRutas");
+                    reject();
+                  }
+                })
+              });
+              arregloDePromesasRecepcionTablasRutas.push(promesaEstadosRutas);
+
+              let promesaBitacoraRutas = new Promise((resolve, reject) => {
+                var usr_string = localStorage.getItem("usuarioActual");
+                var usuario = JSON.parse(usr_string).usuario;
+                let parametros = {
+                  "USU_ID": usuario.USU_ID,
+                }
+                outerThis.eleccionesService.ObtenerBitacoraRutas(parametros).subscribe(data => {
+                  console.log("Obteniendo BitacoraRutas del servidor");
+                  if (data != null) {
+                    outerThis.dbElecciones.GuardarBitacoraRutasLocal(data).then(data => {
+                      resolve();
+                      console.log("BitacoraRutas guardadas");
+                    }, error => {
+                      console.log("Ocurrió un error al guardar las BitacoraRutas localmente");
+                      reject();
+                    });
+                  } else {
+                    console.log("No se obtuvo respuesta de la API al obtener BitacoraRutas");
+                    reject();
+                  }
+                })
+              });
+              arregloDePromesasRecepcionTablasRutas.push(promesaBitacoraRutas);
+
+              let promesaRutasCargas = new Promise((resolve, reject) => {
+                var usr_string = localStorage.getItem("usuarioActual");
+                var usuario = JSON.parse(usr_string).usuario;
+                let parametros = {
+                  "USU_ID": usuario.USU_ID,
+                }
+                outerThis.eleccionesService.ObtenerRutasCargas(parametros).subscribe(data => {
+                  console.log("Obteniendo RutasCargas del servidor");
+                  if (data != null) {
+                    outerThis.dbElecciones.GuardarRutasCargasLocal(data).then(data => {
+                      resolve();
+                      console.log("RutasCargas guardadas");
+                    }, error => {
+                      console.log("Ocurrió un error al guardar las RutasCargas localmente");
+                      reject();
+                    });
+                  } else {
+                    console.log("No se obtuvo respuesta de la API al obtener RutasCargas");
+                    reject();
+                  }
+                })
+              });
+              arregloDePromesasRecepcionTablasRutas.push(promesaRutasCargas);
+
+              Promise.all(arregloDePromesasRecepcionTablasRutas).then(x => {
+                  arregloDePromesasRecepcionTablasRutas = [];
+                  // Una vez hicimos todos los envíos y todas las recepciones del universo rutas
+                  // resolvemos la promesa. La sincronización de rutas y las tablas relacionadas
+                  resolverUniverso();
+              });
+            }, error => {
+              debugger
+              console.error(error);
+            }); // Fin UpdateRutasSincronizadas.then
+          }); // Fin ObtenerRutasSincronizadas.then
+        }); // Fin promesaUniversoRutas
+        arregloDePromesas.push(promesaUniversoRutas);
+
+        
+
+        // ============================== FIN SINCRONIZADORES ==============================
         console.log(outerThis.TableCoordenadasUsuario);
 
         Promise.all(arregloDePromesas).then(x => {
-          outerThis.loadingController.dismiss(null, null, 'cerrar').then(() => {
-            console.log("Cerrando el Spinner");
-            resolve(true);
-          });
+          arregloDePromesas = [];
+          modal.dismiss(null, null);
+          console.log("Cerrando el Spinner");
+          resolve(true);
         });
       })
     });
     return promise;
 
-  }
-  async Loading() {
-    const loading = await this.loadingController.create({
-      spinner: 'circles',
-      duration: 15000,
-      message: 'Sincronizando...',
-      translucent: true,
-      cssClass: 'custom-class custom-loading',
-      backdropDismiss: false,
-      id: 'cerrar'
-    });
-    await loading.present();
   }
 }

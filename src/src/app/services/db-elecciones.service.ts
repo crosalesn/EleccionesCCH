@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { Platform } from '@ionic/angular';
 import { strictEqual } from 'assert';
 import { IRegion } from '../interfaces/region.interface';
-import { ITipoLugar } from '../interfaces/tipo_lugar.interface';
 import { IProvincia } from '../interfaces/provincia.interface';
 
 @Injectable({
@@ -16,11 +15,6 @@ export class DbEleccionesService {
 
   private database: SQLiteObject = null;
   private dbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-  regiones = new BehaviorSubject([]);
-  provincias = new BehaviorSubject([]);
-  comnuas = new BehaviorSubject([]);
-  tipoLugares = new BehaviorSubject([]);
 
   constructor(private plt: Platform, private sqlitePorter: SQLitePorter, private sqlite: SQLite, 
     private http: HttpClient) {
@@ -82,8 +76,6 @@ export class DbEleccionesService {
       this.sqlitePorter.importSqlToDb(this.database, sql)
         .then(_ => {
           console.log("la importacion se realizó correctamente");
-          this.ObtenerRegionesLocal();
-          this.ObtenerTipoLugares();
           this.dbReady.next(true);
         })
         .catch(e => console.error(e));
@@ -257,7 +249,6 @@ export class DbEleccionesService {
       }
     });
   }
-
   GuardarRegionesLocal(regiones): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -280,25 +271,6 @@ export class DbEleccionesService {
     });
     return promise;
   }
-
-
-  ObtenerRegionesLocal() {
-    const query = 'SELECT * FROM REGIONES';
-    return this.database.executeSql(query,[]).then( data => {
-      var regiones: IRegion[] = [];
-      if (data.rows.length > 0) {
-        for (var i = 0; i < data.rows.length; i++) {
-          regiones.push({
-            regId: data.rows.item(i).REG_ID,
-            regCodigo: data.rows.item(i).REG_CODIGO,
-            regNombre: data.rows.item(i).REG_NOMBRE
-          });          
-        }
-      }
-      this.regiones.next(regiones);
-    });
-  }
-
   GuardarProvinciasLocal(provincias): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -308,7 +280,6 @@ export class DbEleccionesService {
         ((singleProvince) => {
           arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO PROVINCIAS " +
            "(PRO_ID, PRO_NOMBRE, REG_ID, PRO_CODIGO) VALUES (?,?,?,?)", [singleProvince.PRO_ID, singleProvince.PRO_NOMBRE, singleProvince.REG_ID, singleProvince.PRO_CODIGO]).then(data => {
-
              console.log("Provincia insertada:" + JSON.stringify(singleProvince));
            })
           );
@@ -319,7 +290,7 @@ export class DbEleccionesService {
       }, anyWasRejected => {
         resolve(false);
       });
-    });    
+    });
     return promise;
   }
 
@@ -341,8 +312,8 @@ export class DbEleccionesService {
         }
         resolve(provincias);
       });
-    });
 
+    });
     return promise;
   }
 
@@ -364,27 +335,6 @@ export class DbEleccionesService {
         resolve(true);
       }, anyWasRejected => {
         resolve(false);
-      });
-    });
-    return promise;
-  }
-
-  ObtenerComunasPorProvincias(idProv: number) {
-    const query = 'SELECT * FROM COMUNAS WHERE PRO_ID = ? ';
-    let promise = new Promise( (resolve, reject) => {
-      this.database.executeSql(query,[idProv]).then( data => {
-        var comunas= [];
-        if (data.rows.length > 0) {
-          for (var i = 0; i < data.rows.length; i++) {                                        
-            comunas.push({
-              COM_ID: data.rows.item(i).COM_ID,
-              COM_NOMBRE: data.rows.item(i).COM_NOMBRE,
-              PRO_ID : data.rows.item(i).PRO_ID ,
-              COM_CODIGO: data.rows.item(i).COM_CODIGO,            
-            });          
-          }
-        }
-        resolve(comunas);
       });
     });
     return promise;
@@ -413,26 +363,6 @@ export class DbEleccionesService {
     return promise;
   }
 
-
-  ObtenerTipoLugares() {
-    const query = 'SELECT * FROM TIPO_LUGARES';
-    return this.database.executeSql(query,[]).then( data => {
-      var tipoLugares: ITipoLugar[] = [];
-      if (data.rows.length > 0) {
-        for (var i = 0; i < data.rows.length; i++) {
-          tipoLugares.push({
-            tilId: data.rows.item(i).TIL_ID,
-            tilCodigo: data.rows.item(i).TIL_CODIGO,
-            tilNombre: data.rows.item(i).TIL_NOMBRE,
-            tilDesripcion: data.rows.item(i).TIL_DESCRIPCION,
-            tilEstado: data.rows.item(i).TIL_ESTADO,
-          });          
-        }
-      }
-      this.tipoLugares.next(tipoLugares);
-    });
-  }
-
   GuardarLugaresLocal(lugares): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -456,7 +386,50 @@ export class DbEleccionesService {
     });
     return promise;
   }
-
+  GuardarCargasLocal(cargas): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM CARGAS"));
+      for(let j=0; j<cargas.length; j++) {
+        ((singleLoad) => {
+          arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO CARGAS " +
+           "(CAR_ID, TVO_ID, CAR_CODIGO, CAR_BARRA, TCG_TD, CAR_BARRA_PALLET, CAR_BARRA_CUBETA, CAR_BARRA_BOLSA,"+
+           "CAR_FECHA_REGISTRO, CAR_USUARIO_CREACION, CAR_FECHA_MODIFICACION, CAR_USUARIO_MODIFICACION, MES_ID, LUG_ID,"+
+           "CAR_NOMBRE, CAR_DESCRIPCION, ECA_ID, TRC_ID, TDC_ID)"+
+           " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 
+              [singleLoad.CAR_ID,
+                singleLoad.TVO_ID,
+                singleLoad.CAR_CODIGO, 
+                singleLoad.CAR_BARRA,
+                singleLoad.TCG_TD,
+                singleLoad.CAR_BARRA_PALLET,
+                singleLoad.CAR_BARRA_CUBETA,
+                singleLoad.CAR_BARRA_BOLSA,
+                singleLoad.CAR_FECHA_REGISTRO,
+                singleLoad.CAR_USUARIO_CREACION,
+                singleLoad.CAR_FECHA_MODIFICACION,
+                singleLoad.CAR_USUARIO_MODIFICACION,
+                singleLoad.MES_ID,
+                singleLoad.LUG_ID,
+                singleLoad.CAR_NOMBRE,
+                singleLoad.CAR_DESCRIPCION,
+                singleLoad.ECA_ID,
+                singleLoad.TRC_ID,
+                singleLoad.TDC_ID]).then(data => {
+             console.log("Lugar insertado:" + JSON.stringify(singleLoad));
+           })
+          );
+        })(cargas[j])
+      }
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+    return promise;
+  }
   GuardarEmpresasTransporteLocal(empresaTransporte): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -476,7 +449,6 @@ export class DbEleccionesService {
     });
     return promise;
   }
-
   GuardarTransportesLocal(transportes): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -499,7 +471,111 @@ export class DbEleccionesService {
       });
     });
     return promise;
-  }  
+  }
+  GuardarRutasLocal(rutas): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM RUTAS"));
+      for(let j=0; j<rutas.length; j++) {
+        ((singleRoute) => {
+          arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO RUTAS " +
+           "(RTA_ID, RTA_USUARIO_REGISTRO, RTA_FECHA_REGISTRO, RTA_USUARIO_MODIFICACION, RTA_FECHA_MODIFICACION," + 
+           " RTA_CODIGO, ERU_ID, TRA_ID, USU_ID, LUG_ID_ORIGEN, LUG_ID_DESTINO, RTA_OS, RTA_LATITUD, RTA_LONGITUD," + 
+           " RTA_FECHA_DISPOSITIVO) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 
+              [singleRoute.RTA_ID, singleRoute.RTA_USUARIO_REGISTRO, singleRoute.RTA_FECHA_REGISTRO, singleRoute.RTA_USUARIO_MODIFICACION, 
+                singleRoute.RTA_FECHA_MODIFICACION, singleRoute.RTA_CODIGO, singleRoute.ERU_ID, singleRoute.TRA_ID, singleRoute.USU_ID,
+                singleRoute.LUG_ID_ORIGEN, singleRoute.LUG_ID_DESTINO, singleRoute.RTA_OS, singleRoute.RTA_LATITUD, singleRoute.RTA_LONGITUD,
+                singleRoute.RTA_FECHA_DISPOSITIVO]).then(data => {
+             console.log("Ruta insertada:" + JSON.stringify(singleRoute));
+           })
+          );
+        })(rutas[j])
+      }
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+    return promise;
+  }
+
+  GuardarEstadosRutasLocal(estadosRutas): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM ESTADOS_RUTAS"));
+      for(let j=0; j<estadosRutas.length; j++) {
+        ((singleRouteState) => {
+          arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO ESTADOS_RUTAS " +
+           "(ERU_ID, ERU_NOMBRE, ERU_DESCRIPCION, ERU_CODIGO) VALUES (?,?,?,?)", 
+              [singleRouteState.ERU_ID, singleRouteState.ERU_NOMBRE, singleRouteState.ERU_DESCRIPCION, singleRouteState.ERU_CODIGO]).then(data => {
+             console.log("Ruta insertada:" + JSON.stringify(singleRouteState));
+           })
+          );
+        })(estadosRutas[j])
+      }
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+    return promise;
+  }
+
+  GuardarBitacoraRutasLocal(bitacorasrutas): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM BITACORA_RUTAS"));
+      for(let j=0; j<bitacorasrutas.length; j++) {
+        ((singleRouteLog) => {
+          arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO BITACORA_RUTAS " +
+           "(BRU_ID, BRU_FECHA_REGISTRO_DISPOSITIVO, BRU_USUARIO_REGISTRO, BRU_LATITUD, BRU_LONGITUD, BRU_CUADRADO, BRU_DESCRIPCION, RTA_ID, BRU_FECHA_REGISTRO) " + 
+           "VALUES (?,?,?,?,?,?,?,?,?,?)", 
+              [singleRouteLog.BRU_ID, singleRouteLog.BRU_FECHA_REGISTRO_DISPOSITIVO, singleRouteLog.BRU_USUARIO_REGISTRO, singleRouteLog.BRU_LATITUD, singleRouteLog.BRU_LONGITUD, singleRouteLog.BRU_CUADRADO, singleRouteLog.BRU_DESCRIPCION, singleRouteLog.RTA_ID, singleRouteLog.BRU_FECHA_REGISTRO]).then(data => {
+             console.log("Ruta insertada:" + JSON.stringify(singleRouteLog));
+           })
+          );
+        })(bitacorasrutas[j])
+      }
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+    return promise;
+  }
+
+  GuardarRutasCargasLocal(rutasCargas): Promise<any> {
+    let outerThis = this;
+    let promise = new Promise((resolve, reject) => {
+      var arregloDePromesas = [];
+      arregloDePromesas.push(outerThis.database.executeSql("DELETE FROM RUTAS_CARGAS"));
+      for(let j=0; j<rutasCargas.length; j++) {
+        ((singleRouteLoad) => {
+          arregloDePromesas.push(outerThis.database.executeSql("INSERT INTO BITACORA_RUTAS " +
+           "(CAR_ID, RTA_ID, CAR_RTA_ESTADO) " + 
+           "VALUES (?,?,?)", 
+              [singleRouteLoad.CAR_ID, singleRouteLoad.RTA_ID, singleRouteLoad.CAR_RTA_ESTADO]).then(data => {
+             console.log("Ruta insertada:" + JSON.stringify(singleRouteLoad));
+           })
+          );
+        })(rutasCargas[j])
+      }
+      Promise.all(arregloDePromesas).then(allWereResolved => { 
+        resolve(true);
+      }, anyWasRejected => {
+        resolve(false);
+      });
+    });
+    return promise;
+  }
+  
+
   GuardarParametrosLocal(parametros): Promise<any> {
     let outerThis = this;
     let promise = new Promise<boolean>(function(resolve, reject) {
@@ -754,6 +830,23 @@ export class DbEleccionesService {
       }else{
         return GuardarCoordenadasUsuarioParam;
       }
+    });
+  }
+
+  GetCoordenada(USU_ID: number): Promise<any>{
+    var query: string = "SELECT * FROM COORDENADAS_USUARIOS WHERE USU_ID = ? AND CUS_ID = (SELECT MAX(CUS_ID) FROM COORDENADAS_USUARIOS)";
+    return this.database.executeSql(query,[USU_ID]).then(data =>{
+      let array =  [];
+      if(data.rows.length > 0){
+          array.push({
+              CUS_LATITUD: data.rows.item(0).CUS_LATITUD,
+              CUS_LONGITUD: data.rows.item(0).CUS_LONGITUD,
+              CUS_FECHA_DISPOSITIVO: data.rows.item(0).CUS_FECHA_DISPOSITIVO,
+              USU_ID: data.rows.item(0).USU_ID,
+              CUS_SYNC: data.rows.item(0).CUS_SYNC
+          });
+      }
+      return array;
     });
   }
 

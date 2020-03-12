@@ -95,7 +95,7 @@ export class EleccionesService {
     return this.http.post(this.urlServicios+'localvotacion/'+'ObtenerLocalesVotacion','', {headers: this.headers});
   }
 
-  ObtenerEstadoRuta(): Observable<any>{
+  ObtenerEstadosRutas(): Observable<any>{
     return this.http.post(this.urlServicios+'estadoruta/'+'ObtenerEstadoRuta','',{headers: this.headers});
   }
 
@@ -131,34 +131,22 @@ export class EleccionesService {
     return this.http.post(this.urlServicios+'transporte/'+'ObtenerTransportes',parametro,{headers: this.headers});
   }
 
+  ObtenerRutas(parametro): Observable<any> {
+    return this.http.post(this.urlServicios+'Ruta/'+'ObtenerRutas',parametro,{headers: this.headers});
+  }
+  GuardarEntregaServel(parametro): Observable<any>{
+    return this.http.post(this.urlServicios+'circunscripcion/'+'GuardarEntregaServel',parametro,{headers: this.headers});
+  }
 
+  ObtenerBitacoraRutas(parametro): Observable<any> {
+    return this.http.post(this.urlServicios+'BitacoraRuta/'+'ObtenerBitacoraRutas',parametro,{headers: this.headers});
+  }
 
+  ObtenerRutasCargas(parametro): Observable<any> {
+    return this.http.post(this.urlServicios+'ruta/'+'ObtenerRutasCargas',parametro,{headers: this.headers});
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  GuardarEntregaServelResumen(parametro): Observable<any>{
+    return this.http.post(this.urlServicios+'carga/'+'GuardarEntregaServelResumen',parametro,{headers: this.headers});
+  }
 }
