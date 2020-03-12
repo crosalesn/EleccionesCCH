@@ -94,22 +94,30 @@ export class DbEleccionesService {
   GetDatabaseState(){
     return this.dbReady.asObservable();
   }
-  BorrarUsuarioLocal(){
-    return this.database.executeSql('DELETE FROM USUARIOS', []).then(data =>{
+  async BorrarUsuarioLocal(){
+    await this.database.executeSql('DELETE FROM USUARIOS', []).then(() => {
       console.log("Usuarios borrado");
+    }).catch(erro =>{
+      console.log("Error al borrar Usuarios borrado");
     });
+    
   }
 
-  BorrarParametrosLocal(){
-    return this.database.executeSql('DELETE FROM PARAMETROS', []).then(data =>{
+  async BorrarParametrosLocal(){
+    return await this.database.executeSql('DELETE FROM PARAMETROS', []).then(data =>{
       console.log("Parametros borrados");
+    }).catch(err => {
+      console.log("Error borrado Parametro");
     });
   }
 
-  BorrarPerfilesLocal(){
-    return this.database.executeSql('DELETE FROM PERFILES', []).then(data =>{
+  async BorrarPerfilesLocal(){
+    return await this.database.executeSql('DELETE FROM PERFILES', []).then(() => {
       console.log("Perfiles borrado");
+    }).catch(err => {
+      console.log("Error al borrar Perfiles");
     });
+    
   }
 
   BorraRegistroInicioFinDiaLocal(){
@@ -118,16 +126,22 @@ export class DbEleccionesService {
     });
   }
 
-  BorrarAplicacionesLocal(){
-    return this.database.executeSql('DELETE FROM APLICACIONES', []).then(data =>{
+  async BorrarAplicacionesLocal(){
+    await this.database.executeSql('DELETE FROM APLICACIONES', []).catch(()=> {
       console.log("Aplicaciones borrado");
+    }).catch(err => {
+      console.log("Error borrar Aplicaciones", err);
     });
+    
   }
 
-  BorrarPerfilesAplicacionesLocal(){
-    return this.database.executeSql('DELETE FROM PERFILES_APLICACIONES', []).then(data =>{
+  async BorrarPerfilesAplicacionesLocal(){
+    await this.database.executeSql('DELETE FROM PERFILES_APLICACIONES', []).then(() => {
       console.log("Perfiles_Aplicaciones borrado");
+    }).catch(err => {
+      console.log("error borrador Perfiles_Aplicaciones", err);
     });
+    
   }
 
 
@@ -309,8 +323,9 @@ export class DbEleccionesService {
     return promise;
   }
 
-  ObtenerProvinciasPorRegion(idRegion: number) {
-    console.log('service:', idRegion);  
+  ObtenerProvinciasPorRegion(region: IRegion) {
+    var idRegion = region.regId;
+    console.log('service:', region);  
     var provincias: IProvincia[] = [];
     let promise = new Promise( (resolve, reject)  => {
       this.database.executeSql("SELECT * FROM PROVINCIAS WHERE REG_ID = ?", [idRegion]).then( data => {

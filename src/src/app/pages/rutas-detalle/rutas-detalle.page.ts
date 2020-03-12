@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { RutaService } from 'src/app/services/ruta.service';
+import { IRuta } from 'src/app/interfaces/ruta.interface';
 
 @Component({
   selector: 'app-rutas-detalle',
@@ -9,8 +11,11 @@ import { Router } from '@angular/router';
 export class RutasDetallePage implements OnInit {
 
   private rutas: object;
-
-  constructor(private route: Router) {
+  ruta: IRuta;
+  constructor(
+    private route: Router,
+    private rutaServ: RutaService
+    ) {
     this.rutas = {
       "RUTA": [
         {
@@ -38,9 +43,12 @@ export class RutasDetallePage implements OnInit {
 
   }
 
-  ngOnInit() {
+  ngOnInit() {    
   }
 
+  ionViewWillEnter() {
+    this.ruta = this.rutaServ.getRuta();
+  }
   // 0 origen 1 destino
   escanearRuta(tipo: number) {
     if (tipo === 0) {

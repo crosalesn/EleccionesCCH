@@ -6,10 +6,18 @@ import { IRuta } from '../interfaces/ruta.interface';
 })
 export class RutaService {
   rutas: IRuta[] = [];
-
+  ruta: IRuta;
   constructor(private storage: Storage) {
     this.obtenerRutas();
     //this.deleteAll();
+  }
+
+  setRuta(ruta: IRuta) {
+    this.ruta = ruta;
+  }
+ 
+  getRuta() {
+    return this.ruta;
   }
 
   insertarRutas(ruta){

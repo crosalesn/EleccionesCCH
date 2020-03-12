@@ -24,58 +24,7 @@ export class MisRutasPage implements OnInit {
     private rutaServ: RutaService
   ) {
       this.usuario = user.obtenerUsuario();
-      console.log('usuarioLogeado: ', this.usuario);
-      /*
-      this.rutas = {
-        RUTA: [
-          {
-            ORIGEN: [
-              {
-                LUG_CODIGO: 'CODORI001',
-                LUG_NOMBRE: 'Colegio 01',
-                LUG_CALLE: 'Huerfanos',
-                LUG_NUMERO: '835',
-                LUG_COMUNA: 'Santiago',
-                ESTADO: '2',
-              }
-            ],
-            DESTINO: [
-              {
-                LUG_CODIGO: 'CODDES001',
-                LUG_NOMBRE: 'Colegio 02',
-                LUG_CALLE: 'Huerfanos',
-                LUG_NUMERO: '836',
-                LUG_COMUNA: 'Santiago',
-                ESTADO: '2',
-              }
-            ]
-          },
-          {
-            ORIGEN: [
-              {
-                LUG_CODIGO: 'CODORI002',
-                LUG_NOMBRE: 'Colegio 05',
-                LUG_CALLE: 'Gran Avenida',
-                LUG_NUMERO: '123',
-                LUG_COMUNA: 'San Miguel',
-                ESTADO: '1',
-              }
-            ],
-            DESTINO: [
-              {
-
-                LUG_CODIGO: 'CODDES002',
-                LUG_NOMBRE: 'Colegio 09',
-                LUG_CALLE: 'Huerfanos',
-                LUG_NUMERO: '222',
-                LUG_COMUNA: 'Santiago',
-                ESTADO: '2',
-              }
-            ]
-          }
-        ]
-      };
-      */
+      console.log('usuarioLogeado: ', this.usuario);      
   }
 
   ngOnInit() {
@@ -90,6 +39,12 @@ export class MisRutasPage implements OnInit {
     this.route.navigate(['/mis-rutas/crear-ruta']);
   }
 
+  detalleRuta(estadoRuta: number, ruta: IRuta) {    
+    if( estadoRuta == 2 ) {
+      this.rutaServ.setRuta(ruta);
+      this.route.navigate(['/rutas-detalle']);
+    }    
+  }
 }
 
 

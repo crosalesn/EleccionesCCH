@@ -11,14 +11,14 @@
                 <ion-label>Región</ion-label>
                 <ion-select placeholder="Seleccione" [(ngModel)]="ruta.regionOrigen"
                     (ionChange)="cambioComuna(ruta.regionOrigen, 0)">
-                    <ion-select-option *ngFor="let reg of regiones" [value]="reg.regId">{{reg.regNombre}}
+                    <ion-select-option *ngFor="let reg of regiones" [value]="reg">{{reg.regNombre}}
                     </ion-select-option>
                 </ion-select>
             </ion-item>
             <ion-item>
                 <ion-label>Tipo Lugar</ion-label>
                 <ion-select placeholder="Seleccione" [(ngModel)]="ruta.tipoLugarOrigen">
-                    <ion-select-option *ngFor="let tipLug of tipoLugares" [value]="tipLug.tilId">{{tipLug.tilNombre}}
+                    <ion-select-option *ngFor="let tipLug of tipoLugares" [value]="tipLug">{{tipLug.tilNombre}}
                     </ion-select-option>
 
                 </ion-select>
@@ -26,25 +26,24 @@
             <ion-item>
                 <ion-label>Comuna</ion-label>
                 <ion-select placeholder="Seleccione" [(ngModel)]="ruta.comumaOrigen">
-                    <ion-select-option *ngFor="let com of comumas" [value]="com.COM_ID">{{com.COM_NOMBRE}}
+                    <ion-select-option *ngFor="let com of comumas" [value]="com">{{com.COM_NOMBRE}}
                     </ion-select-option>
                 </ion-select>
             </ion-item>
 
-            <ion-title>Destino</ion-title>
-            
+            <ion-title>Destino</ion-title>         
             <ion-item>
                 <ion-label>Región</ion-label>
                 <ion-select placeholder="Seleccione" [(ngModel)]="ruta.regionDestino"
                     (ionChange)="cambioComuna(ruta.regionDestino, 1)">
-                    <ion-select-option *ngFor="let reg of regionDestino" [value]="reg.regId">{{reg.regNombre}}
+                    <ion-select-option *ngFor="let reg of regionDestino" [value]="reg">{{reg.regNombre}}
                     </ion-select-option>
                 </ion-select>
             </ion-item>
             <ion-item>
                 <ion-label>Tipo Lugar</ion-label>
                 <ion-select placeholder="Seleccione" [(ngModel)]="ruta.tipoLugarDestino">
-                    <ion-select-option *ngFor="let tipLug of tipoLugares" [value]="tipLug.tilId">{{tipLug.tilNombre}}
+                    <ion-select-option *ngFor="let tipLug of tipoLugares" [value]="tipLug">{{tipLug.tilNombre}}
                     </ion-select-option>
 
                 </ion-select>
@@ -52,7 +51,7 @@
             <ion-item>
                 <ion-label>Comuna</ion-label>
                 <ion-select placeholder="Seleccione" [(ngModel)]="ruta.comumaDestino">
-                    <ion-select-option *ngFor="let com of comumasDestino" [value]="com.COM_ID">{{com.COM_NOMBRE}}
+                    <ion-select-option *ngFor="let com of comumasDestino" [value]="com">{{com.COM_NOMBRE}}
                     </ion-select-option>
                 </ion-select>
             </ion-item>           

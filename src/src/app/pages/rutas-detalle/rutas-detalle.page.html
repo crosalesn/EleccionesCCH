@@ -1,4 +1,4 @@
-<ion-content>
+<ion-content *ngIf="ruta">
   <div class="cuerpo detalle_rutas">
     <app-header></app-header>
 
@@ -11,7 +11,8 @@
                 s49.1,9.9,67.1,27.8C326.3,190.2,326.3,250.3,289.3,287.3z"/>
             </svg>
             <h2><strong>Origen</strong></h2>
-            <h3>{{rutas['RUTA'][0].ORIGEN[0].LUG_CALLE}} {{rutas['RUTA'][0].ORIGEN[0].LUG_NUMERO}}, {{rutas['RUTA'][0].ORIGEN[0].LUG_COMUNA}}</h3>
+            <h3>{{ruta.regionOrigen.regNombre}} - {{ ruta.tipoLugarOrigen.tilNombre}}</h3>
+            <h3 style="display: none;">{{rutas['RUTA'][0].ORIGEN[0].LUG_CALLE}} {{rutas['RUTA'][0].ORIGEN[0].LUG_NUMERO}}, {{rutas['RUTA'][0].ORIGEN[0].LUG_COMUNA}}</h3>
             <a (click)="escanearRuta(0)" class="btn-principal">Escanear</a>
         </div>
         <div class="origen">
@@ -21,7 +22,8 @@
                 s49.1,9.9,67.1,27.8C326.3,190.2,326.3,250.3,289.3,287.3z"/>
             </svg>
             <h2><strong>Destino</strong></h2>
-            <h3>{{rutas['RUTA'][0].DESTINO[0].LUG_CALLE}} {{rutas['RUTA'][0].DESTINO[0].LUG_NUMERO}}, {{rutas['RUTA'][0].DESTINO[0].LUG_COMUNA}}</h3>
+            <h3>{{ruta.regionDestino.regNombre}} - {{ ruta.tipoLugarDestino.tilNombre}}</h3>
+            <h3  style="display: none;">{{rutas['RUTA'][0].DESTINO[0].LUG_CALLE}} {{rutas['RUTA'][0].DESTINO[0].LUG_NUMERO}}, {{rutas['RUTA'][0].DESTINO[0].LUG_COMUNA}}</h3>
             <a (click)="escanearRuta(1)" class="btn-principal">Escanear</a>
         </div>
     </div>

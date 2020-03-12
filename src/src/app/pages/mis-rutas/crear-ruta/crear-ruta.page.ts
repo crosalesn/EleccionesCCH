@@ -10,6 +10,7 @@ import { DbEleccionesService } from 'src/app/services/db-elecciones.service';
 import { IRegion } from 'src/app/interfaces/region.interface';
 import { ITipoLugar } from 'src/app/interfaces/tipo_lugar.interface';
 import { IProvincia } from 'src/app/interfaces/provincia.interface';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-crear-ruta',
@@ -29,10 +30,11 @@ export class CrearRutaPage implements OnInit {
   comumasDestino = [];
 
   ruta: IRuta = {
+    id: uuidv4(),
     regionOrigen: null,
-    comumaOrigen: null,
+    comumaOrigen: {},
     regionDestino: null,
-    comumaDestino: null,
+    comumaDestino: {},
     codigos: [],
     estado: 2,
     tipoLugarDestino: null,
@@ -40,6 +42,7 @@ export class CrearRutaPage implements OnInit {
   };
 
   codigos: string[] = [];
+
   rutas = {
     RUTA: [
       {
@@ -126,12 +129,12 @@ export class CrearRutaPage implements OnInit {
   }
   // origen 0 destino origen 1 destino
 
-  cambioComuna(idRegion: number, origen: number) {
+  cambioComuna(region: IRegion, origen: number) {
     this.comumas = [];
-    console.log(idRegion);          
-    this.db.ObtenerProvinciasPorRegion(idRegion).then((provincias: IProvincia[]) =>{            
-      provincias.forEach(dato => {         
-        this.comunasPorProvincia(dato.proId).then((com: any[]) => {
+    console.log('cambio comuna',region.regId);          
+    this.db.ObtenerProvinciasPorRegion(region).then((provincias: IProvincia[]) =>{            
+      provincias.forEach(provincias => {         
+        this.comunasPorProvincia(provincias).then((com: any[]) => {
             com.forEach(c => {             
               if (origen === 0) {
                 this.comumas.push(c);
@@ -144,8 +147,8 @@ export class CrearRutaPage implements OnInit {
     });
   }
 
-  comunasPorProvincia(idProv: number) {
-    return this.db.ObtenerComunasPorProvincias(idProv);
+  comunasPorProvincia(idProv: IProvincia) {
+    return this.db.ObtenerComunasPorProvincias(idProv.proId);
   }
 
   async asignarCarga() {
@@ -194,7 +197,7 @@ export class CrearRutaPage implements OnInit {
       && this.ruta.regionDestino != null 
       && this.ruta.regionDestino != null
       && this.ruta.comumaDestino != null
-      && this.ruta.codigos .length > 0      
+      && this.ruta.codigos.length > 0      
       && this.ruta.tipoLugarDestino != null
       && this.ruta.tipoLugarOrigen != null      
     ) {

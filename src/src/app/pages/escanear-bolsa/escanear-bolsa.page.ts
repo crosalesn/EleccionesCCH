@@ -4,6 +4,8 @@ import { Platform } from '@ionic/angular';
 import { ZBar, ZBarOptions } from '@ionic-native/zbar/ngx';
 import { EleccionesService } from '../../services/elecciones.service';
 import { NativeAudio } from '@ionic-native/native-audio/ngx';
+import { IRuta } from 'src/app/interfaces/ruta.interface';
+import { RutaService } from 'src/app/services/ruta.service';
 
 @Component({
   selector: 'app-escanear-bolsa',
@@ -12,7 +14,7 @@ import { NativeAudio } from '@ionic-native/native-audio/ngx';
 })
 
 export class EscanearBolsaPage implements OnInit {
-
+  ruta: IRuta;
   private zbarOptions: any;
 
   private codigos: object;
@@ -24,9 +26,11 @@ export class EscanearBolsaPage implements OnInit {
   private max: number;
   private avance: any = 0;
 
-  constructor(private zbar: ZBar, private eleccionesService: EleccionesService, 
+  constructor(
+    private rutaServ: RutaService,
+    private zbar: ZBar, private eleccionesService: EleccionesService, 
     private plataform: Platform, private nativeAudio: NativeAudio) {
-
+      
       this.plataform.ready().then(() => {
         this.nativeAudio.preloadSimple('beep', 'assets/music/beep.mp3').then((audio) => {
           console.log("Audio cargado: "+audio);
@@ -63,6 +67,11 @@ export class EscanearBolsaPage implements OnInit {
       text_instructions: 'Escaneando'
     }
 
+  }
+
+  ionionViewWillEnter() {
+    this.ruta = this.rutaServ.getRuta();
+    console.log("ruta: ", this.ruta);
   }
 
   Escanear(){
@@ -118,6 +127,9 @@ export class EscanearBolsaPage implements OnInit {
    });
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.ruta = this.rutaServ.getRuta();
+    console.log("ruta: ", this.ruta);
+   }
 
 }
