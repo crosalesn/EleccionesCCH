@@ -5,7 +5,7 @@ import { DbEleccionesService } from './db-elecciones.service';
 import { Router } from '@angular/router';
 import { NetworkService } from './network.service';
 import { AlertasService } from './alertas.service';
-import { DbSincroService } from './db-sincro.service';
+// import { DbSincroService } from './db-sincro.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +20,11 @@ export class SincronizarService {
     private dbElecciones: DbEleccionesService,
     public alert: AlertasService,
     private router: Router, private net: NetworkService,
-    private dbSincro: DbSincroService) { }
+    // private dbSincro: DbSincroService
+    
+  ) { }
 
-  Sincronizar(): Promise<boolean> {
+  async Sincronizar(): Promise<boolean> {
     let modal: HTMLIonLoadingElement;
     let loading = this.loadingController.create({
       spinner: 'circles',
@@ -40,24 +42,22 @@ export class SincronizarService {
     let outerThis = this;
     var promise = new Promise<boolean>(function (resolve, reject) {
       console.log("Se llama Inicio() de Sincronizar");
-      outerThis.net.checkNetworkStatusNow().then(estoyConectado => {
+       outerThis.net.checkNetworkStatusNow().then(estoyConectado => {
         if (!estoyConectado) {
           outerThis.alert.Alerta("Debe estar conectado a internet para sincronizar");
           resolve(false);
-        }
-
-        
+        }      
         var arregloDePromesas = [];
         // Sincronizacion COORDENADAS
-        var syncCoords = outerThis.dbElecciones.GetCoordenadasUsuarios().then((data) => {
+        var syncCoords =  outerThis.dbElecciones.GetCoordenadasUsuarios().then(async (data) => {
           var largo: number = data.LISTA_COORDENADAS.length;
-          console.log(data);
+          console.log('getcoordenadas :', data);
           if (largo > 0) {
-            outerThis.eleccionesService.GuardarCoordenadasUsuario(data)
+             outerThis.eleccionesService.GuardarCoordenadasUsuario(data)
               .subscribe(
-                (info) => {
+                async (info) => {
                   if (info.error.codigo == 0) {
-                    outerThis.dbElecciones.UpdateCoordenadasUsuarios();
+                    await outerThis.dbElecciones.UpdateCoordenadasUsuarios();
                     console.log("Sincronizando: " + info.error.mensaje);
                   } else {
                     console.log("Las coordenadas no se sincronizaron");
@@ -248,6 +248,7 @@ export class SincronizarService {
             }
           })
         });
+
         arregloDePromesas.push(promesaEmpresasTransporte);
 
         let promesaTransportes = new Promise((resolve, reject) => {
@@ -273,9 +274,10 @@ export class SincronizarService {
             }
           })
         });
+
         arregloDePromesas.push(promesaTransportes);
 
-
+        /* */
         let promesaUniversoRutas = new Promise((resolverUniverso, rechazar) => {
           var arregloDePromesasRecepcionTablasRutas = [];
           var usr_string = localStorage.getItem("usuarioActual");
@@ -284,22 +286,18 @@ export class SincronizarService {
             "USU_ID": usuario.USU_ID,
           }
           // Envío
-          outerThis.dbSincro.ObtenerRutasNoSincronizadas().then(data => {
+          
+          outerThis.dbElecciones.ObtenerRutasNoSincronizadas().then(data => {
+            console.log('ObtenerRutasNoSincronizadas: ', data);
             // Acá se debe ir a consultar las demás tablas del universo rutas y
             // armar el JSON necesario para enviar a la API, que incluirá todas las tablas
             // asociadas a la ruta. 
 
-            /*
-              Code here
-            */
-
+            
             // Una vez realizado el envío de toda la información, se deben updatear todas las tablas
             // del universo rutas a SYNC = 1 (Sincronizadas)
-            outerThis.dbSincro.UpdateRutasSincronizadas().then(r => {
-              /*
-                Code here
-              */
-
+            outerThis.dbElecciones.UpdateRutasSincronizadas().then(r => {
+              
               // Finalmente comienza la recepción de datos. Una vez que ya terminamos de enviar todo, vamos a borrar las tablas locales
               // y recibir toda la data nuevamente.
               let promesaRutas = new Promise((resolve, reject) => {
@@ -343,6 +341,7 @@ export class SincronizarService {
                   }
                 })
               });
+              
               arregloDePromesasRecepcionTablasRutas.push(promesaEstadosRutas);
 
               let promesaBitacoraRutas = new Promise((resolve, reject) => {
@@ -400,23 +399,26 @@ export class SincronizarService {
                   resolverUniverso();
               });
             }, error => {
-              debugger
+              
               console.error(error);
             }); // Fin UpdateRutasSincronizadas.then
           }); // Fin ObtenerRutasSincronizadas.then
+          
         }); // Fin promesaUniversoRutas
         arregloDePromesas.push(promesaUniversoRutas);
-
+       
         
 
         // ============================== FIN SINCRONIZADORES ==============================
-        console.log(outerThis.TableCoordenadasUsuario);
+        console.log('outerThis.TableCoordenadasUsuario' ,outerThis.TableCoordenadasUsuario);
 
         Promise.all(arregloDePromesas).then(x => {
           arregloDePromesas = [];
           modal.dismiss(null, null);
           console.log("Cerrando el Spinner");
           resolve(true);
+        }).catch(erro => {
+          console.error("error :", erro);
         });
       })
     });

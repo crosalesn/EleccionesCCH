@@ -5,7 +5,18 @@
         <h3><strong>Cargo:</strong> Transportista</h3>
         <h3><strong>Camión asignado:</strong> ZW - 45 56</h3>
 
-        <div class="crear-ruta" style="text-align: start;">
+        <div class="crear-ruta" style="text-align: start;">            
+            <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-input [(ngModel)]="transporte.patente" placeholder="Ingrese una patente"></ion-input>
+                  </ion-col>
+                  <ion-col>
+                    <ion-button (click)="buscarPatente()" size="small">Buscar</ion-button>
+                  </ion-col>                  
+                </ion-row>
+            </ion-grid>
+
             <ion-title>Origen</ion-title>
             <ion-item>
                 <ion-label>Región</ion-label>

@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { IRuta } from '../interfaces/ruta.interface';
+import { DbEleccionesService } from './db-elecciones.service';
 @Injectable({
   providedIn: 'root'
 })
 export class RutaService {
   rutas: IRuta[] = [];
   ruta: IRuta;
-  constructor(private storage: Storage) {
+  constructor(
+    private storage: Storage,
+    private db: DbEleccionesService
+  ) {
+    
+    
     this.obtenerRutas();
     //this.deleteAll();
   }

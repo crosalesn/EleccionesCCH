@@ -20,7 +20,12 @@ import { v4 as uuidv4 } from 'uuid';
 export class CrearRutaPage implements OnInit {
   
   tipoLugares: ITipoLugar[] = [];
-  
+  lugarOrigen = [];
+  transporte = {
+    patente: '',
+    id: null
+  };
+
   regiones: IRegion[] = [];
   provincias = [];
   comumas = [];
@@ -105,7 +110,10 @@ export class CrearRutaPage implements OnInit {
     private user: UsuarioService,
     private rutaServ: RutaService,
     private db: DbEleccionesService
-  ) { }
+  ) { 
+
+    this.obtenerTransportes();
+  }
 
   ngOnInit() {
     this.db.GetDatabaseState().subscribe(ready => {
@@ -204,6 +212,32 @@ export class CrearRutaPage implements OnInit {
       resp = true;
     }                                            
     return resp;
+  }
+
+  buscarPatente() {
+    if (this.transporte.patente === ''){
+      this.alert.Alerta("debe ingresar la patente");
+    } else {
+      this.db.obtenerTransportePorPatente(this.transporte.patente).then(trans => {
+        console.log("trans :", trans);
+        this.transporte = {
+          id: trans[0].TRA_ID,
+          patente: trans[0].TRA_PATENTE
+        };
+      });      
+    }
+  }
+
+  obtenerTransportes() {
+    console.log('transportes: ', this.db.obtenerTransportes());
+  }
+  cambiarLugar(idTipoLugar) {
+    this.db.ObtenerLugaresPorTipo(idTipoLugar).then(data => {
+      if( data.length > 0 ) {
+        this.lugarOrigen = data;
+      }
+      console.log("this.lugarOrigen ", this.lugarOrigen );
+    });
   }
 }
 

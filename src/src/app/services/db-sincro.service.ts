@@ -6,6 +6,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 })
 export class DbSincroService {
   private database: SQLiteObject = null;
+
   constructor() { }
 
   setDatabase(database: SQLiteObject){

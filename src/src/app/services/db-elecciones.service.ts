@@ -28,6 +28,19 @@ export class DbEleccionesService {
 
    }
 
+
+  ObtenerRutasNoSincronizadas(): Promise<any> {
+    return new Promise(resolve => { resolve(true)});
+
+    //this.database.executeSql("SELECT * FROM RUTAS WHERE RTA_SYNC = 0", []);
+  }
+
+  UpdateRutasSincronizadas(): Promise<any> {
+    return new Promise(resolve => { resolve(true)});
+    //return this.database.executeSql("UPDATE RUTAS SET RTA_SYNC = 1", []);
+  }
+
+
    /**
    * Obtiene la fecha y hora del movil
    * @param horas (Opcional) Si es TRUE devuelve la fecha y hora de lo contrario solo devuelve solo la fecha
@@ -72,7 +85,6 @@ export class DbEleccionesService {
     }
   }
 
-
    ImportacionDB(){
     console.log("Intentando obtener elecciones.sql");
     this.http.get('../../assets/bd/elecciones.sql', { responseType: 'text'})
@@ -89,7 +101,6 @@ export class DbEleccionesService {
         .catch(e => console.error(e));
     });
   }
-
 
   GetDatabaseState(){
     return this.dbReady.asObservable();
@@ -108,6 +119,14 @@ export class DbEleccionesService {
       console.log("Parametros borrados");
     }).catch(err => {
       console.log("Error borrado Parametro");
+    });
+  }
+
+  async Borrar(name: string){
+    return await this.database.executeSql('DELETE FROM ' + name, []).then(data =>{
+      console.log("tabla " + name +" borrada");
+    }).catch(err => {
+      console.log("Error borradondo ", name);
     });
   }
 
@@ -143,7 +162,6 @@ export class DbEleccionesService {
     });
     
   }
-
 
   AgregarUsuarioLocal(parametro) {
     console.log("Se ejecuta la funcion AgregarUsuarioLocal del archivo db-elecciones.service.ts");
@@ -257,6 +275,7 @@ export class DbEleccionesService {
       }
     });
   }
+
   GuardarRegionesLocal(regiones): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -452,6 +471,25 @@ export class DbEleccionesService {
     });
     return promise;
   }
+
+  async ObtenerLugaresPorTipo(idTipoLugar) {
+    var query = 'SELECT * FROM LUGARES WHERE TIL_ID = ?';
+    var lugares = [];
+    await this.database.executeSql(query, [idTipoLugar]).then( dato => {
+      if (dato.rows.length > 0) {
+        for (let i = 0; i < dato.rows.length; i++) {          
+          lugares.push({
+            TIL_ID: dato.rows.item(i).TIL_ID,
+            TIL_CODIGO: dato.rows.item(i).TIL_CODIGO,
+            TIL_NOMBRE: dato.rows.item(i).TIL_NOMBRE,
+            TIL_DESCRIPCION: dato.rows.item(i).TIL_DESCRIPCION,
+            TIL_ESTADO: dato.rows.item(i).TIL_ESTADO
+          });
+        }
+      }
+    });
+    return lugares;
+  }
   GuardarCargasLocal(cargas): Promise<any> {
     console.log('cargas: ', cargas);
     let outerThis = this;
@@ -499,6 +537,7 @@ export class DbEleccionesService {
     });
     return promise;
   }
+
   GuardarEmpresasTransporteLocal(empresaTransporte): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -518,6 +557,7 @@ export class DbEleccionesService {
     });
     return promise;
   }
+
   GuardarTransportesLocal(transportes): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -541,6 +581,7 @@ export class DbEleccionesService {
     });
     return promise;
   }
+
   GuardarRutasLocal(rutas): Promise<any> {
     let outerThis = this;
     let promise = new Promise((resolve, reject) => {
@@ -686,10 +727,10 @@ export class DbEleccionesService {
     
   }
 
-  ObtenerUsuarioLocal(parametro): Promise<any> {
+  async ObtenerUsuarioLocal(parametro): Promise<any> {
     console.log("Se ejecuta la funcion ObtenerUsuarioLocal del archivo db-elecciones.service.ts");
     let data = [parametro.USU_CLAVE, parametro.USU_NOMBRE_USUARIO, this.GetFechaHora()];
-    return this.database.executeSql('SELECT USU_ID FROM USUARIOS WHERE USU_CLAVE = ? AND USU_NOMBRE_USUARIO = ? AND USU_FECHA_REGISTRO = ?', data).then(data => {
+    return await  this.database.executeSql('SELECT USU_ID FROM USUARIOS WHERE USU_CLAVE = ? AND USU_NOMBRE_USUARIO = ? AND USU_FECHA_REGISTRO = ?', data).then(data => {
       if(data.rows.length > 0){
       let query1 = 'SELECT U.USU_ID,'+ 
       'U.USU_RUT,'
@@ -711,7 +752,7 @@ export class DbEleccionesService {
       + 'JOIN PERFILES P ON P.PER_ID = U.PER_ID '
       + 'WHERE U.USU_NOMBRE_USUARIO = ? AND '
       + 'U.USU_CLAVE = ?';
-      return this.database.executeSql(query1, [parametro.USU_NOMBRE_USUARIO, parametro.USU_CLAVE]).then(data => {
+      return  this.database.executeSql(query1, [parametro.USU_NOMBRE_USUARIO, parametro.USU_CLAVE]).then(data => {
       let obtenerLoginUsuarioRespuesta: Object;
       let usuario: Object;
       let aplicaciones: any[] = [];
@@ -871,15 +912,16 @@ export class DbEleccionesService {
     let query = "UPDATE REGISTRO_INICIO_FIN_DIA SET RIN_SYNC = 1";
     return this.database.executeSql(query, []).then(data => {
       console.log("Actualiza sincronizacion en REGISTRO_INICIO_FIN_DIA");
+    }).catch(e => {
+      console.log(e);
     });
   }
 
-
   //Obtiene todas las coordenadas que no estan sincronizadas
-  GetCoordenadasUsuarios(): Promise<any>{
+  async GetCoordenadasUsuarios(): Promise<any>{
     var query: string = "SELECT CUS_LATITUD, CUS_LONGITUD, CUS_FECHA_DISPOSITIVO, USU_ID FROM COORDENADAS_USUARIOS WHERE CUS_SYNC = 0";
     console.log(query);
-    return this.database.executeSql(query,[]).then(data =>{
+    return await this.database.executeSql(query,[]).then(data =>{
       console.log("En GetCoordenadasUsuarios")
       console.log(data);
       let GuardarCoordenadasUsuarioParam =  {
@@ -938,6 +980,50 @@ export class DbEleccionesService {
       return valor.rows.item(0).PAR_VALOR;
     });
 
+  }
+
+
+  async obtenerTransportePorPatente(patente: string){    
+    var transportes: any[] = [];
+    var query = "SELECT * FROM TRANSPORTES WHERE TRA_PATENTE = ?";
+    await this.database.executeSql(query, [patente]).then(data => {
+      if(data.rows.length > 0){        
+        transportes.push({
+          TRA_ID: data.rows.item(0).TRA_ID,
+          TRA_PATENTE: data.rows.item(0).TRA_PATENTE,
+          TRA_NOMBRE: data.rows.item(0).TRA_NOMBRE,
+          TRA_DESCRIPCION: data.rows.item(0).TRA_DESCRIPCION,
+          ETR_ID: data.rows.item(0).ETR_IDC,
+          REG_ID: data.rows.item(0).REG_IDC,
+          TIT_ID: data.rows.item(0).TIT_IDC
+      });
+      }
+    });
+    return transportes;
+  }
+
+
+  async obtenerTransportes(){
+    var transportes: any[] = [];
+    var query = "SELECT * FROM TRANSPORTES";
+    await this.database.executeSql(query, []).then(data => {
+      if(data.rows.length > 0){             
+        for (var i = 0; i < data.rows.length; i++) {          
+          transportes.push({
+            TRA_ID: data.rows.item(i).TRA_ID,
+            TRA_PATENTE: data.rows.item(i).TRA_PATENTE,
+            TRA_NOMBRE: data.rows.item(i).TRA_NOMBRE,
+            TRA_DESCRIPCION: data.rows.item(i).TRA_DESCRIPCION,
+            ETR_ID: data.rows.item(i).ETR_IDC,
+            REG_ID: data.rows.item(i).REG_IDC,
+            TIT_ID: data.rows.item(i).TIT_IDC
+          });
+                
+        }                   
+      }
+    });
+
+    return transportes;
   }
 
   /**

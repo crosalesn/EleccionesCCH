@@ -46,7 +46,7 @@ export class LoginPage implements OnInit {
     return patron.test(tecla_final);
   }
 
-  Ingresar(camposFormulario) {
+  async Ingresar(camposFormulario) {
     this.datosFormulario = { USU_NOMBRE_USUARIO: camposFormulario.usuario, USU_CLAVE: camposFormulario.clave };
 
     if (!camposFormulario.usuario.trim()) {
@@ -59,9 +59,11 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    this.net.checkNetworkStatusNow().then(usuarioConectado => {
+    await this.net.checkNetworkStatusNow().then(usuarioConectado => {
+      console.log('usuarioConectado :', usuarioConectado);
       if (!usuarioConectado) {
-        this.dbElecciones.ObtenerUsuarioLocal(this.datosFormulario).then(data => {
+        console.log("aqui !usuarioConectado");
+         this.dbElecciones.ObtenerUsuarioLocal(this.datosFormulario).then(data => {
           this.usuarioLocal = data;
           if (this.usuarioLocal === "No existe usuario") {
             this.alertas.Alerta("Debe estar conectado a la red para acceder por primera vez");
@@ -73,25 +75,55 @@ export class LoginPage implements OnInit {
           }
         });
       } else {
-
+        console.log("aqui else Ingresar");
         this.eleccionesService.ObtenerLoginUsuario(this.datosFormulario)
           .subscribe(
             (info) => {
+              console.log("info: ", info);
               if (info.error === null) {
+                console.log("info no error: ", info);
                 this.funciones.SetUsuarioLogeado(info);
+                console.log("this.funciones.SetUsuarioLogeado(info);");
                 this.dbElecciones.BorrarPerfilesLocal();
+                console.log("BorrarPerfilesLocal");
                 this.dbElecciones.BorrarUsuarioLocal();
+                console.log("BorrarUsuarioLocal");
                 this.dbElecciones.BorrarAplicacionesLocal();
+                console.log("BorrarAplicacionesLocal");
                 this.dbElecciones.BorrarParametrosLocal();
+                console.log("BorrarParametrosLocal");
+                this.dbElecciones.Borrar("CARGAS");
+                
+                this.dbElecciones.Borrar("RUTAS_CARGAS");
+              
+                this.dbElecciones.Borrar("BITACORA_RUTAS");
+                
+                this.dbElecciones.Borrar("ESTADOS_RUTAS");
+               
+                this.dbElecciones.Borrar("TRANSPORTES");
+                
+                this.dbElecciones.Borrar("EMPRESAS_TRANSPORTES");
+                
+                this.dbElecciones.Borrar("LUGARES");
+                
+                this.dbElecciones.Borrar("TIPO_LUGARES");
+                
                 this.dbElecciones.BorrarPerfilesAplicacionesLocal();
+                
                 this.dbElecciones.AgregarUsuarioLocal(info);
                 const token = info.usuario.USU_ID;
                 this.funciones.SetToken(token);
+                console.log("aquiiiiiiiiiiiii");
                 this.sincronizar.Sincronizar().then(sincronizacionFueExitosa => {
+                  console.log("sincronizacionFueExitosa :", sincronizacionFueExitosa);
                   if (sincronizacionFueExitosa) {
-                    this.router.navigateByUrl('/home');
+                    this.router.navigate(['/home']);
                     return;
+                  } else {
+                    this.alertas.Alerta("Error al sincronizar");
                   }
+                }).catch(error => {
+                  console.log("error al sincronizar");
                 });
 
               } else {
