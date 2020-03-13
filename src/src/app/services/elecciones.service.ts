@@ -149,6 +149,10 @@ export class EleccionesService {
   GuardarEntregaServelResumen(parametro): Observable<any> {
     return this.http.post(this.urlServicios + 'carga/' + 'GuardarEntregaServelResumen', parametro, { headers: this.headers });
   }
+  
+  GuardarRutas(parametro): Observable<any>{
+    return this.http.post(this.urlServicios+'ruta/'+'GuardarRutas',parametro,{headers: this.headers});
+  }
 
   
 }
