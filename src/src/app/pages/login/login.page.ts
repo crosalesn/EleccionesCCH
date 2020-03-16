@@ -32,8 +32,7 @@ export class LoginPage implements OnInit {
     });
   }
 
-  ngOnInit() {
-
+  ngOnInit() {    
   }
 
   caracteresPermitidos(event: any) {
@@ -97,8 +96,9 @@ export class LoginPage implements OnInit {
                 // this.dbElecciones.Borrar('CARGAS');
 
                 // this.dbElecciones.Borrar('RUTAS_CARGAS');
-
-                this.dbElecciones.Borrar('BITACORA_RUTAS');
+                
+                // this.dbElecciones.Borrar('BITACORA_RUTAS');
+                this.dbElecciones.borrarBitacorasRutasSync();
 
                 this.dbElecciones.Borrar('ESTADOS_RUTAS');
 
@@ -109,8 +109,8 @@ export class LoginPage implements OnInit {
                 this.dbElecciones.Borrar('LUGARES');
 
                 this.dbElecciones.Borrar('TIPO_LUGARES');
-
-                this.dbElecciones.Borrar('BITACORA_RUTAS_CARGAS');
+                
+                this.dbElecciones.borrarBitacorasRutasCargasSync();
 
                 this.dbElecciones.BorrarPerfilesAplicacionesLocal();
 

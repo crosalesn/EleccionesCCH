@@ -23,23 +23,56 @@ export class DbEleccionesService {
   tipoLugares = new BehaviorSubject([]);
 
   constructor(private plt: Platform, private sqlitePorter: SQLitePorter, private sqlite: SQLite,
-              private http: HttpClient) {
+    private http: HttpClient) {
     console.log('Se llama constructor de Db-Elecciones');
 
-   }
+  }
 
 
   ObtenerRutasNoSincronizadas(): Promise<any> {
-    return new Promise(resolve => { resolve(true);});
+    return new Promise(resolve => { resolve(true); });
 
     // this.database.executeSql("SELECT * FROM RUTAS WHERE RTA_SYNC = 0", []);
   }
 
+  async getAllRutasNoSync() {
+    let rutas: any[] = [];
+    let query = 'SELECT * FROM RUTAS WHERE RTA_SYNC = 0 ';
+    await this.database.executeSql(query, []).then(async data => {
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          rutas.push({
+            RTA_ID: data.rows.item(i).RTA_ID,
+            RTA_USUARIO_REGISTRO: data.rows.item(i).RTA_USUARIO_REGISTRO,
+            RTA_FECHA_REGISTRO: data.rows.item(i).RTA_FECHA_REGISTRO,
+            RTA_USUARIO_MODIFICACION: data.rows.item(i).RTA_USUARIO_MODIFICACION,
+            RTA_FECHA_MODIFICACION: data.rows.item(i).RTA_FECHA_MODIFICACION,
+            RTA_CODIGO: data.rows.item(i).RTA_CODIGO,
+            ERU_ID: data.rows.item(i).ERU_ID,
+            TRA_ID: data.rows.item(i).TRA_ID,
+            USU_ID: data.rows.item(i).USU_ID,
+            LUG_ID_ORIGEN: data.rows.item(i).LUG_ID_ORIGEN,
+            LUG_ID_DESTINO: data.rows.item(i).LUG_ID_DESTINO,
+            RTA_OS: data.rows.item(i).RTA_OS,
+            RTA_LATITUD: data.rows.item(i).RTA_LATITUD,
+            RTA_LONGITUD: data.rows.item(i).RTA_LONGITUD,
+            RTA_FECHA_DISPOSITIVO: data.rows.item(i).RTA_FECHA_DISPOSITIVO
+          });
+
+        }
+      }
+    });
+
+    return rutas;
+
+
+  }
+
   UpdateRutasSincronizadas(): Promise<any> {
-    return new Promise(resolve => { resolve(true);});
+    return new Promise(resolve => { resolve(true); });
     // return this.database.executeSql("UPDATE RUTAS SET RTA_SYNC = 1", []);
   }
-  
+
   GetFechaHora(horas?: boolean): string {
 
     let date: any = new Date();
@@ -74,27 +107,27 @@ export class DbEleccionesService {
     return (horas) ? fechayhora : fecha;
   }
 
-   setDatabase(database: SQLiteObject) {
+  setDatabase(database: SQLiteObject) {
     if (this.database === null) {
       this.database = database;
     }
   }
 
-   ImportacionDB() {
+  ImportacionDB() {
     console.log('Intentando obtener elecciones.sql');
-    this.http.get('../../assets/bd/elecciones.sql', { responseType: 'text'})
-    .subscribe(sql => {
-      console.log('Se obtuvo elecciones.sql');
-      console.log(this.database);
-      this.sqlitePorter.importSqlToDb(this.database, sql)
-        .then(_ => {
-          console.log('la importacion se realizó correctamente');
-          // this.ObtenerRegionesLocal();
-          // this.ObtenerTipoLugares();
-          this.dbReady.next(true);
-        })
-        .catch(e => console.error(e));
-    });
+    this.http.get('../../assets/bd/elecciones.sql', { responseType: 'text' })
+      .subscribe(sql => {
+        console.log('Se obtuvo elecciones.sql');
+        console.log(this.database);
+        this.sqlitePorter.importSqlToDb(this.database, sql)
+          .then(_ => {
+            console.log('la importacion se realizó correctamente');
+            // this.ObtenerRegionesLocal();
+            // this.ObtenerTipoLugares();
+            this.dbReady.next(true);
+          })
+          .catch(e => console.error(e));
+      });
   }
 
   GetDatabaseState() {
@@ -118,10 +151,30 @@ export class DbEleccionesService {
   }
 
   async Borrar(name: string) {
+
+
     return await this.database.executeSql('DELETE FROM ' + name, []).then(data => {
       console.log('tabla ' + name + ' borrada');
     }).catch(err => {
       console.log('Error borradondo ', name);
+    });
+  }
+
+  async borrarBitacorasRutasSync() {
+
+    return await this.database.executeSql('DELETE FROM BITACORA_RUTAS WHERE SYNC NOT IN (0) ', []).then(data => {
+      console.log('tabla BITACORA_RUTAS borrada');
+    }).catch(err => {
+      console.log('Error borradondo BITACORA_RUTAS ');
+    });
+  }
+
+  async borrarBitacorasRutasCargasSync() {
+
+    return await this.database.executeSql('DELETE FROM BITACORA_RUTAS_CARGAS WHERE SYNC NOT IN (0) ', []).then(data => {
+      console.log('tabla BITACORA_RUTAS_CARGAS borrada');
+    }).catch(err => {
+      console.log('Error borradondo BITACORA_RUTAS_CARGAS ');
     });
   }
 
@@ -205,65 +258,65 @@ export class DbEleccionesService {
           perfil).then(data => {
             console.log('Perfil guardado');
             return this.database.executeSql('INSERT INTO USUARIOS '
-            + '(USU_ID, '
-            + 'USU_RUT, '
-            + 'USU_DV, '
-            + 'USU_NOMBRES,'
-            + 'USU_APELLIDO_PATERNO, '
-            + 'USU_APELLIDO_MATERNO, '
-            + 'USU_FECHA_NACIMIENTO, '
-            + 'USU_NOMBRE_USUARIO,'
-            + 'USU_CLAVE, '
-            + 'USU_FECHA_REGISTRO, '
-            + 'USU_ESTADO, PER_ID, '
-            + 'REG_ID, LUGAR_ASIGNADO_ID, USU_CODIGO_RESET_CONTRASENA, '
-            + 'USU_TELEFONO, TUS_ID, ETR_ID) '
-            + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            usuario).then(data => {
-              console.log('Usuario guardado: ' + JSON.stringify(parametro.usuario));
-              // tslint:disable-next-line: prefer-for-of
-              for (let i = 0; i < parametro.aplicaciones.length; i++) {
-                        ((param) => {
-                          const tempAplicaciones = [
-                            parseInt(param.APLI_ID),
-                            param.APLI_CODIGO,
-                            param.APLI_NOMBRE,
-                            param.APLI_DESCRIPCION,
-                            parseInt(param.APLI_ESTADO),
-                            param.APLI_IMG,
-                            parseInt(param.TAP_ID),
-                            param.APLI_METODO,
-                            param.APLI_CONTROLADOR
-                          ];
+              + '(USU_ID, '
+              + 'USU_RUT, '
+              + 'USU_DV, '
+              + 'USU_NOMBRES,'
+              + 'USU_APELLIDO_PATERNO, '
+              + 'USU_APELLIDO_MATERNO, '
+              + 'USU_FECHA_NACIMIENTO, '
+              + 'USU_NOMBRE_USUARIO,'
+              + 'USU_CLAVE, '
+              + 'USU_FECHA_REGISTRO, '
+              + 'USU_ESTADO, PER_ID, '
+              + 'REG_ID, LUGAR_ASIGNADO_ID, USU_CODIGO_RESET_CONTRASENA, '
+              + 'USU_TELEFONO, TUS_ID, ETR_ID) '
+              + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              usuario).then(data => {
+                console.log('Usuario guardado: ' + JSON.stringify(parametro.usuario));
+                // tslint:disable-next-line: prefer-for-of
+                for (let i = 0; i < parametro.aplicaciones.length; i++) {
+                  ((param) => {
+                    const tempAplicaciones = [
+                      parseInt(param.APLI_ID),
+                      param.APLI_CODIGO,
+                      param.APLI_NOMBRE,
+                      param.APLI_DESCRIPCION,
+                      parseInt(param.APLI_ESTADO),
+                      param.APLI_IMG,
+                      parseInt(param.TAP_ID),
+                      param.APLI_METODO,
+                      param.APLI_CONTROLADOR
+                    ];
 
-                          this.database.executeSql('INSERT INTO APLICACIONES (APLI_ID, '
-                          + 'APLI_CODIGO, '
-                          + 'APLI_NOMBRE, '
-                          + 'APLI_DESCRIPCION, '
-                          + 'APLI_ESTADO,'
-                          + 'APLI_IMG,'
-                          + 'TAP_ID,'
-                          + 'APLI_METODO,'
-                          + 'APLI_CONTROLADOR) '
-                          + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                          tempAplicaciones).then(data => {
-                            console.log('Aplicacion guardada');
-                            console.log(tempAplicaciones);
-                            this.database.executeSql('INSERT INTO PERFILES_APLICACIONES ('
-                                + 'PER_ID,'
-                                + 'APLI_ID)'
-                                + ' VALUES '
-                                + '(?, ?)',
-                                [parametro.usuario.PER_ID, param.APLI_ID]).then(data => {
-                                  console.log(parametro.usuario.PER_ID);
-                                  console.log(param.APLI_ID);
-                                  console.log('Perfiles_Aplicaciones guardados');
-                                });
+                    this.database.executeSql('INSERT INTO APLICACIONES (APLI_ID, '
+                      + 'APLI_CODIGO, '
+                      + 'APLI_NOMBRE, '
+                      + 'APLI_DESCRIPCION, '
+                      + 'APLI_ESTADO,'
+                      + 'APLI_IMG,'
+                      + 'TAP_ID,'
+                      + 'APLI_METODO,'
+                      + 'APLI_CONTROLADOR) '
+                      + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                      tempAplicaciones).then(data => {
+                        console.log('Aplicacion guardada');
+                        console.log(tempAplicaciones);
+                        this.database.executeSql('INSERT INTO PERFILES_APLICACIONES ('
+                          + 'PER_ID,'
+                          + 'APLI_ID)'
+                          + ' VALUES '
+                          + '(?, ?)',
+                          [parametro.usuario.PER_ID, param.APLI_ID]).then(data => {
+                            console.log(parametro.usuario.PER_ID);
+                            console.log(param.APLI_ID);
+                            console.log('Perfiles_Aplicaciones guardados');
                           });
+                      });
 
-                        }) (parametro.aplicaciones[i]);
-                      }
-                });
+                  })(parametro.aplicaciones[i]);
+                }
+              });
           });
       }
     });
@@ -277,10 +330,10 @@ export class DbEleccionesService {
       for (let j = 0; j < regiones.length; j++) {
         ((singleRegion) => {
           arregloDePromesas.push(outerThis.database.executeSql('INSERT INTO REGIONES ' +
-           '(REG_ID, REG_CODIGO, REG_NOMBRE) VALUES (?,?,?)', 
-           [singleRegion.REG_ID, singleRegion.REG_CODIGO, singleRegion.REG_NOMBRE]).then(data => {
-             console.log('Region insertada: ' + JSON.stringify(singleRegion));
-           })
+            '(REG_ID, REG_CODIGO, REG_NOMBRE) VALUES (?,?,?)',
+            [singleRegion.REG_ID, singleRegion.REG_CODIGO, singleRegion.REG_NOMBRE]).then(data => {
+              console.log('Region insertada: ' + JSON.stringify(singleRegion));
+            })
           );
         })(regiones[j]);
       }
@@ -295,7 +348,7 @@ export class DbEleccionesService {
 
   ObtenerRegionesLocal() {
     const query = 'SELECT * FROM REGIONES';
-    return this.database.executeSql(query, []).then( data => {
+    return this.database.executeSql(query, []).then(data => {
       let regiones: IRegion[] = [];
       if (data.rows.length > 0) {
         for (let i = 0; i < data.rows.length; i++) {
@@ -313,7 +366,7 @@ export class DbEleccionesService {
   async ObtenerRegiones() {
     const query = 'SELECT * FROM REGIONES';
     let regiones: IRegion[] = [];
-    await this.database.executeSql(query, []).then( data => {
+    await this.database.executeSql(query, []).then(data => {
 
       if (data.rows.length > 0) {
         // tslint:disable-next-line: no-var-keyword
@@ -338,10 +391,10 @@ export class DbEleccionesService {
       for (let j = 0; j < provincias.length; j++) {
         ((singleProvince) => {
           arregloDePromesas.push(outerThis.database.executeSql('INSERT INTO PROVINCIAS ' +
-           '(PRO_ID, PRO_NOMBRE, REG_ID, PRO_CODIGO) VALUES (?,?,?,?)',
-           [singleProvince.PRO_ID, singleProvince.PRO_NOMBRE, singleProvince.REG_ID, singleProvince.PRO_CODIGO]).then(data => {
-             console.log('Provincia insertada:' + JSON.stringify(singleProvince));
-           })
+            '(PRO_ID, PRO_NOMBRE, REG_ID, PRO_CODIGO) VALUES (?,?,?,?)',
+            [singleProvince.PRO_ID, singleProvince.PRO_NOMBRE, singleProvince.REG_ID, singleProvince.PRO_CODIGO]).then(data => {
+              console.log('Provincia insertada:' + JSON.stringify(singleProvince));
+            })
           );
         })(provincias[j]);
       }
@@ -358,13 +411,13 @@ export class DbEleccionesService {
     let idRegion = region.regId;
     console.log('service:', region);
     let provincias: IProvincia[] = [];
-    const promise = new Promise( (resolve, reject)  => {
-      this.database.executeSql('SELECT * FROM PROVINCIAS WHERE REG_ID = ?', [idRegion]).then( data => {
+    const promise = new Promise((resolve, reject) => {
+      this.database.executeSql('SELECT * FROM PROVINCIAS WHERE REG_ID = ?', [idRegion]).then(data => {
         if (data.rows.length > 0) {
           for (let i = 0; i < data.rows.length; i++) {
             provincias.push({
               proCodigo: data.rows.item(i).PRO_CODIGO,
-              proId:  data.rows.item(i).PRO_ID,
+              proId: data.rows.item(i).PRO_ID,
               proNombre: data.rows.item(i).PRO_NOMBRE,
               regid: data.rows.item(i).REG_ID
             });
@@ -385,10 +438,10 @@ export class DbEleccionesService {
       for (let j = 0; j < comunas.length; j++) {
         ((singleComune) => {
           arregloDePromesas.push(outerThis.database.executeSql('INSERT INTO COMUNAS ' +
-           '(COM_ID, COM_NOMBRE, PRO_ID, COM_CODIGO) VALUES (?,?,?,?)',
-           [singleComune.COM_ID, singleComune.COM_NOMBRE, singleComune.PRO_ID, singleComune.COM_CODIGO]).then(data => {
-             console.log('Comuna insertada:' + JSON.stringify(singleComune));
-           })
+            '(COM_ID, COM_NOMBRE, PRO_ID, COM_CODIGO) VALUES (?,?,?,?)',
+            [singleComune.COM_ID, singleComune.COM_NOMBRE, singleComune.PRO_ID, singleComune.COM_CODIGO]).then(data => {
+              console.log('Comuna insertada:' + JSON.stringify(singleComune));
+            })
           );
         })(comunas[j]);
       }
@@ -403,15 +456,15 @@ export class DbEleccionesService {
 
   ObtenerComunasPorProvincias(idProv: number) {
     const query = 'SELECT * FROM COMUNAS WHERE PRO_ID = ? ';
-    const promise = new Promise( (resolve, reject) => {
-      this.database.executeSql(query, [idProv]).then( data => {
+    const promise = new Promise((resolve, reject) => {
+      this.database.executeSql(query, [idProv]).then(data => {
         let comunas = [];
         if (data.rows.length > 0) {
           for (let i = 0; i < data.rows.length; i++) {
             comunas.push({
               COM_ID: data.rows.item(i).COM_ID,
               COM_NOMBRE: data.rows.item(i).COM_NOMBRE,
-              PRO_ID : data.rows.item(i).PRO_ID ,
+              PRO_ID: data.rows.item(i).PRO_ID,
               COM_CODIGO: data.rows.item(i).COM_CODIGO,
             });
           }
@@ -420,6 +473,25 @@ export class DbEleccionesService {
       });
     });
     return promise;
+
+  }
+  async ObtenerComunasPorId(idCom: number) {
+    const query = 'SELECT * FROM COMUNAS WHERE COM_ID = ? ';
+    var comunas = [];
+    await this.database.executeSql(query, [idCom]).then(data => {
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          comunas.push({
+            COM_ID: data.rows.item(i).COM_ID,
+            COM_NOMBRE: data.rows.item(i).COM_NOMBRE,
+            PRO_ID: data.rows.item(i).PRO_ID,
+            COM_CODIGO: data.rows.item(i).COM_CODIGO,
+          });
+        }
+      }
+    });
+
+    return comunas;
   }
 
   GuardarTipoLugaresLocal(tipoLugares): Promise<any> {
@@ -430,9 +502,9 @@ export class DbEleccionesService {
       for (let j = 0; j < tipoLugares.length; j++) {
         ((singlePlaceType) => {
           arregloDePromesas.push(outerThis.database.executeSql('INSERT INTO TIPO_LUGARES ' +
-           '(TIL_ID, TIL_CODIGO, TIL_NOMBRE, TIL_DESCRIPCION, TIL_ESTADO) VALUES (?,?,?,?,?)', [singlePlaceType.TIL_ID, singlePlaceType.TIL_CODIGO, singlePlaceType.TIL_DESCRIPCION, singlePlaceType.TIL_ESTADO]).then(data => {
-             console.log('Tipo Lugar insertado:' + JSON.stringify(singlePlaceType));
-           })
+            '(TIL_ID, TIL_CODIGO, TIL_NOMBRE, TIL_DESCRIPCION, TIL_ESTADO) VALUES (?,?,?,?,?)', [singlePlaceType.TIL_ID, singlePlaceType.TIL_CODIGO, singlePlaceType.TIL_DESCRIPCION, singlePlaceType.TIL_ESTADO]).then(data => {
+              console.log('Tipo Lugar insertado:' + JSON.stringify(singlePlaceType));
+            })
           );
         })(tipoLugares[j]);
       }
@@ -449,7 +521,7 @@ export class DbEleccionesService {
     const query = 'SELECT * FROM TIPO_LUGARES';
     // tslint:disable-next-line: prefer-const
     let tipoLugares: ITipoLugar[] = [];
-    await this.database.executeSql(query, []).then( data => {
+    await this.database.executeSql(query, []).then(data => {
 
       if (data.rows.length > 0) {
         // tslint:disable-next-line: no-var-keyword
@@ -475,10 +547,10 @@ export class DbEleccionesService {
       for (let j = 0; j < lugares.length; j++) {
         ((singlePlace) => {
           arregloDePromesas.push(outerThis.database.executeSql('INSERT INTO LUGARES ' +
-           '(LUG_ID, LUG_NOMBRE, COM_ID, LUG_CALLE, LUG_CALLE, LUG_NUMERO, LUG_LATITUD, LUG_LONGITUD, LUG_DESCRIPCION, TIL_ID) VALUES (?,?,?,?,?,?,?,?,?,?)',
-              [singlePlace.LUG_ID, singlePlace.LUG_NOMBRE, singlePlace.COM_ID, singlePlace.LUG_CALLE, singlePlace.LUG_NUMERO, singlePlace.LUG_LATITUD, singlePlace.LUG_LONGITUD, singlePlace.LUG_DESCRIPCION, singlePlace.TIL_ID]).then(data => {
-             console.log('Lugar insertado:' + JSON.stringify(singlePlace));
-           })
+            '(LUG_ID, LUG_NOMBRE, COM_ID, LUG_CALLE, LUG_CALLE, LUG_NUMERO, LUG_LATITUD, LUG_LONGITUD, LUG_DESCRIPCION, TIL_ID) VALUES (?,?,?,?,?,?,?,?,?,?)',
+            [singlePlace.LUG_ID, singlePlace.LUG_NOMBRE, singlePlace.COM_ID, singlePlace.LUG_CALLE, singlePlace.LUG_NUMERO, singlePlace.LUG_LATITUD, singlePlace.LUG_LONGITUD, singlePlace.LUG_DESCRIPCION, singlePlace.TIL_ID]).then(data => {
+              console.log('Lugar insertado:' + JSON.stringify(singlePlace));
+            })
           );
         })(lugares[j]);
       }
@@ -493,8 +565,8 @@ export class DbEleccionesService {
   async getAllLugares() {
     let query = 'SELECT * FROM LUGARES ';
     let lugares = [];
-    await this.database.executeSql(query, []).then( dato => {
-      console.log('query dato:' , dato);
+    await this.database.executeSql(query, []).then(dato => {
+      console.log('query dato:', dato);
       if (dato.rows.length > 0) {
         for (let i = 0; i < dato.rows.length; i++) {
           lugares.push({
@@ -506,7 +578,7 @@ export class DbEleccionesService {
             LUG_NUMERO: dato.rows.item(i).LUG_NUMERO,
             LUG_LATITUD: dato.rows.item(i).LUG_LATITUD,
             LUG_LONGITUD: dato.rows.item(i).LUG_LONGITUD,
-            LUG_DESCRIPCION : dato.rows.item(i).LUG_DESCRIPCION,
+            LUG_DESCRIPCION: dato.rows.item(i).LUG_DESCRIPCION,
             TIL_ID: dato.rows.item(i).TIL_ID
           });
         }
@@ -515,10 +587,34 @@ export class DbEleccionesService {
     return lugares;
   }
 
-  async ObtenerLugarByComuna( idComnuna) {
+  async getAllLugaresById(id) {
+    let query = 'SELECT * FROM LUGARES WHERE LUG_ID = ? ';
+    let lugares = [];
+    await this.database.executeSql(query, [id]).then(async dato => {
+      if (dato.rows.length > 0) {
+        for (let i = 0; i < dato.rows.length; i++) {
+          lugares.push({
+            LUG_ID: dato.rows.item(i).LUG_ID,
+            LUG_CODIGO: dato.rows.item(i).LUG_CODIGO,
+            LUG_NOMBRE: dato.rows.item(i).LUG_NOMBRE,
+            COM_ID: await this.ObtenerComunasPorId(dato.rows.item(i).COM_ID),
+            LUG_CALLE: dato.rows.item(i).LUG_CALLE,
+            LUG_NUMERO: dato.rows.item(i).LUG_NUMERO,
+            LUG_LATITUD: dato.rows.item(i).LUG_LATITUD,
+            LUG_LONGITUD: dato.rows.item(i).LUG_LONGITUD,
+            LUG_DESCRIPCION: dato.rows.item(i).LUG_DESCRIPCION,
+            TIL_ID: dato.rows.item(i).TIL_ID
+          });
+        }
+      }
+    });
+    return lugares;
+  }
+
+  async ObtenerLugarByComuna(idComnuna) {
     let query = 'SELECT * FROM LUGARES WHERE COM_ID = ? ';
     let lugares = [];
-    await this.database.executeSql(query, [idComnuna]).then( dato => {
+    await this.database.executeSql(query, [idComnuna]).then(dato => {
       if (dato.rows.length > 0) {
         for (let i = 0; i < dato.rows.length; i++) {
           lugares.push({
@@ -530,7 +626,7 @@ export class DbEleccionesService {
             LUG_NUMERO: dato.rows.item(i).LUG_NUMERO,
             LUG_LATITUD: dato.rows.item(i).LUG_LATITUD,
             LUG_LONGITUD: dato.rows.item(i).LUG_LONGITUD,
-            LUG_DESCRIPCION : dato.rows.item(i).LUG_DESCRIPCION,
+            LUG_DESCRIPCION: dato.rows.item(i).LUG_DESCRIPCION,
             TIL_ID: dato.rows.item(i).TIL_ID
           });
         }
@@ -553,33 +649,33 @@ export class DbEleccionesService {
               CAR_BARRA_BOLSA,CAR_FECHA_REGISTRO,CAR_USUARIO_CREACION,CAR_FECHA_MODIFICACION,
               CAR_USUARIO_MODIFICACION,MES_ID,LUG_ID,CAR_NOMBRE,CAR_DESCRIPCION,ECA_ID,TRC_ID,TDC_ID
             )`
-          +
-           'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-              [
-                singleLoad.CAR_ID,
-                singleLoad.TVO_ID,
-                singleLoad.CAR_CODIGO,
-                singleLoad.CAR_BARRA,
-                singleLoad.TCG_ID,
-                singleLoad.CAR_BARRA_PALLET,
-                singleLoad.CAR_BARRA_CUBETA,
-                singleLoad.CAR_BARRA_BOLSA,
-                singleLoad.CAR_FECHA_REGISTRO,
-                singleLoad.CAR_USUARIO_CREACION,
-                singleLoad.CAR_FECHA_MODIFICACION,
-                singleLoad.CAR_USUARIO_MODIFICACION,
-                singleLoad.MES_ID,
-                singleLoad.LUG_ID,
-                singleLoad.CAR_NOMBRE,
-                singleLoad.CAR_DESCRIPCION,
-                singleLoad.ECA_ID,
-                singleLoad.TRC_ID,
-                singleLoad.TDC_ID
-              ]).then(data => {
-             console.log('CARGA insertada:' + JSON.stringify(singleLoad));
-           }).catch(erro => {
-             console.error('error al insertar cargas, ' , erro);
-           })
+            +
+            'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [
+              singleLoad.CAR_ID,
+              singleLoad.TVO_ID,
+              singleLoad.CAR_CODIGO,
+              singleLoad.CAR_BARRA,
+              singleLoad.TCG_ID,
+              singleLoad.CAR_BARRA_PALLET,
+              singleLoad.CAR_BARRA_CUBETA,
+              singleLoad.CAR_BARRA_BOLSA,
+              singleLoad.CAR_FECHA_REGISTRO,
+              singleLoad.CAR_USUARIO_CREACION,
+              singleLoad.CAR_FECHA_MODIFICACION,
+              singleLoad.CAR_USUARIO_MODIFICACION,
+              singleLoad.MES_ID,
+              singleLoad.LUG_ID,
+              singleLoad.CAR_NOMBRE,
+              singleLoad.CAR_DESCRIPCION,
+              singleLoad.ECA_ID,
+              singleLoad.TRC_ID,
+              singleLoad.TDC_ID
+            ]).then(data => {
+              console.log('CARGA insertada:' + JSON.stringify(singleLoad));
+            }).catch(erro => {
+              console.error('error al insertar cargas, ', erro);
+            })
           );
         })(cargas[j]);
       }
@@ -595,7 +691,7 @@ export class DbEleccionesService {
   async ObtenerCargas() {
     let query = 'SELECT * FROM CARGAS';
     let cargas = [];
-    await this.database.executeSql(query, []).then( dato => {
+    await this.database.executeSql(query, []).then(dato => {
       if (dato.rows.length > 0) {
         for (let i = 0; i < dato.rows.length; i++) {
           cargas.push({
@@ -628,8 +724,8 @@ export class DbEleccionesService {
   async ObtenerCargaByCodigo(codigo: string) {
     let query = 'SELECT * FROM CARGAS WHERE CAR_BARRA = ? ';
     let cargas = [];
-    await this.database.executeSql(query, [codigo]).then( dato => {
-      console.log('cargaescanaeada cod ' + codigo + ': ' +  dato.rows.item);
+    await this.database.executeSql(query, [codigo]).then(dato => {
+      console.log('cargaescanaeada cod ' + codigo + ': ' + dato.rows.item);
       if (dato.rows.length > 0) {
         for (let i = 0; i < dato.rows.length; i++) {
           cargas.push({
@@ -666,7 +762,7 @@ export class DbEleccionesService {
       arregloDePromesas.push(outerThis.database.executeSql('DELETE FROM EMPRESAS_TRANSPORTES'));
       arregloDePromesas.push(outerThis.database.executeSql('INSERT INTO EMPRESAS_TRANSPORTES ' +
         '(ETR_ID, ETR_CODIGO, ETR_NOMBRE, ETR_DESCRIPCION, ETR_RUT, ETR_DV, ETR_TELEFONO) VALUES (?,?,?,?,?,?,?)',
-          [empresaTransporte.ETR_ID, empresaTransporte.ETR_CODIGO, empresaTransporte.ETR_NOMBRE, empresaTransporte.ETR_DESCRIPCION, empresaTransporte.ETR_RUT, empresaTransporte.ETR_DV, empresaTransporte.ETR_TELEFONO]).then(data => {
+        [empresaTransporte.ETR_ID, empresaTransporte.ETR_CODIGO, empresaTransporte.ETR_NOMBRE, empresaTransporte.ETR_DESCRIPCION, empresaTransporte.ETR_RUT, empresaTransporte.ETR_DV, empresaTransporte.ETR_TELEFONO]).then(data => {
           console.log('Empresa de Transporte insertada:' + JSON.stringify(empresaTransporte));
         })
       );
@@ -687,10 +783,10 @@ export class DbEleccionesService {
       for (let j = 0; j < transportes.length; j++) {
         ((singleTransport) => {
           arregloDePromesas.push(outerThis.database.executeSql('INSERT INTO TRANSPORTES ' +
-           '(TRA_ID, TRA_PATENTE, TRA_NOMBRE, TRA_DESCRIPCION, ETR_ID, REG_ID, TIT_ID) VALUES (?,?,?,?,?,?,?)',
-              [singleTransport.TRA_ID, singleTransport.TRA_PATENTE, singleTransport.TRA_NOMBRE, singleTransport.TRA_DESCRIPCION, singleTransport.ETR_ID, singleTransport.REG_ID, singleTransport.TIT_ID]).then(data => {
-             console.log('Transporte insertado:' + JSON.stringify(singleTransport));
-           })
+            '(TRA_ID, TRA_PATENTE, TRA_NOMBRE, TRA_DESCRIPCION, ETR_ID, REG_ID, TIT_ID) VALUES (?,?,?,?,?,?,?)',
+            [singleTransport.TRA_ID, singleTransport.TRA_PATENTE, singleTransport.TRA_NOMBRE, singleTransport.TRA_DESCRIPCION, singleTransport.ETR_ID, singleTransport.REG_ID, singleTransport.TIT_ID]).then(data => {
+              console.log('Transporte insertado:' + JSON.stringify(singleTransport));
+            })
           );
         })(transportes[j]);
       }
@@ -707,20 +803,20 @@ export class DbEleccionesService {
     const outerThis = this;
     const promise = new Promise((resolve, reject) => {
       let arregloDePromesas = [];
-      arregloDePromesas.push(outerThis.database.executeSql('DELETE FROM RUTAS'));
+      arregloDePromesas.push(outerThis.database.executeSql('DELETE FROM RUTAS WHERE SYNC NOT IN (0)'));
       for (let j = 0; j < rutas.length; j++) {
         ((singleRoute) => {
           arregloDePromesas.push(outerThis.database.executeSql('INSERT INTO RUTAS ' +
-           '(RTA_ID, RTA_USUARIO_REGISTRO, RTA_FECHA_REGISTRO, RTA_USUARIO_MODIFICACION, RTA_FECHA_MODIFICACION,' +
-           ' RTA_CODIGO, ERU_ID, TRA_ID, USU_ID, LUG_ID_ORIGEN, LUG_ID_DESTINO, RTA_OS, RTA_LATITUD, RTA_LONGITUD,' +
-           ' RTA_FECHA_DISPOSITIVO) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-              [singleRoute.RTA_ID, singleRoute.RTA_USUARIO_REGISTRO, singleRoute.RTA_FECHA_REGISTRO, singleRoute.RTA_USUARIO_MODIFICACION,
-                singleRoute.RTA_FECHA_MODIFICACION, singleRoute.RTA_CODIGO, singleRoute.ERU_ID, singleRoute.TRA_ID, singleRoute.USU_ID,
-                singleRoute.LUG_ID_ORIGEN, singleRoute.LUG_ID_DESTINO, singleRoute.RTA_OS,
-                singleRoute.RTA_LATITUD, singleRoute.RTA_LONGITUD,
-                singleRoute.RTA_FECHA_DISPOSITIVO]).then(data => {
-             console.log('Ruta insertada:' + JSON.stringify(singleRoute));
-           })
+            '(RTA_ID, RTA_USUARIO_REGISTRO, RTA_FECHA_REGISTRO, RTA_USUARIO_MODIFICACION, RTA_FECHA_MODIFICACION,' +
+            ' RTA_CODIGO, ERU_ID, TRA_ID, USU_ID, LUG_ID_ORIGEN, LUG_ID_DESTINO, RTA_OS, RTA_LATITUD, RTA_LONGITUD,' +
+            ' RTA_FECHA_DISPOSITIVO) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [singleRoute.RTA_ID, singleRoute.RTA_USUARIO_REGISTRO, singleRoute.RTA_FECHA_REGISTRO, singleRoute.RTA_USUARIO_MODIFICACION,
+            singleRoute.RTA_FECHA_MODIFICACION, singleRoute.RTA_CODIGO, singleRoute.ERU_ID, singleRoute.TRA_ID, singleRoute.USU_ID,
+            singleRoute.LUG_ID_ORIGEN, singleRoute.LUG_ID_DESTINO, singleRoute.RTA_OS,
+            singleRoute.RTA_LATITUD, singleRoute.RTA_LONGITUD,
+            singleRoute.RTA_FECHA_DISPOSITIVO]).then(data => {
+              console.log('Ruta insertada:' + JSON.stringify(singleRoute));
+            })
           );
         })(rutas[j]);
       }
@@ -769,6 +865,7 @@ export class DbEleccionesService {
     });
     return id;
   }
+
   async insertarRutaCarga(carga) {
     var idRutaCarga = 0;
     console.log('idRutaCarga db insertar', carga);
@@ -776,14 +873,16 @@ export class DbEleccionesService {
       (
         CAR_ID,
         RTA_ID,
-        CAR_RTA_ESTADO
+        CAR_RTA_ESTADO,
+        SYNC
       )
-      VALUES (?,?,?)
+      VALUES (?,?,?,?)
     `;
     await this.database.executeSql(query, [
       carga.CAR_ID,
       carga.RTA_ID,
-      carga.CAR_RTA_ESTADO
+      carga.CAR_RTA_ESTADO,
+      carga.SYNC
     ]).then(data => {
       idRutaCarga = data.insertId;
       console.log('idRutaCarga: ', data.insertId);
@@ -791,6 +890,45 @@ export class DbEleccionesService {
       console.error('error al insertar rutaCarga :', err);
     });
     return idRutaCarga;
+  }
+
+  async getRutaCargaByIdRuta(idRuta) {
+    var cargasRutas = [];
+    const query = `SELECT * FROM RUTAS_CARGAS WHERE RTA_ID = ?`;
+    await this.database.executeSql(query, [idRuta]).then(data => {
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          cargasRutas.push({
+            CAR_ID: data.rows.item(i).CAR_ID,
+            RTA_ID: data.rows.item(i).RTA_ID,
+
+          });
+        }
+      }
+    }).catch(err => {
+      console.error('error al insertar rutaCarga :', err);
+    });
+
+    return cargasRutas;
+  }
+
+  async getAllRutasCargas() {
+    var rutasCargas = [];
+    const query = `SELECT * FROM RUTAS_CARGAS`;
+    await this.database.executeSql(query, []).then(data => {
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          rutasCargas.push({
+            CAR_ID: data.rows.item(i).CAR_ID,
+            RTA_ID: data.rows.item(i).RTA_ID
+          });
+        }
+      }
+    }).catch(err => {
+      console.error('error al insertar RUTAS_CARGAS :', err);
+    });
+
+    return rutasCargas;
   }
 
   async insertarBitacoraRuta(bitacoraRuta) {
@@ -805,9 +943,10 @@ export class DbEleccionesService {
         BRU_LONGITUD,
         ERU_ID,
         BRU_DESCRIPCION,
-        RTA_ID
+        RTA_ID,
+        SYNC
       )
-      VALUES (?,?,?,?,?,?,?)
+      VALUES (?,?,?,?,?,?,?,?)
     `;
     await this.database.executeSql(query, [
       bitacoraRuta.BRU_FECHA_REGISTRO_DISPOSITIVO,
@@ -816,7 +955,8 @@ export class DbEleccionesService {
       bitacoraRuta.BRU_LONGITUD,
       bitacoraRuta.ERU_ID,
       bitacoraRuta.BRU_DESCRIPCION,
-      bitacoraRuta.RTA_ID
+      bitacoraRuta.RTA_ID,
+      bitacoraRuta.SYNC
     ]).then(data => {
       idBitacoraRuta = data.insertId;
       console.log('idBitacoraRuta: ', data.insertId);
@@ -833,13 +973,15 @@ export class DbEleccionesService {
     const query = `INSERT INTO BITACORA_RUTAS_CARGAS
       (
         CAR_ID,
-        BRU_ID
+        BRU_ID,
+        SYNC
       )
-      VALUES (?,?)
+      VALUES (?,?,?)
     `;
     await this.database.executeSql(query, [
       bitacoraRutaCarga.CAR_ID,
-      bitacoraRutaCarga.BRU_ID
+      bitacoraRutaCarga.BRU_ID,
+      bitacoraRutaCarga.SYNC
     ]).then(data => {
       idBitacoraRutaCarga = data.insertId;
       console.log('idBitacoraRutaCargaBD: ', data.insertId);
@@ -852,7 +994,7 @@ export class DbEleccionesService {
   async obtenerRutas() {
     let rutas: any[] = [];
     let query = 'SELECT * FROM RUTAS';
-    await this.database.executeSql(query, []).then(data => {
+    await this.database.executeSql(query, []).then(async data => {
       if (data.rows.length > 0) {
         for (let i = 0; i < data.rows.length; i++) {
           rutas.push({
@@ -863,10 +1005,10 @@ export class DbEleccionesService {
             RTA_FECHA_MODIFICACION: data.rows.item(i).RTA_FECHA_MODIFICACION,
             RTA_CODIGO: data.rows.item(i).RTA_CODIGO,
             ERU_ID: data.rows.item(i).ERU_ID,
-            TRA_ID: data.rows.item(i).TRA_ID,
+            TRA_ID: await this.obtenerTransportesById(data.rows.item(i).TRA_ID),
             USU_ID: data.rows.item(i).USU_ID,
-            LUG_ID_ORIGEN: data.rows.item(i).LUG_ID_ORIGEN,
-            LUG_ID_DESTINO: data.rows.item(i).LUG_ID_DESTINO,
+            LUG_ID_ORIGEN: await this.getAllLugaresById(data.rows.item(i).LUG_ID_ORIGEN),
+            LUG_ID_DESTINO: await this.getAllLugaresById(data.rows.item(i).LUG_ID_DESTINO),
             RTA_OS: data.rows.item(i).RTA_OS,
             RTA_LATITUD: data.rows.item(i).RTA_LATITUD,
             RTA_LONGITUD: data.rows.item(i).RTA_LONGITUD,
@@ -881,6 +1023,10 @@ export class DbEleccionesService {
     return rutas;
   }
 
+  async obtenerLugarById() {
+
+  }
+
   async obtenerRutasCargas() {
     // tslint:disable-next-line: prefer-const
     let rutas: any[] = [];
@@ -891,7 +1037,26 @@ export class DbEleccionesService {
           rutas.push({
             CAR_ID: data.rows.item(i).CAR_ID,
             RTA_ID: data.rows.item(i).RTA_ID,
-            CAR_RTA_ESTADO: data.rows.item(i).CAR_RTA_ESTADO
+            CAR_RTA_ESTADO: data.rows.item(i).CAR_RTA_ESTADO,
+            SYNC: data.rows.item(i).SYNC
+          });
+        }
+      }
+    });
+
+    return rutas;
+  }
+
+  async obtenerRutasCargasByIdRuta(idRuta) {
+    // tslint:disable-next-line: prefer-const
+    let rutas: any[] = [];
+    const query = 'SELECT * FROM RUTAS_CARGAS WHERE RTA_ID = ? ';
+    await this.database.executeSql(query, [idRuta]).then(data => {
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          rutas.push({
+            CAR_ID: data.rows.item(i).CAR_ID,
+            RTA_ID: data.rows.item(i).RTA_ID
           });
         }
       }
@@ -910,6 +1075,7 @@ export class DbEleccionesService {
           rutas.push({
             CAR_ID: data.rows.item(i).CAR_ID,
             BRU_ID: data.rows.item(i).BRU_ID,
+            SYNC: data.rows.item(i).SYNC,
           });
         }
       }
@@ -930,12 +1096,40 @@ export class DbEleccionesService {
             BRU_FECHA_REGISTRO_DISPOSITIVO: data.rows.item(i).BRU_FECHA_REGISTRO_DISPOSITIVO,
             BRU_USUARIO_REGISTRO: data.rows.item(i).BRU_USUARIO_REGISTRO,
             BRU_LATITUD: data.rows.item(i).BRU_LATITUD,
-            BRU_LONGITUD : data.rows.item(i).BRU_LONGITUD,
+            BRU_LONGITUD: data.rows.item(i).BRU_LONGITUD,
             ERU_ID: data.rows.item(i).ERU_ID,
             BRU_CUADRADO: data.rows.item(i).BRU_CUADRADO,
             BRU_DESCRIPCION: data.rows.item(i).BRU_DESCRIPCION,
             RTA_ID: data.rows.item(i).RTA_ID,
-            BRU_FECHA_REGISTRO : data.rows.item(i).BRU_FECHA_REGISTRO
+            BRU_FECHA_REGISTRO: data.rows.item(i).BRU_FECHA_REGISTRO,
+            SYNC: data.rows.item(i).SYNC
+          });
+        }
+      }
+    });
+    return rutas;
+  }
+
+
+  async obtenerBitacoraRutasByIdRuta(idRuta) {
+    // tslint:disable-next-line: prefer-const
+    let rutas: any[] = [];
+    const query = 'SELECT * FROM BITACORA_RUTAS WHERE RTA_ID = ?';
+    await this.database.executeSql(query, [idRuta]).then(data => {
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          rutas.push({
+            BRU_ID: data.rows.item(i).BRU_ID,
+            BRU_FECHA_REGISTRO_DISPOSITIVO: data.rows.item(i).BRU_FECHA_REGISTRO_DISPOSITIVO,
+            BRU_USUARIO_REGISTRO: data.rows.item(i).BRU_USUARIO_REGISTRO,
+            BRU_LATITUD: data.rows.item(i).BRU_LATITUD,
+            BRU_LONGITUD: data.rows.item(i).BRU_LONGITUD,
+            ERU_ID: data.rows.item(i).ERU_ID,
+            BRU_CUADRADO: data.rows.item(i).BRU_CUADRADO,
+            BRU_DESCRIPCION: data.rows.item(i).BRU_DESCRIPCION,
+            RTA_ID: data.rows.item(i).RTA_ID,
+            BRU_FECHA_REGISTRO: data.rows.item(i).BRU_FECHA_REGISTRO
+            //SYNC: data.rows.item(i).SYNC
           });
         }
       }
@@ -947,14 +1141,14 @@ export class DbEleccionesService {
     const outerThis = this;
     const promise = new Promise((resolve, reject) => {
       let arregloDePromesas = [];
-      arregloDePromesas.push(outerThis.database.executeSql('DELETE FROM ESTADOS_RUTAS'));
+      arregloDePromesas.push(outerThis.database.executeSql('DELETE FROM ESTADOS_RUTAS WHERE SYNC NOT IN (0)'));
       for (let j = 0; j < estadosRutas.length; j++) {
         ((singleRouteState) => {
           arregloDePromesas.push(outerThis.database.executeSql('INSERT INTO ESTADOS_RUTAS ' +
-           '(ERU_ID, ERU_NOMBRE, ERU_DESCRIPCION, ERU_CODIGO) VALUES (?,?,?,?)',
-              [singleRouteState.ERU_ID, singleRouteState.ERU_NOMBRE, singleRouteState.ERU_DESCRIPCION, singleRouteState.ERU_CODIGO]).then(data => {
-             console.log('Ruta insertada:' + JSON.stringify(singleRouteState));
-           })
+            '(ERU_ID, ERU_NOMBRE, ERU_DESCRIPCION, ERU_CODIGO) VALUES (?,?,?,?)',
+            [singleRouteState.ERU_ID, singleRouteState.ERU_NOMBRE, singleRouteState.ERU_DESCRIPCION, singleRouteState.ERU_CODIGO]).then(data => {
+              console.log('Ruta insertada:' + JSON.stringify(singleRouteState));
+            })
           );
         })(estadosRutas[j]);
       }
@@ -971,15 +1165,15 @@ export class DbEleccionesService {
     const outerThis = this;
     const promise = new Promise((resolve, reject) => {
       let arregloDePromesas = [];
-      arregloDePromesas.push(outerThis.database.executeSql('DELETE FROM BITACORA_RUTAS'));
+      arregloDePromesas.push(outerThis.database.executeSql('DELETE FROM BITACORA_RUTAS WHERE SYNC NOT IN (0)'));
       for (let j = 0; j < bitacorasrutas.length; j++) {
         ((singleRouteLog) => {
           arregloDePromesas.push(outerThis.database.executeSql('INSERT INTO BITACORA_RUTAS ' +
-           '(BRU_ID, BRU_FECHA_REGISTRO_DISPOSITIVO, BRU_USUARIO_REGISTRO, BRU_LATITUD, BRU_LONGITUD, BRU_CUADRADO, BRU_DESCRIPCION, RTA_ID, BRU_FECHA_REGISTRO) ' +
-           'VALUES (?,?,?,?,?,?,?,?,?,?)',
-              [singleRouteLog.BRU_ID, singleRouteLog.BRU_FECHA_REGISTRO_DISPOSITIVO, singleRouteLog.BRU_USUARIO_REGISTRO, singleRouteLog.BRU_LATITUD, singleRouteLog.BRU_LONGITUD, singleRouteLog.BRU_CUADRADO, singleRouteLog.BRU_DESCRIPCION, singleRouteLog.RTA_ID, singleRouteLog.BRU_FECHA_REGISTRO]).then(data => {
-             console.log('Ruta insertada:' + JSON.stringify(singleRouteLog));
-           })
+            '(BRU_ID, BRU_FECHA_REGISTRO_DISPOSITIVO, BRU_USUARIO_REGISTRO, BRU_LATITUD, BRU_LONGITUD, BRU_CUADRADO, BRU_DESCRIPCION, RTA_ID, BRU_FECHA_REGISTRO) ' +
+            'VALUES (?,?,?,?,?,?,?,?,?,?)',
+            [singleRouteLog.BRU_ID, singleRouteLog.BRU_FECHA_REGISTRO_DISPOSITIVO, singleRouteLog.BRU_USUARIO_REGISTRO, singleRouteLog.BRU_LATITUD, singleRouteLog.BRU_LONGITUD, singleRouteLog.BRU_CUADRADO, singleRouteLog.BRU_DESCRIPCION, singleRouteLog.RTA_ID, singleRouteLog.BRU_FECHA_REGISTRO]).then(data => {
+              console.log('Ruta insertada:' + JSON.stringify(singleRouteLog));
+            })
           );
         })(bitacorasrutas[j]);
       }
@@ -996,15 +1190,15 @@ export class DbEleccionesService {
     const outerThis = this;
     const promise = new Promise((resolve, reject) => {
       let arregloDePromesas = [];
-      arregloDePromesas.push(outerThis.database.executeSql('DELETE FROM RUTAS_CARGAS'));
+      arregloDePromesas.push(outerThis.database.executeSql('DELETE FROM RUTAS_CARGAS WHERE SYNC NOT IN (0)'));
       for (let j = 0; j < rutasCargas.length; j++) {
         ((singleRouteLoad) => {
           arregloDePromesas.push(outerThis.database.executeSql('INSERT INTO BITACORA_RUTAS ' +
-           '(CAR_ID, RTA_ID, CAR_RTA_ESTADO) ' +
-           'VALUES (?,?,?)',
-              [singleRouteLoad.CAR_ID, singleRouteLoad.RTA_ID, singleRouteLoad.CAR_RTA_ESTADO]).then(data => {
-             console.log('RutaCarga insertada:' + JSON.stringify(singleRouteLoad));
-           })
+            '(CAR_ID, RTA_ID, CAR_RTA_ESTADO) ' +
+            'VALUES (?,?,?)',
+            [singleRouteLoad.CAR_ID, singleRouteLoad.RTA_ID, singleRouteLoad.CAR_RTA_ESTADO]).then(data => {
+              console.log('RutaCarga insertada:' + JSON.stringify(singleRouteLoad));
+            })
           );
         })(rutasCargas[j]);
       }
@@ -1020,12 +1214,12 @@ export class DbEleccionesService {
 
   GuardarParametrosLocal(parametros): Promise<any> {
     const outerThis = this;
-    const promise = new Promise<boolean>(function(resolve, reject) {
+    const promise = new Promise<boolean>(function (resolve, reject) {
       let arregloDePromesas = [];
 
-      for (let j = 0; j < parametros.length; j++)   {
+      for (let j = 0; j < parametros.length; j++) {
         ((singleParam) => {
-          const innerPromise = new Promise ((resolver, rechazar) => {
+          const innerPromise = new Promise((resolver, rechazar) => {
             outerThis.database.executeSql('SELECT PAR_ID FROM PARAMETROS WHERE PAR_ID = ?', [singleParam.PAR_ID]).then(data => {
               if (data.rows.length > 0) {
                 outerThis.database.executeSql('UPDATE PARAMETROS SET PAR_VALOR = ? WHERE PAR_ID = ?', [singleParam.PAR_VALOR, singleParam.PAR_ID]).then(data => {
@@ -1062,35 +1256,35 @@ export class DbEleccionesService {
   async ObtenerUsuarioLocal(parametro): Promise<any> {
     console.log('Se ejecuta la funcion ObtenerUsuarioLocal del archivo db-elecciones.service.ts');
     const data = [parametro.USU_CLAVE, parametro.USU_NOMBRE_USUARIO, this.GetFechaHora()];
-    return await  this.database.executeSql('SELECT USU_ID FROM USUARIOS WHERE USU_CLAVE = ? AND USU_NOMBRE_USUARIO = ? AND USU_FECHA_REGISTRO = ?', data).then(data => {
+    return await this.database.executeSql('SELECT USU_ID FROM USUARIOS WHERE USU_CLAVE = ? AND USU_NOMBRE_USUARIO = ? AND USU_FECHA_REGISTRO = ?', data).then(data => {
       if (data.rows.length > 0) {
-      const query1 = 'SELECT U.USU_ID,' +
-      'U.USU_RUT,'
-      + 'U.USU_DV,'
-      + 'U.USU_NOMBRES, '
-      + 'U.USU_APELLIDO_PATERNO, '
-      + 'U.USU_APELLIDO_MATERNO, '
-      + 'U.USU_FECHA_NACIMIENTO, '
-      + 'U.USU_NOMBRE_USUARIO, '
-      + 'U.USU_CLAVE, '
-      + 'U.USU_FECHA_REGISTRO, '
-      + 'U.USU_ESTADO, '
-      + 'U.PER_ID, '
-      + 'P.PER_DESCRIPCION, '
-      + 'P.PER_ESTADO, '
-      + 'P.PER_NOMBRE, '
-      + 'P.PER_CODIGO '
-      + 'FROM USUARIOS U '
-      + 'JOIN PERFILES P ON P.PER_ID = U.PER_ID '
-      + 'WHERE U.USU_NOMBRE_USUARIO = ? AND '
-      + 'U.USU_CLAVE = ?';
-      return  this.database.executeSql(query1, [parametro.USU_NOMBRE_USUARIO, parametro.USU_CLAVE]).then(data => {
-      let obtenerLoginUsuarioRespuesta: Object;
-      let usuario: Object;
-      const aplicaciones: any[] = [];
-      let idPerfil = 0;
+        const query1 = 'SELECT U.USU_ID,' +
+          'U.USU_RUT,'
+          + 'U.USU_DV,'
+          + 'U.USU_NOMBRES, '
+          + 'U.USU_APELLIDO_PATERNO, '
+          + 'U.USU_APELLIDO_MATERNO, '
+          + 'U.USU_FECHA_NACIMIENTO, '
+          + 'U.USU_NOMBRE_USUARIO, '
+          + 'U.USU_CLAVE, '
+          + 'U.USU_FECHA_REGISTRO, '
+          + 'U.USU_ESTADO, '
+          + 'U.PER_ID, '
+          + 'P.PER_DESCRIPCION, '
+          + 'P.PER_ESTADO, '
+          + 'P.PER_NOMBRE, '
+          + 'P.PER_CODIGO '
+          + 'FROM USUARIOS U '
+          + 'JOIN PERFILES P ON P.PER_ID = U.PER_ID '
+          + 'WHERE U.USU_NOMBRE_USUARIO = ? AND '
+          + 'U.USU_CLAVE = ?';
+        return this.database.executeSql(query1, [parametro.USU_NOMBRE_USUARIO, parametro.USU_CLAVE]).then(data => {
+          let obtenerLoginUsuarioRespuesta: Object;
+          let usuario: Object;
+          const aplicaciones: any[] = [];
+          let idPerfil = 0;
 
-      for (let i = 0; i < data.rows.length; i++) {
+          for (let i = 0; i < data.rows.length; i++) {
             idPerfil = data.rows.item(0).PER_ID;
             usuario = {
               USU_ID: data.rows.item(0).USU_ID,
@@ -1110,22 +1304,22 @@ export class DbEleccionesService {
               PER_NOMBRE: data.rows.item(0).PER_NOMBRE,
               PER_CODIGO: data.rows.item(0).PER_CODIGO
             };
-        }
+          }
 
-      let query2 = 'SELECT AP.APLI_ID, '
-          + 'AP.APLI_CODIGO, '
-          + 'AP.APLI_NOMBRE, '
-          + 'AP.APLI_DESCRIPCION, '
-          + 'AP.APLI_ESTADO, '
-          + 'AP.APLI_IMG, '
-          + 'AP.TAP_ID, '
-          + 'AP.APLI_METODO, '
-          + 'AP.APLI_CONTROLADOR '
-          + 'FROM APLICACIONES AP '
-          + 'INNER JOIN PERFILES_APLICACIONES PA ON AP.APLI_ID = PA.APLI_ID '
-          + 'WHERE PA.PER_ID = ?';
+          let query2 = 'SELECT AP.APLI_ID, '
+            + 'AP.APLI_CODIGO, '
+            + 'AP.APLI_NOMBRE, '
+            + 'AP.APLI_DESCRIPCION, '
+            + 'AP.APLI_ESTADO, '
+            + 'AP.APLI_IMG, '
+            + 'AP.TAP_ID, '
+            + 'AP.APLI_METODO, '
+            + 'AP.APLI_CONTROLADOR '
+            + 'FROM APLICACIONES AP '
+            + 'INNER JOIN PERFILES_APLICACIONES PA ON AP.APLI_ID = PA.APLI_ID '
+            + 'WHERE PA.PER_ID = ?';
 
-      return this.database.executeSql(query2, [idPerfil]).then(data => {
+          return this.database.executeSql(query2, [idPerfil]).then(data => {
             if (data.rows.length > 0) {
               for (let i = 0; i < data.rows.length; i++) {
                 aplicaciones.push({
@@ -1146,7 +1340,7 @@ export class DbEleccionesService {
               aplicaciones
             };
             return obtenerLoginUsuarioRespuesta;
-            });
+          });
         });
       } else {
         const obtenerLoginUsuarioRespuesta: any = 'No existe usuario';
@@ -1158,8 +1352,8 @@ export class DbEleccionesService {
   ObtenerEstadoInicioFinDiaLocal(parametro): Promise<any> {
     console.log('Ejecuta ObtenerDiaIniciadoLocal');
     let query = 'SELECT RIN_ESTADO ' +
-    ' FROM REGISTRO_INICIO_FIN_DIA ' +
-    ' WHERE USU_ID = ' + parametro.USU_ID + ' AND strftime(\'%Y-%m-%d\',RIN_FECHA_INICIO) = \'' + this.GetFechaHora() + '\'';
+      ' FROM REGISTRO_INICIO_FIN_DIA ' +
+      ' WHERE USU_ID = ' + parametro.USU_ID + ' AND strftime(\'%Y-%m-%d\',RIN_FECHA_INICIO) = \'' + this.GetFechaHora() + '\'';
     console.log(query);
     return this.database.executeSql(query, []).then(data => {
       let obtenerDiaIniciado: Object;
@@ -1167,47 +1361,48 @@ export class DbEleccionesService {
         for (let i = 0; i < data.rows.length; i++) {
           obtenerDiaIniciado = {
             RIN_ESTADO: data.rows.item(0).RIN_ESTADO
-            };
+          };
         }
         return obtenerDiaIniciado;
       } else {
         return obtenerDiaIniciado;
       }
-    }).catch(error => { console.log(error);
+    }).catch(error => {
+      console.log(error);
     });
   }
 
   GuardarInicioFinDiaLocal(parametro): Promise<any> {
     console.log('Ejecuta GuardarInicioFinDiaLocal');
     let query = 'SELECT RIN_ESTADO' +
-    ' FROM REGISTRO_INICIO_FIN_DIA ' +
-    ' WHERE USU_ID = ' + parametro.USU_ID + ' AND strftime(\'%Y-%m-%d\',RIN_FECHA_INICIO) = \'' + this.GetFechaHora() + '\'';
+      ' FROM REGISTRO_INICIO_FIN_DIA ' +
+      ' WHERE USU_ID = ' + parametro.USU_ID + ' AND strftime(\'%Y-%m-%d\',RIN_FECHA_INICIO) = \'' + this.GetFechaHora() + '\'';
     console.log(query);
     return this.database.executeSql(query, []).then(data => {
       if (data.rows.length > 0) {
         return this.database.executeSql('UPDATE ' +
-        'REGISTRO_INICIO_FIN_DIA SET RIN_FECHA_FIN = ?,' +
-        'RIN_ESTADO = 2, ' +
-        'RIN_SYNC = 0 ' +
-        'WHERE USU_ID = ?', [this.GetFechaHora(true), parametro.USU_ID])
-        .then(data => {
-          return 'Registro Actualizado';
-        })
-        .catch((e) =>
-        console.error(e)
-        );
+          'REGISTRO_INICIO_FIN_DIA SET RIN_FECHA_FIN = ?,' +
+          'RIN_ESTADO = 2, ' +
+          'RIN_SYNC = 0 ' +
+          'WHERE USU_ID = ?', [this.GetFechaHora(true), parametro.USU_ID])
+          .then(data => {
+            return 'Registro Actualizado';
+          })
+          .catch((e) =>
+            console.error(e)
+          );
       } else {
         return this.database.executeSql('INSERT INTO REGISTRO_INICIO_FIN_DIA '
-        + '(RIN_ESTADO, '
-        + 'RIN_FECHA_INICIO,'
-        + 'USU_ID,'
-        + 'RIN_SYNC)'
-        + ' VALUES (1, ?, ?, 0)', [this.GetFechaHora(true), parametro.USU_ID])
-        .then(data => {
-          return 'Registro Insertado';
-        })
-        .catch((e) => console.log(e));
-        }
+          + '(RIN_ESTADO, '
+          + 'RIN_FECHA_INICIO,'
+          + 'USU_ID,'
+          + 'RIN_SYNC)'
+          + ' VALUES (1, ?, ?, 0)', [this.GetFechaHora(true), parametro.USU_ID])
+          .then(data => {
+            return 'Registro Insertado';
+          })
+          .catch((e) => console.log(e));
+      }
     });
   }
 
@@ -1253,17 +1448,17 @@ export class DbEleccionesService {
     return await this.database.executeSql(query, []).then(data => {
       console.log('En GetCoordenadasUsuarios');
       console.log(data);
-      const GuardarCoordenadasUsuarioParam =  {
+      const GuardarCoordenadasUsuarioParam = {
         LISTA_COORDENADAS: []
       };
       if (data.rows.length > 0) {
         for (let i = 0; i < data.rows.length; i++) {
 
           GuardarCoordenadasUsuarioParam.LISTA_COORDENADAS.push({
-              CUS_LATITUD: data.rows.item(i).CUS_LATITUD,
-              CUS_LONGITUD: data.rows.item(i).CUS_LONGITUD,
-              CUS_FECHA_DISPOSITIVO: data.rows.item(i).CUS_FECHA_DISPOSITIVO,
-              USU_ID: data.rows.item(i).USU_ID
+            CUS_LATITUD: data.rows.item(i).CUS_LATITUD,
+            CUS_LONGITUD: data.rows.item(i).CUS_LONGITUD,
+            CUS_FECHA_DISPOSITIVO: data.rows.item(i).CUS_FECHA_DISPOSITIVO,
+            USU_ID: data.rows.item(i).USU_ID
           });
         }
         return GuardarCoordenadasUsuarioParam;
@@ -1276,15 +1471,15 @@ export class DbEleccionesService {
   GetCoordenada(USU_ID: number): Promise<any> {
     let query = 'SELECT * FROM COORDENADAS_USUARIOS WHERE USU_ID = ? AND CUS_ID = (SELECT MAX(CUS_ID) FROM COORDENADAS_USUARIOS)';
     return this.database.executeSql(query, [USU_ID]).then(data => {
-      const array =  [];
+      const array = [];
       if (data.rows.length > 0) {
-          array.push({
-              CUS_LATITUD: data.rows.item(0).CUS_LATITUD,
-              CUS_LONGITUD: data.rows.item(0).CUS_LONGITUD,
-              CUS_FECHA_DISPOSITIVO: data.rows.item(0).CUS_FECHA_DISPOSITIVO,
-              USU_ID: data.rows.item(0).USU_ID,
-              CUS_SYNC: data.rows.item(0).CUS_SYNC
-          });
+        array.push({
+          CUS_LATITUD: data.rows.item(0).CUS_LATITUD,
+          CUS_LONGITUD: data.rows.item(0).CUS_LONGITUD,
+          CUS_FECHA_DISPOSITIVO: data.rows.item(0).CUS_FECHA_DISPOSITIVO,
+          USU_ID: data.rows.item(0).USU_ID,
+          CUS_SYNC: data.rows.item(0).CUS_SYNC
+        });
       }
       return array;
     });
@@ -1297,7 +1492,7 @@ export class DbEleccionesService {
 
   InsertCoordenadasUsuarios(idUsuario: number, lat: number, lon: number): Promise<any> {
     let query: string = 'INSERT INTO COORDENADAS_USUARIOS(CUS_LATITUD, CUS_LONGITUD, CUS_FECHA_DISPOSITIVO, USU_ID, CUS_SYNC)'
-                        + ' VALUES (\'' + lat + '\',\'' + lon + '\',\'' + this.GetFechaHora(true) + '\',' + idUsuario + ',0); ';
+      + ' VALUES (\'' + lat + '\',\'' + lon + '\',\'' + this.GetFechaHora(true) + '\',' + idUsuario + ',0); ';
     console.log(query);
     return this.database.executeSql(query, []);
   }
@@ -1325,7 +1520,7 @@ export class DbEleccionesService {
           ETR_ID: data.rows.item(0).ETR_IDC,
           REG_ID: data.rows.item(0).REG_IDC,
           TIT_ID: data.rows.item(0).TIT_IDC
-      });
+        });
       }
     });
     return transportes;
@@ -1355,6 +1550,29 @@ export class DbEleccionesService {
     return transportes;
   }
 
+  async obtenerTransportesById(id) {
+    let transportes: any[] = [];
+    let query = 'SELECT * FROM TRANSPORTES WHERE TRA_ID = ?';
+    await this.database.executeSql(query, [id]).then(data => {
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          transportes.push({
+            TRA_ID: data.rows.item(i).TRA_ID,
+            TRA_PATENTE: data.rows.item(i).TRA_PATENTE,
+            TRA_NOMBRE: data.rows.item(i).TRA_NOMBRE,
+            TRA_DESCRIPCION: data.rows.item(i).TRA_DESCRIPCION,
+            ETR_ID: data.rows.item(i).ETR_IDC,
+            REG_ID: data.rows.item(i).REG_IDC,
+            TIT_ID: data.rows.item(i).TIT_IDC
+          });
+
+        }
+      }
+    });
+
+    return transportes;
+  }
+
   /**
    * Borra los registros de cualquier tabla
    * @param table Nombre le la tabla a borrar
@@ -1365,6 +1583,58 @@ export class DbEleccionesService {
       console.log('Registros eliminados de la tabla ' + table + ': ' + result);
       return result;
     });
+  }
+
+
+  async crearJsonInsertarRuta() {
+    var json: any[] = [];
+    await this.getAllRutasNoSync().then( async (rutas: any[]) => {
+      console.log('rutas: ', rutas);
+      if (rutas.length > 0) {    
+        for (let i = 0; i < rutas.length; i++) {
+          json.push({
+            RTA_ID: rutas[i].RTA_ID,
+            TRA_ID: rutas[i].TRA_ID,
+            USU_ID: rutas[i].USU_ID,
+            ERU_ID: rutas[i].ERU_ID,
+            LUG_ID_ORIGEN: rutas[i].LUG_ID_ORIGEN,
+            LUG_ID_DESTINO: rutas[i].LUG_ID_DESTINO,
+            RTA_LATITUD: rutas[i].RTA_LATITUD,
+            RTA_LONGITUD: rutas[i].RTA_LONGITUD,
+            RTA_FECHA_DISPOSITIVO: rutas[i].RTA_FECHA_DISPOSITIVO,
+            LISTA_RUTAS_CARGAS: await this.obtenerRutasCargasByIdRuta(rutas[i].RTA_ID),
+            LISTA_BITACORA_RUTAS: await this.armarListaBitacoraRutas(rutas[i].RTA_ID)
+          });
+        }                          
+      }
+    });
+    return json;
+  }
+
+  async armarListaBitacoraRutas(iRuta) {
+    const bitacorasRutas = [];
+    await this.obtenerBitacoraRutasByIdRuta(iRuta).then( (bitRut: any[]) => {
+      console.log('bitacoraRutas: ' ,bitRut);
+      if(bitRut.length > 0 ) {
+        bitRut.forEach(data => {
+          bitacorasRutas.push({
+             BRU_FECHA_REGISTRO_DISPOSITIVO: data.BRU_FECHA_REGISTRO_DISPOSITIVO,
+             USU_ID: data.USU_ID,
+             BRU_LATITUD: data.BRU_LATITUD,
+             BRU_LONGITUD: data.BRU_LONGITUD,
+             ERU_ID: data.ERU_ID,
+             BRU_CUADRADO: data.BRU_CUADRADO,
+             BRU_DESCRIPCION: data.BRU_DESCRIPCION,
+             LISTA_BITACORA_RUTAS_CARGAS: [], //await this.obtenerRutasCargasByIdRuta(),
+             LISTA_BITACORA_RUTAS_IMAGENES: [],
+             LISTA_BITACORA_RUTAS_CARGAS_NO_REGISTRADAS: []
+           });
+        });  
+      }
+           
+    });
+    
+    return bitacorasRutas;
   }
 
 }

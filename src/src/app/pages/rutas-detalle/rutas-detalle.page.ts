@@ -11,36 +11,11 @@ import { IRuta } from 'src/app/interfaces/ruta.interface';
 export class RutasDetallePage implements OnInit {
 
   private rutas: object;
-  ruta: IRuta;
+  ruta: any;
   constructor(
     private route: Router,
     private rutaServ: RutaService
     ) {
-    this.rutas = {
-      "RUTA": [
-        {
-          "ORIGEN": [
-            {
-              "LUG_NOMBRE": "Colegio 01",
-              "LUG_CALLE": "Huerfanos",
-              "LUG_NUMERO": "835",
-              "LUG_COMUNA": "Santiago",
-              "ESTADO": "2",
-            }
-          ],
-          "DESTINO": [
-            {
-              "LUG_NOMBRE": "Colegio 02",
-              "LUG_CALLE": "Huerfanos",
-              "LUG_NUMERO": "836",
-              "LUG_COMUNA": "Santiago",
-              "ESTADO": "2",
-            }
-          ]
-        }
-      ]
-    }
-
   }
 
   ngOnInit() {    

@@ -14,7 +14,7 @@ import { IRuta } from 'src/app/interfaces/ruta.interface';
 export class MisRutasPage implements OnInit {
   ruta: any;
 
-  rutas: IRuta[] = [];
+  rutas = [];
 
   usuario: any;
   constructor(
@@ -28,11 +28,18 @@ export class MisRutasPage implements OnInit {
   }
 
   ngOnInit() {
-    
+
   }
 
   ionViewDidEnter() {
-    this.rutas = this.rutaServ.rutas;
+    this.dbElecciones.crearJsonInsertarRuta().then(data => {
+      console.log('jsonIngresar :', data);
+    });
+    this.dbElecciones.obtenerRutas().then( rutas => {
+      console.log('todas las Rutas Inicio: ', rutas);
+      this.rutas = rutas;
+    });
+    
   } 
 
   crearRuta() {

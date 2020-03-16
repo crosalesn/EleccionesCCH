@@ -211,15 +211,19 @@ export class CrearRutaPage implements OnInit {
 
   buscarPatente() {
     if (this.transporte.patente === '') {
-      this.alert.Alerta('debe ingresar la patente');
+      this.alert.Alerta('Debe ingresar la patente');
     } else {
       console.log('PATENTE UPPER: ', this.transporte.patente.toUpperCase());
       this.db.obtenerTransportePorPatente(this.transporte.patente.toUpperCase()).then(trans => {
         console.log('trans :', trans);
-        this.transporte = {
-          id: trans[0].TRA_ID,
-          patente: trans[0].TRA_PATENTE
-        };
+        if(trans.length > 0) {        
+          this.transporte = {
+            id: trans[0].TRA_ID,
+            patente: trans[0].TRA_PATENTE
+          };
+        } else {
+          this.alert.Alerta('La patente no existe.');
+        }
       });
     }
   }
@@ -264,7 +268,7 @@ export class CrearRutaPage implements OnInit {
       RTA_LONGITUD: null, // ok
       // tslint:disable-next-line: max-line-length
       RTA_FECHA_DISPOSITIVO: `${ new Date().getFullYear()}-${new Date().getMonth() < 10 ? '0' + new Date().getMonth() : new Date().getMonth()}-${new Date().getDay()}` , // ok
-      RTA_SYNC: 0 // ok
+      RTA_SYNC: 0 // ok no sincronizadas
     };
 
     this.ruta.codigos = this.codigos;
@@ -296,7 +300,8 @@ export class CrearRutaPage implements OnInit {
           var rutaCarga = {
             CAR_ID: cod.CAR_ID,
             RTA_ID: idInsertado,
-            CAR_RTA_ESTADO: 2
+            CAR_RTA_ESTADO: 2,
+            SYNC: 0
           };
           await this.db.insertarRutaCarga(rutaCarga).then(idRutaCargaInsertado => {
             console.log('idRutaCargaInsertado: ', idRutaCargaInsertado);
@@ -312,7 +317,8 @@ export class CrearRutaPage implements OnInit {
           BRU_LONGITUD : rutaInsertar.RTA_LONGITUD,
           ERU_ID : 2,
           BRU_DESCRIPCION : 'Desde dispositivo movil',
-          RTA_ID: idInsertado
+          RTA_ID: idInsertado,
+          SYNC: 0
         };
 
         await this.db.insertarBitacoraRuta(bitacoraRuta).then(idBitacoraRegistro => {
@@ -323,36 +329,29 @@ export class CrearRutaPage implements OnInit {
             var bitacoraRutaCarga = {
               CAR_ID: cod.CAR_ID,
               BRU_ID: idBitacoraRegistro,
+              SYNC: 0
             };
             await this.db.insertarBitacoraRutaCarga(bitacoraRutaCarga).then(id => {
               console.log('bitacoraRutaCargaBD: ', id);
+            }).catch( erro => {
+              console.error('Error al insertar insertarBitacoraRutaCarga ', erro);
+              return;
             });
           });
-        });
+        }).catch( erro => {
+          console.error('Error al insertar bitacoraruta ', erro);
+          return;
+        });               
+        
 
-        this.db.obtenerRutas().then(rutas => {
-          console.log('todas las Rutas: ', rutas);
-        });
-
-        this.db.obtenerRutasCargas().then(rutasCargas => {
-          console.log('todas las RutasCargas: ', rutasCargas);
-        });
-
-        this.db.obtenerBitacoraRutas().then(bitacorasRutas => {
-          console.log('todas las bitacorasRutas: ', bitacorasRutas);
-        });
-
-        this.db.obtenerBitacorasRutasCargas().then(bitacorasRutasCargas => {
-          console.log('todas las bitacorasRutasCargas: ', bitacorasRutasCargas);
-        });
+      }).catch( erro => {
+        console.error('Error al insertar ruta ', erro);
+        return;
       });
-      // insertar rutas cargas
 
-
-
-      // this.rutaServ.insertarRutas(this.ruta);
       // redireccionar
-      // this.route.navigate(['/mis-rutas']);
+      await this.validarInserciones();
+      this.route.navigate(['/mis-rutas']);
     } else {
       this.alert.Toast('Debe ingresar todos los campos');
     }
@@ -369,6 +368,24 @@ export class CrearRutaPage implements OnInit {
     });
 
     return coordenadas;
+  }
+
+  async validarInserciones() {
+    await this.db.obtenerRutas().then(rutas => {
+      console.log('todas las Rutas: ', rutas);
+    });
+    
+    await this.db.obtenerRutasCargas().then(rutasCargas => {
+      console.log('todas las RutasCargas: ', rutasCargas);
+    });
+
+    await this.db.obtenerBitacoraRutas().then(bitacorasRutas => {
+      console.log('todas las bitacorasRutas: ', bitacorasRutas);
+    });
+
+    await this.db.obtenerBitacorasRutasCargas().then(bitacorasRutasCargas => {
+      console.log('todas las bitacorasRutasCargas: ', bitacorasRutasCargas);
+    });
   }
 }
 

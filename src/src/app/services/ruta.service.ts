@@ -7,7 +7,7 @@ import { DbEleccionesService } from './db-elecciones.service';
 })
 export class RutaService {
   rutas: IRuta[] = [];
-  ruta: IRuta;
+  ruta: any;
   constructor(
     private storage: Storage,
     private db: DbEleccionesService
@@ -18,7 +18,7 @@ export class RutaService {
     //this.deleteAll();
   }
 
-  setRuta(ruta: IRuta) {
+  setRuta(ruta) {
     this.ruta = ruta;
   }
  

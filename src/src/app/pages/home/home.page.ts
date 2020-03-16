@@ -29,7 +29,7 @@ export class HomePage implements OnInit {
       })
     }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.gps.GpsIniciar().then(dato =>{
       console.log("dato:", dato);
       if(!dato){
@@ -91,6 +91,24 @@ export class HomePage implements OnInit {
         }
       }
     });
+
+
+
+    await this.dbElecciones.obtenerRutas().then(rutas => {
+      console.log('todas las Rutas: ', rutas);
+    });
+    
+    await this.dbElecciones.obtenerRutasCargas().then(rutasCargas => {
+      console.log('todas las RutasCargas: ', rutasCargas);
+    });
+
+    await this.dbElecciones.obtenerBitacoraRutas().then(bitacorasRutas => {
+      console.log('todas las bitacorasRutas: ', bitacorasRutas);
+    });
+
+    await this.dbElecciones.obtenerBitacorasRutasCargas().then(bitacorasRutasCargas => {
+      console.log('todas las bitacorasRutasCargas: ', bitacorasRutasCargas);
+    });
   }
 
   ClickIniciarDia(event)
@@ -133,8 +151,8 @@ export class HomePage implements OnInit {
               }
             }
           });
-        } if(this.diaIniciado == 'ACTIVIDADES TERMINADAS'){
-          
+        } else if (this.diaIniciado == 'ACTIVIDADES TERMINADAS'){
+          console.log('');
         }else{
           this.diaIniciado = 'INICIANDO...';
         }
