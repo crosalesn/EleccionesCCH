@@ -13,15 +13,15 @@ import { ComponentsModule } from './components/components.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-//Lector de código de barra
+// Lector de código de barra
 import { ZBar } from '@ionic-native/zbar/ngx';
-//GPS
+// GPS
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
-//Audio - Beeps al momento de escanear
+// Audio - Beeps al momento de escanear
 import { NativeAudio } from '@ionic-native/native-audio/ngx';
-//Conexión a internet
+// Conexión a internet
 import { Network } from '@ionic-native/network/ngx';
-//Base de datos local
+// Base de datos local
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 
@@ -29,11 +29,14 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
 import { IonicStorageModule } from '@ionic/storage';
 
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    BrowserModule, 
+    BrowserModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
     AppRoutingModule,
@@ -52,6 +55,7 @@ import { IonicStorageModule } from '@ionic/storage';
     SQLitePorter,
     SQLite,
     BarcodeScanner,
+    Geolocation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
