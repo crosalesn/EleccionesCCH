@@ -792,7 +792,7 @@ export class DbEleccionesService {
     });
     return idRutaCarga;
   }
-  
+
   async insertarBitacoraRuta(bitacoraRuta) {
     // tslint:disable-next-line: no-var-keyword
     var idBitacoraRuta = 0;
@@ -824,6 +824,29 @@ export class DbEleccionesService {
       console.error('error al insertar bitacoraRuta :', err);
     });
     return idBitacoraRuta;
+  }
+
+  async insertarBitacoraRutaCarga(bitacoraRutaCarga) {
+    // tslint:disable-next-line: no-var-keyword
+    var idBitacoraRutaCarga = 0;
+    console.log('BITACORA_RUTAS_CARGAS db insertar', bitacoraRutaCarga);
+    const query = `INSERT INTO BITACORA_RUTAS_CARGAS
+      (
+        CAR_ID,
+        BRU_ID
+      )
+      VALUES (?,?)
+    `;
+    await this.database.executeSql(query, [
+      bitacoraRutaCarga.CAR_ID,
+      bitacoraRutaCarga.BRU_ID
+    ]).then(data => {
+      idBitacoraRutaCarga = data.insertId;
+      console.log('idBitacoraRutaCarga: ', data.insertId);
+    }).catch(err => {
+      console.error('error al insertar idBitacoraRutaCarga :', err);
+    });
+    return idBitacoraRutaCarga;
   }
 
   async obtenerRutas() {
@@ -869,6 +892,24 @@ export class DbEleccionesService {
             CAR_ID: data.rows.item(i).CAR_ID,
             RTA_ID: data.rows.item(i).RTA_ID,
             CAR_RTA_ESTADO: data.rows.item(i).CAR_RTA_ESTADO
+          });
+        }
+      }
+    });
+
+    return rutas;
+  }
+
+  async obtenerBitacorasRutasCargas() {
+    // tslint:disable-next-line: prefer-const
+    let rutas: any[] = [];
+    const query = 'SELECT * FROM BITACORA_RUTAS_CARGAS';
+    await this.database.executeSql(query, []).then(data => {
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          rutas.push({
+            CAR_ID: data.rows.item(i).CAR_ID,
+            BRU_ID: data.rows.item(i).RTA_ID,
           });
         }
       }

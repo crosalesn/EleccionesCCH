@@ -317,6 +317,17 @@ export class CrearRutaPage implements OnInit {
 
         this.db.insertarBitacoraRuta(bitacoraRuta).then(idBitacoraRegistro => {
           console.log('idBitacoraRegistroInsertado: ', idBitacoraRegistro);
+
+          this.codigos.forEach( async (cod: any) => {
+            // tslint:disable-next-line: prefer-const tslint:disable-next-line: no-var-keyword
+            var bitacoraRutaCarga = {
+              CAR_ID: cod.CAR_ID,
+              BRU_ID: idBitacoraRegistro,
+            };
+            await this.db.insertarBitacoraRutaCarga(bitacoraRutaCarga).then(id => {
+              console.log('bitacoraRutaCargaBD: ', id);
+            });
+          });
         });
 
         this.db.obtenerRutas().then(rutas => {
@@ -331,6 +342,9 @@ export class CrearRutaPage implements OnInit {
           console.log('todas las bitacorasRutas: ', bitacorasRutas);
         });
 
+        this.db.obtenerBitacorasRutasCargas().then(bitacorasRutasCargas => {
+          console.log('todas las bitacorasRutasCargas: ', bitacorasRutasCargas);
+        });
       });
       // insertar rutas cargas
 
