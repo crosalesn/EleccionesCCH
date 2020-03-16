@@ -289,7 +289,7 @@ export class CrearRutaPage implements OnInit {
       // guardar ruta
       // console.log('rutaAInsertar:', rutaInsertar);
 
-      await this.db.insertarRuta(rutaInsertar).then( idInsertado => {
+      await this.db.insertarRuta(rutaInsertar).then( async idInsertado => {
         console.log('idInsertadoRuta: ', idInsertado);
         this.codigos.forEach( async (cod: any) => {
           // tslint:disable-next-line: prefer-const tslint:disable-next-line: no-var-keyword
@@ -315,7 +315,7 @@ export class CrearRutaPage implements OnInit {
           RTA_ID: idInsertado
         };
 
-        this.db.insertarBitacoraRuta(bitacoraRuta).then(idBitacoraRegistro => {
+        await this.db.insertarBitacoraRuta(bitacoraRuta).then(idBitacoraRegistro => {
           console.log('idBitacoraRegistroInsertado: ', idBitacoraRegistro);
 
           this.codigos.forEach( async (cod: any) => {
