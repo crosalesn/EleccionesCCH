@@ -842,7 +842,7 @@ export class DbEleccionesService {
       bitacoraRutaCarga.BRU_ID
     ]).then(data => {
       idBitacoraRutaCarga = data.insertId;
-      console.log('idBitacoraRutaCarga: ', data.insertId);
+      console.log('idBitacoraRutaCargaBD: ', data.insertId);
     }).catch(err => {
       console.error('error al insertar idBitacoraRutaCarga :', err);
     });
@@ -909,7 +909,7 @@ export class DbEleccionesService {
         for (let i = 0; i < data.rows.length; i++) {
           rutas.push({
             CAR_ID: data.rows.item(i).CAR_ID,
-            BRU_ID: data.rows.item(i).RTA_ID,
+            BRU_ID: data.rows.item(i).BRU_ID,
           });
         }
       }

@@ -110,6 +110,8 @@ export class LoginPage implements OnInit {
 
                 this.dbElecciones.Borrar('TIPO_LUGARES');
 
+                this.dbElecciones.Borrar('BITACORA_RUTAS_CARGAS');
+
                 this.dbElecciones.BorrarPerfilesAplicacionesLocal();
 
                 this.dbElecciones.AgregarUsuarioLocal(info);
