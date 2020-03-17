@@ -6,15 +6,14 @@ export interface IRuta {
     id: string;
     destino?: string;
     regionOrigen: IRegion;
-    comumaOrigen: Object;
+    comumaOrigen: any;
     regionDestino: IRegion;
-    comumaDestino: Object;
+    comumaDestino: any;
     tipoLugarOrigen: ITipoLugar;
     tipoLugarDestino: ITipoLugar;
     lugarOrigen: ILugar;
     lugarDestino: ILugar;
     codigos: string[];
     estado: number;
-    usuario?: Object;
-    
+    usuario?: any;
 }

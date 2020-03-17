@@ -216,7 +216,7 @@ export class CrearRutaPage implements OnInit {
       console.log('PATENTE UPPER: ', this.transporte.patente.toUpperCase());
       this.db.obtenerTransportePorPatente(this.transporte.patente.toUpperCase()).then(trans => {
         console.log('trans :', trans);
-        if(trans.length > 0) {        
+        if (trans.length > 0) {
           this.transporte = {
             id: trans[0].TRA_ID,
             patente: trans[0].TRA_PATENTE
@@ -236,6 +236,7 @@ export class CrearRutaPage implements OnInit {
   cambioLugar(origen) {
     if (origen === 0) {
       if (this.ruta.comumaOrigen != null) {
+        // tslint:disable-next-line: no-string-literal
         console.log('comunaIdOrigen ', this.ruta.comumaOrigen['COM_ID']);
         // tslint:disable-next-line: no-string-literal
         this.db.ObtenerLugarByComuna(this.ruta.comumaOrigen['COM_ID']).then(data => {
@@ -245,7 +246,7 @@ export class CrearRutaPage implements OnInit {
       }
     } else if (origen === 1) {
       if (this.ruta.comumaDestino != null) {
-        console.log('comunaIdDestino ', this.ruta.comumaDestino['COM_ID']);
+        console.log('comunaIdDestino ', this.ruta.comumaDestino.COM_ID);
         // tslint:disable-next-line: no-string-literal
         this.db.ObtenerLugarByComuna(this.ruta.comumaDestino['COM_ID']).then(data => {
           console.log('1 cambio lugar lugares: ', data);
@@ -256,7 +257,7 @@ export class CrearRutaPage implements OnInit {
   }
 
   async crearRuta() {
-    // tslint:disable-next-line: no-var-keyword
+    // tslint:disable-next-line: no-var-keyword tslint:disable-next-line: prefer-const
     var rutaInsertar = {
       RTA_FECHA_RE: null, // OK no va
       ERU_ID: 2, // ok
@@ -267,7 +268,7 @@ export class CrearRutaPage implements OnInit {
       RTA_LATITUD: null, // ok
       RTA_LONGITUD: null, // ok
       // tslint:disable-next-line: max-line-length
-      RTA_FECHA_DISPOSITIVO: `${ new Date().getFullYear()}-${new Date().getMonth() < 10 ? '0' + new Date().getMonth() : new Date().getMonth()}-${new Date().getDay()}` , // ok
+      RTA_FECHA_DISPOSITIVO: `${ new Date().getFullYear()}-${new Date().getMonth() < 10 ? '0' + new Date().getMonth() : new Date().getMonth()}-${new Date().getDate()}` , // ok
       RTA_SYNC: 0 // ok no sincronizadas
     };
 
@@ -311,7 +312,7 @@ export class CrearRutaPage implements OnInit {
         // tslint:disable-next-line: prefer-const
         let bitacoraRuta: any = {
           // tslint:disable-next-line: max-line-length
-          BRU_FECHA_REGISTRO_DISPOSITIVO: `${ new Date().getFullYear()}-${new Date().getMonth() < 10 ? '0' + new Date().getMonth() : new Date().getMonth()}-${new Date().getDay()}`,
+          BRU_FECHA_REGISTRO_DISPOSITIVO: `${ new Date().getFullYear()}-${new Date().getMonth() < 10 ? '0' + new Date().getMonth() : new Date().getMonth()}-${new Date().getDate()}`,
           BRU_USUARIO_REGISTRO: this.user.usuarioLogeado.usuario.USU_ID,
           BRU_LATITUD : rutaInsertar.RTA_LATITUD,
           BRU_LONGITUD : rutaInsertar.RTA_LONGITUD,
@@ -341,8 +342,8 @@ export class CrearRutaPage implements OnInit {
         }).catch( erro => {
           console.error('Error al insertar bitacoraruta ', erro);
           return;
-        });               
-        
+        });
+
 
       }).catch( erro => {
         console.error('Error al insertar ruta ', erro);
@@ -374,7 +375,7 @@ export class CrearRutaPage implements OnInit {
     await this.db.obtenerRutas().then(rutas => {
       console.log('todas las Rutas: ', rutas);
     });
-    
+
     await this.db.obtenerRutasCargas().then(rutasCargas => {
       console.log('todas las RutasCargas: ', rutasCargas);
     });

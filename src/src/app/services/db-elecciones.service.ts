@@ -22,12 +22,14 @@ export class DbEleccionesService {
   comnuas = new BehaviorSubject([]);
   tipoLugares = new BehaviorSubject([]);
 
-  constructor(private plt: Platform, private sqlitePorter: SQLitePorter, private sqlite: SQLite,
-    private http: HttpClient) {
+  constructor(
+    private plt: Platform,
+    private sqlitePorter: SQLitePorter,
+    private sqlite: SQLite,
+    private http: HttpClient
+  ) {
     console.log('Se llama constructor de Db-Elecciones');
-
   }
-
 
   ObtenerRutasNoSincronizadas(): Promise<any> {
     return new Promise(resolve => { resolve(true); });
@@ -36,8 +38,9 @@ export class DbEleccionesService {
   }
 
   async getAllRutasNoSync() {
+    // tslint:disable-next-line: prefer-const
     let rutas: any[] = [];
-    let query = 'SELECT * FROM RUTAS WHERE RTA_SYNC = 0 ';
+    const query = 'SELECT * FROM RUTAS WHERE RTA_SYNC = 0 ';
     await this.database.executeSql(query, []).then(async data => {
       if (data.rows.length > 0) {
         for (let i = 0; i < data.rows.length; i++) {
@@ -75,9 +78,11 @@ export class DbEleccionesService {
 
   GetFechaHora(horas?: boolean): string {
 
+    // tslint:disable-next-line: prefer-const
     let date: any = new Date();
     let day: any = date.getDate();       // yields date
     let month: any = date.getMonth() + 1; // yields month (add one as '.getMonth()' is zero indexed)
+    // tslint:disable-next-line: prefer-const
     let year: any = date.getFullYear();  // yields year
     let hour: any = date.getHours();     // yields hours
     let minute: any = date.getMinutes(); // yields minutes
@@ -100,8 +105,9 @@ export class DbEleccionesService {
     if (second < 10) {
       second = '0' + second;
     }
-
+    // tslint:disable-next-line: prefer-const
     let fecha: string = year + '-' + month + '-' + day;
+    // tslint:disable-next-line: prefer-const
     let fechayhora: string = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
 
     return (horas) ? fechayhora : fecha;
@@ -220,8 +226,8 @@ export class DbEleccionesService {
       } else {
         const USU_FECHA_REGISTRO = this.GetFechaHora();
         const usuario = [
-          parseInt(parametro.usuario.USU_ID),
-          parseInt(parametro.usuario.USU_RUT),
+          parseInt(parametro.usuario.USU_ID, 10),
+          parseInt(parametro.usuario.USU_RUT, 10),
           parametro.usuario.USU_DV,
           parametro.usuario.USU_NOMBRES,
           parametro.usuario.USU_APELLIDO_PATERNO,
@@ -230,18 +236,20 @@ export class DbEleccionesService {
           parametro.usuario.USU_NOMBRE_USUARIO,
           parametro.usuario.USU_CLAVE,
           USU_FECHA_REGISTRO,
-          parseInt(parametro.usuario.USU_ESTADO),
-          parseInt(parametro.usuario.PER_ID),
-          parseInt(parametro.usuario.REG_ID),
-          parseInt(parametro.usuario.LUGAR_ASIGNADO_ID),
+          parseInt(parametro.usuario.USU_ESTADO, 10),
+          parseInt(parametro.usuario.PER_ID, 10),
+
+          parseInt(parametro.usuario.REG_ID, 10),
+
+          parseInt(parametro.usuario.LUGAR_ASIGNADO_ID, 10),
           parametro.usuario.USU_CODIGO_RESET_CONTRASENA,
           parametro.usuario.USU_TELEFONO,
-          parseInt(parametro.usuario.TUS_ID),
-          parseInt(parametro.usuario.ETR_ID)
+          parseInt(parametro.usuario.TUS_ID, 10),
+          parseInt(parametro.usuario.ETR_ID, 10)
         ];
 
         const perfil = [
-          parseInt(parametro.usuario.PER_ID),
+          parseInt(parametro.usuario.PER_ID, 10),
           parametro.usuario.PER_CODIGO,
           parametro.usuario.PER_NOMBRE,
           parametro.usuario.PER_DESCRIPCION,
@@ -1084,6 +1092,59 @@ export class DbEleccionesService {
     return rutas;
   }
 
+  async obtenerBitacorasRutasCargasByIdBitacoraRuta(idBitacoraRuta) {
+    // tslint:disable-next-line: prefer-const
+    let rutas: any[] = [];
+    const query = 'SELECT * FROM BITACORA_RUTAS_CARGAS WHERE BRU_ID = ?';
+    await this.database.executeSql(query, [idBitacoraRuta]).then(data => {
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          rutas.push({
+            CAR_ID: data.rows.item(i).CAR_ID,
+            BRU_ID: data.rows.item(i).BRU_ID,
+            SYNC: data.rows.item(i).SYNC,
+          });
+        }
+      }
+    });
+    return rutas;
+  }
+  async obtenerBitacoraRutasImgByIdBitacoraRuta(idBitacoraRuta) {
+    // tslint:disable-next-line: prefer-const
+    let bitacoraRutasImgs: any[] = [];
+    const query = 'SELECT * FROM BITACORA_RUTAS_IMAGENES WHERE BRU_ID = ?';
+    await this.database.executeSql(query, [idBitacoraRuta]).then(data => {
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          bitacoraRutasImgs.push({
+            BRU_ID: data.rows.item(i).BRU_ID,
+            BRI_RUTA: data.rows.item(i).BRI_RUTA,
+            BRI_NOMBRE: data.rows.item(i).BRI_NOMBRE
+          });
+        }
+      }
+    });
+    return bitacoraRutasImgs;
+  }
+
+  async obtenerBitacoraRutasImgNoCargadaByIdBitacoraRuta(idBitacoraRuta) {
+    // tslint:disable-next-line: prefer-const
+    let bitacoraRutasImgsNo: any[] = [];
+    const query = 'SELECT * FROM BITACORA_RUTAS_CARGAS_NOREGISTRADAS WHERE BRU_ID = ?';
+    await this.database.executeSql(query, [idBitacoraRuta]).then(data => {
+      if (data.rows.length > 0) {
+        for (let i = 0; i < data.rows.length; i++) {
+          bitacoraRutasImgsNo.push({
+            BRC_ID: data.rows.item(i).BRC_ID,
+            BRC_CODIGO_BARRA: data.rows.item(i).BRC_CODIGO_BARRA,
+            BRU_ID: data.rows.item(i).BRU_ID
+          });
+        }
+      }
+    });
+    return bitacoraRutasImgsNo;
+  }
+
   async obtenerBitacoraRutas() {
     // tslint:disable-next-line: prefer-const
     let rutas: any[] = [];
@@ -1508,8 +1569,9 @@ export class DbEleccionesService {
 
 
   async obtenerTransportePorPatente(patente: string) {
+    // tslint:disable-next-line: prefer-const
     let transportes: any[] = [];
-    let query = 'SELECT * FROM TRANSPORTES WHERE TRA_PATENTE = ?';
+    const query = 'SELECT * FROM TRANSPORTES WHERE TRA_PATENTE = ?';
     await this.database.executeSql(query, [patente]).then(data => {
       if (data.rows.length > 0) {
         transportes.push({
@@ -1528,8 +1590,9 @@ export class DbEleccionesService {
 
 
   async obtenerTransportes() {
+    // tslint:disable-next-line: prefer-const
     let transportes: any[] = [];
-    let query = 'SELECT * FROM TRANSPORTES';
+    const query = 'SELECT * FROM TRANSPORTES';
     await this.database.executeSql(query, []).then(data => {
       if (data.rows.length > 0) {
         for (let i = 0; i < data.rows.length; i++) {
@@ -1588,9 +1651,9 @@ export class DbEleccionesService {
 
   async crearJsonInsertarRuta() {
     var json: any[] = [];
-    await this.getAllRutasNoSync().then( async (rutas: any[]) => {
+    await this.getAllRutasNoSync().then(async (rutas: any[]) => {
       console.log('rutas: ', rutas);
-      if (rutas.length > 0) {    
+      if (rutas.length > 0) {
         for (let i = 0; i < rutas.length; i++) {
           json.push({
             RTA_ID: rutas[i].RTA_ID,
@@ -1605,7 +1668,7 @@ export class DbEleccionesService {
             LISTA_RUTAS_CARGAS: await this.obtenerRutasCargasByIdRuta(rutas[i].RTA_ID),
             LISTA_BITACORA_RUTAS: await this.armarListaBitacoraRutas(rutas[i].RTA_ID)
           });
-        }                          
+        }
       }
     });
     return json;
@@ -1613,27 +1676,26 @@ export class DbEleccionesService {
 
   async armarListaBitacoraRutas(iRuta) {
     const bitacorasRutas = [];
-    await this.obtenerBitacoraRutasByIdRuta(iRuta).then( (bitRut: any[]) => {
-      console.log('bitacoraRutas: ' ,bitRut);
-      if(bitRut.length > 0 ) {
-        bitRut.forEach(data => {
+    await this.obtenerBitacoraRutasByIdRuta(iRuta).then((bitRut: any[]) => {
+      console.log('bitacoraRutas: ', bitRut);
+      if (bitRut.length > 0) {
+        bitRut.forEach(async data => {
           bitacorasRutas.push({
-             BRU_FECHA_REGISTRO_DISPOSITIVO: data.BRU_FECHA_REGISTRO_DISPOSITIVO,
-             USU_ID: data.USU_ID,
-             BRU_LATITUD: data.BRU_LATITUD,
-             BRU_LONGITUD: data.BRU_LONGITUD,
-             ERU_ID: data.ERU_ID,
-             BRU_CUADRADO: data.BRU_CUADRADO,
-             BRU_DESCRIPCION: data.BRU_DESCRIPCION,
-             LISTA_BITACORA_RUTAS_CARGAS: [], //await this.obtenerRutasCargasByIdRuta(),
-             LISTA_BITACORA_RUTAS_IMAGENES: [],
-             LISTA_BITACORA_RUTAS_CARGAS_NO_REGISTRADAS: []
-           });
-        });  
+            BRU_FECHA_REGISTRO_DISPOSITIVO: data.BRU_FECHA_REGISTRO_DISPOSITIVO,
+            USU_ID: data.USU_ID,
+            BRU_LATITUD: data.BRU_LATITUD,
+            BRU_LONGITUD: data.BRU_LONGITUD,
+            ERU_ID: data.ERU_ID,
+            BRU_CUADRADO: data.BRU_CUADRADO,
+            BRU_DESCRIPCION: data.BRU_DESCRIPCION,
+            LISTA_BITACORA_RUTAS_CARGAS: await this.obtenerBitacorasRutasCargasByIdBitacoraRuta(data.BRU_ID),
+            LISTA_BITACORA_RUTAS_IMAGENES: await this.obtenerBitacoraRutasImgByIdBitacoraRuta(data.BRU_ID),
+            LISTA_BITACORA_RUTAS_CARGAS_NO_REGISTRADAS: await this.obtenerBitacoraRutasImgNoCargadaByIdBitacoraRuta(data.BRU_ID)
+          });
+        });
       }
-           
     });
-    
+
     return bitacorasRutas;
   }
 
