@@ -11,9 +11,8 @@ export class RutaService {
   constructor(
     private storage: Storage,
     private db: DbEleccionesService
-  ) {
-    
-    
+  ) 
+  {        
     this.obtenerRutas();
     //this.deleteAll();
   }

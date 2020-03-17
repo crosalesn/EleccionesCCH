@@ -950,11 +950,12 @@ export class DbEleccionesService {
         BRU_LATITUD,
         BRU_LONGITUD,
         ERU_ID,
+        BRU_CUADRADO,
         BRU_DESCRIPCION,
-        RTA_ID,
+        RTA_ID,       
         SYNC
       )
-      VALUES (?,?,?,?,?,?,?,?)
+      VALUES (?,?,?,?,?,?,?,?,?)
     `;
     await this.database.executeSql(query, [
       bitacoraRuta.BRU_FECHA_REGISTRO_DISPOSITIVO,

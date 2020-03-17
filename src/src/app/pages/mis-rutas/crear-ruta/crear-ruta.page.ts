@@ -317,6 +317,7 @@ export class CrearRutaPage implements OnInit {
           BRU_LATITUD : rutaInsertar.RTA_LATITUD,
           BRU_LONGITUD : rutaInsertar.RTA_LONGITUD,
           ERU_ID : 2,
+          BRU_CUADRADO: 2,
           BRU_DESCRIPCION : 'Desde dispositivo movil',
           RTA_ID: idInsertado,
           SYNC: 0
